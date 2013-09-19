@@ -13,7 +13,7 @@
 
 #include "src/findmf/qtwidgets/TwoPanelImageWidget.h"
 #include "findmf/fileio/helperfunctions.h"
-#include "parseargExtract.h"
+#include "../apps/parseargExtract.h"
 #include "findmf/algo/vigra/featurefinder.h"
 //!<
 
