@@ -1,0 +1,6 @@
+IF(NOT DEFINED WITH_TEST)
+    SET(WITH_TEST "ON")
+ENDIF()
+SET(WITH_TEST ${WITH_TEST}
+    CACHE BOOL "Build with test ?"
+    FORCE)

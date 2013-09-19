@@ -1,0 +1,243 @@
+// Copyright : ETH Zurich
+// License   : three-clause BSD license
+// Authors   : Witold Wolski
+// for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
+#ifndef PEAKPICKER_H
+#define PEAKPICKER_H
+
+#include <stdint.h>
+#include <boost/math/special_functions.hpp>
+#include "base/resample/convert2dense.h"
+#include "base/filter/filter.h"
+#include "base/ms/simplepicker.h"
+#include "base/filter/gaussfilter.h"
+#include "base/base/equispaceinterpolation.h"
+#include "base/utils/readwritebin.h"
+#include "base/resample/determinebinwidth.h"
+
+namespace ralab{
+  namespace base{
+    namespace ms{
+
+      /// resamples spectrum, apply smoothing,
+      /// determines zero crossings,
+      /// integrates peaks.
+
+      template<typename TReal>
+      struct SimplePeakArea{
+        TReal integwith_;
+
+        SimplePeakArea(TReal integwith):integwith_(integwith){}
+
+        /// intagrates the peak intesnities
+        template<typename Tzerocross, typename Tintensity, typename Tout>
+        void operator()( Tzerocross beginZ,
+                         Tzerocross endZ,
+                         Tintensity intensity,
+                         Tintensity resmpled,
+                         Tout area)const
+        {
+          typedef typename std::iterator_traits<Tout>::value_type AreaType;
+          for( ; beginZ != endZ ; ++beginZ , ++area )
+            {
+              size_t idx = static_cast<size_t>( *beginZ );
+              size_t start = static_cast<size_t>( boost::math::round( idx - integwith_ ) );
+              size_t end = static_cast<size_t>( boost::math::round( idx + integwith_ + 2.) );
+              AreaType aread = 0.;
+              for( ; start != end ; ++start )
+                {
+                  aread += *(resmpled + start);
+                }
+              *area = aread;
+            }
+        }
+      };
+
+      /// extends peak to the left and to the right to the next local minimum or a predefined threshol
+      /// or a maximum allowed extension.
+      template<typename TReal>
+      struct LocalMinPeakArea{
+        typedef TReal value_type;
+        TReal integwith_;
+        TReal threshold_;
+
+        LocalMinPeakArea(TReal integwith,//!<maximal allowed peak width +- in pixel
+                         TReal threshold = .1// minimum intensity
+                         ):integwith_(integwith),threshold_(threshold){}
+
+
+
+        /// intagrates the peak intesnities
+        template< typename Tzerocross, typename Tintensity, typename Tout >
+        void operator()( Tzerocross beginZ,
+                         Tzerocross endZ,
+                         Tintensity intensity,
+                         Tintensity resampled,
+                         Tout area) const
+        {
+          typedef typename std::iterator_traits<Tout>::value_type AreaType;
+          for( ; beginZ != endZ ; ++beginZ , ++area )
+            {
+              size_t idx = static_cast<size_t>( *beginZ );
+              size_t start = static_cast<size_t>( boost::math::round( idx - integwith_ ) );
+              size_t end = static_cast<size_t>( boost::math::round( idx + integwith_ + 2) );
+
+              Tintensity st = intensity + start;
+              Tintensity en = intensity + end;
+              Tintensity center = intensity + idx;
+              std::ptrdiff_t x1 = std::distance(st, center);
+              std::ptrdiff_t y1 = std::distance(center,en);
+              mextend(st , en , center);
+              std::ptrdiff_t x2 = std::distance(intensity,st);
+              std::ptrdiff_t y2 = std::distance(intensity,en);
+              std::ptrdiff_t pp = std::distance(st,en);
+              AreaType areav = std::accumulate(resampled+x2,resampled+y2,0.);
+              *area = areav;
+            }
+        }
+
+
+      private:
+        ///exend peak to left and rigth
+        template<typename TInt >
+        void mextend( TInt &start, TInt &end, TInt idx) const
+        {
+
+
+          typedef typename std::iterator_traits<TInt>::value_type Intensitytype;
+          //
+          for(TInt intens = idx ; intens >= start;  --intens){
+              Intensitytype val1 = *intens;
+              Intensitytype val2 = *(intens-1);
+              if(val1 > threshold_){
+                  if(val1 < val2 ){
+                      start = intens;
+                      break;
+                    }
+                }
+              else{
+                  start = intens;
+                  break;
+                }
+            }
+
+          for(TInt intens = idx ; intens <= end;  ++intens){
+              Intensitytype val1 = *intens;
+              Intensitytype val2 = *(intens+1);
+              if(val1 > threshold_){
+                  if(val1 < val2 ){
+                      end = intens;
+                      break;
+                    }
+                }
+              else{
+                  end = intens;
+                  break;
+                }
+            }
+        }
+      };
+
+
+      /// resamples spectrum, apply smoothing,
+      /// determines zero crossings,
+      /// integrates peaks.
+      template<typename TReal, template <typename B> class TIntegrator >
+      struct PeakPicker{
+        typedef TReal value_type;
+        typedef TIntegrator<value_type> PeakIntegrator;
+
+        TReal resolution_;
+        ralab::base::resample::Convert2Dense c2d_; // resamples spectrum
+        std::vector<TReal> resampledmz_, resampledintensity_; // keeps result of convert to dense
+        std::vector<TReal> filter_, zerocross_, smoothedintensity_; // working variables
+        std::vector<TReal> peakmass_,peakint_, peakarea_; //results
+        TReal smoothwith_;
+        TReal integrationWidth_;
+        ralab::base::ms::SimplePicker<TReal> simplepicker_;
+        ralab::base::resample::SamplingWith sw_;
+        PeakIntegrator integrator_;
+
+        PeakPicker(TReal resolution, //!< instrument resolution
+                   std::pair<TReal, TReal> & massrange, //!< mass range of spectrum
+                   TReal width = 2., //!< smooth width
+                   TReal intwidth = 2. //!< integration width
+            ): resolution_(resolution),smoothwith_(width),integrationWidth_(intwidth),sw_(),integrator_(integrationWidth_)
+        {
+          c2d_.defBreak(massrange,ralab::base::resample::resolution2ppm(resolution));
+          c2d_.getMids(resampledmz_);
+          ralab::base::filter::getGaussianFilterQuantile(filter_,width);
+        }
+
+
+        template<typename Tmass, typename Tintensity>
+        void operator()(Tmass begmz, Tmass endmz, Tintensity begint )
+        {
+          double a = sw_(begmz,endmz);
+          c2d_.am_ = a;
+          c2d_.convert2dense(begmz,endmz, begint, resampledintensity_);
+          ralab::base::filter::filter(resampledintensity_ , filter_ , smoothedintensity_ , true);
+          zerocross_.resize( smoothedintensity_.size()/2 );
+          size_t nrzerocross = simplepicker_( smoothedintensity_.begin( ) , smoothedintensity_.end() , zerocross_.begin());
+
+          peakmass_.resize(nrzerocross);
+          ralab::base::base::interpolate_linear( resampledmz_.begin() , resampledmz_.end() ,
+                                                 zerocross_.begin(),  zerocross_.begin()+nrzerocross ,
+                                                 peakmass_.begin());
+
+          peakint_.resize(nrzerocross);
+          ralab::base::base::interpolate_cubic( smoothedintensity_.begin() , smoothedintensity_.end() ,
+                                                zerocross_.begin(),  zerocross_.begin()+nrzerocross ,
+                                                peakint_.begin());
+
+          peakarea_.resize(nrzerocross);
+
+          integrator_( zerocross_.begin(), zerocross_.begin() + nrzerocross ,
+                       smoothedintensity_.begin(),resampledintensity_.begin(), peakarea_.begin() );
+        }
+
+        const std::vector<TReal> & getPeakMass(){
+          return peakmass_;
+        }
+        const std::vector<TReal> & getPeakIntensity(){
+          return peakint_;
+        }
+
+        const std::vector<TReal> & getPeakArea(){
+          return peakarea_;
+        }
+
+        const std::vector<TReal> & getResampledMZ(){
+          return resampledmz_;
+        }
+
+        const std::vector<TReal> & getResampledIntensity(){
+          return resampledintensity_;
+        }
+
+        const std::vector<TReal> & getSmoothedIntensity(){
+          return smoothedintensity_;
+        }
+
+        //serialize pp state for external validation
+        void write(const std::string & filestem)
+        {
+          std::string tmp = filestem;
+          ralab::base::utils::writeBin(peakmass_, tmp+"peakmass.bin");
+          ralab::base::utils::writeBin(peakint_, tmp+"peakintens.bin" );
+          ralab::base::utils::writeBin(peakarea_, tmp+"peakarea.bin" );
+          ralab::base::utils::writeBin(resampledmz_, tmp+"resampledmz.bin" );
+          ralab::base::utils::writeBin(resampledintensity_, tmp+"resampledint.bin" );
+          ralab::base::utils::writeBin(smoothedintensity_, tmp+"smoothedint.bin" );
+        }
+
+
+      };
+    }//ms
+  }//base
+}//ralab
+
+
+
+#endif // PEAKPICKER_H
