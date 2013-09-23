@@ -4,7 +4,6 @@
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 #include "preliminarytests.h"
-
 #include "findmf/datastruct/swathinfo.h"
 #include "findmf/fileio/spectrastreader.h"
 #include "findmf/datastruct/lcmsimage.h"
@@ -95,9 +94,9 @@ int main(int argc, char *argv[])
 {
   ralab::PreliminaryTests ptests;
   //ptests.merge();
-  ptests.testSwathTable();
+  //ptests.testSwathTable();
   //ptests.testMap();
   //ptests.testImaging();
-  ptests.testSpectrast();
+  //ptests.testSpectrast();
 
 }

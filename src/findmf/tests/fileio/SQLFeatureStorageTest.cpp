@@ -39,7 +39,7 @@ inline void testFeatureTable2(){
   ralab::MapLCMSDescriptionPtr x = ralab::MapLCMSDescriptionPtr(new ralab::MapLCMSDescription());
   ralab::FeaturesMap fm(x);
 
-  for(int i = 0 ; i < 10000; ++i)
+  for(int i = 0 ; i < 1000; ++i)
     {
       // std::cout << i << std::endl;
       f2D.setID(i);
@@ -86,7 +86,7 @@ inline void testFeatureTable(){
 
   boost::timer t;
 
-  for(int i = 0 ; i < 1000000; ++i)
+  for(int i = 0 ; i < 1000; ++i)
     {
       // std::cout << i << std::endl;
       f2D.setID(i);
@@ -113,7 +113,7 @@ inline void testFeatureTable(){
 
   ralab::SQLFeatureTableSelects sfrs( sfs.getDatabase() );
 
-  for(uint32_t i = 0 ; i <100000; ++i){
+  for(uint32_t i = 0 ; i <1000; ++i){
       sfrs.getFeature(i,fwa);
       if(!(dto.id_ == i))
         std::cout << "id : " << dto.id_ << std::endl;

@@ -1,3 +1,8 @@
+// Copyright : ETH Zurich
+// License   : three-clause BSD license
+// Authors   : Witold Wolski
+// for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
 #ifndef COPY_IF_H
 #define COPY_IF_H
 
@@ -106,9 +111,9 @@ namespace ralab{
       }
 
 
-    }
-  }
-}
+    }//end utils
+  }//end base
+}//end ralab
 
 
 

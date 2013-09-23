@@ -1,3 +1,8 @@
+// Copyright : ETH Zurich
+// License   : three-clause BSD license
+// Authors   : Witold Wolski
+// for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
 #include "gtest/gtest.h"
 #include "base/utils/Copy_if.h"
 

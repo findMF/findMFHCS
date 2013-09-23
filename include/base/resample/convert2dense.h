@@ -42,31 +42,31 @@ namespace ralab
           for( ; beginMass != (endMass -1) ; ++beginMass, ++intens ){
               double mass1 = *beginMass;
               double mass2 = *(beginMass+1);
-              double predmass2 = mass1 + (am_* sqrt(mass1))*1.1;
+              double predmass2 = mass1 + (am_* sqrt(mass1))*1.01;
               if(mass2 > predmass2){
                   mass2 = predmass2;
                 }
 
-              double nr = mass2-mass1;
-              double nrhalf;
+              double deltamass = mass2-mass1;
+              double deltamasshalf;
               if(true){
-                  nrhalf= nr/2.;
+                  deltamasshalf= deltamass/2.;
                 }
               else{
-                  nrhalf = nr;
+                  deltamasshalf = deltamass;
                 }
 
-              bin_(mass1-nrhalf,mass2-nrhalf,idx_,weight_);
+              bin_(mass1-deltamasshalf,mass2-deltamasshalf,idx_,weight_);
 
               double intensd = static_cast<double>(*intens);
               double sum = std::accumulate(weight_.begin(),weight_.end(),0.);
-              BOOST_ASSERT(fabs(nr- sum) < 1e-11);
+              BOOST_ASSERT(fabs(deltamass- sum) < 1e-11);
 
               double check = 0.;
               for(std::size_t i = 0 ; i < idx_.size();++i){
                   if((idx_[i]>=0) &(idx_[i] < static_cast<int32_t>(bin_.breaks_.size() - 1)))
                     {
-                      double bb= intensd * weight_[i]/nr;
+                      double bb= intensd * weight_[i]/deltamass;
                       *(ass + idx_[i])  += bb;
                       check += bb;
                     }

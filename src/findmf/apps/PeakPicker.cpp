@@ -10,7 +10,6 @@
 #include <boost/program_options.hpp>
 #include "findmf/fileio/pwiz/qtofpeakpickerfilter.h"
 
-
 namespace b_po = boost::program_options;
 namespace b_fs = boost::filesystem3;
 

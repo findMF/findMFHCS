@@ -71,7 +71,7 @@ namespace ralab{
                       *zerocrossings = (i + lag/2 + 1.);
                     }
                 }else{
-                  throw std::logic_error("unhandled else block");
+                  //just continue, nothing to handle
                 }
             }
           return crosscount;

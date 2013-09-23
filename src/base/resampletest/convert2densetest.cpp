@@ -28,6 +28,7 @@ namespace{
     c2d.defBreak(tmp,ppm);
     std::vector<double> mids;
     c2d.getMids(mids);
+    c2d.am_ = 0.1;
 
     double mz[] = {1001. , 1001.5 , 1001.8 , 1004. , 1005., 1008. , 1009. , 1009.3};
     size_t smz = sizeof(mz)/sizeof(double);

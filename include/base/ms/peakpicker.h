@@ -64,7 +64,7 @@ namespace ralab{
 
         LocalMinPeakArea(TReal integwith,//!<maximal allowed peak width +- in pixel
                          TReal threshold = .1// minimum intensity
-                         ):integwith_(integwith),threshold_(threshold){}
+            ):integwith_(integwith),threshold_(threshold){}
 
 
 
@@ -152,20 +152,24 @@ namespace ralab{
         ralab::base::resample::Convert2Dense c2d_; // resamples spectrum
         std::vector<TReal> resampledmz_, resampledintensity_; // keeps result of convert to dense
         std::vector<TReal> filter_, zerocross_, smoothedintensity_; // working variables
-        std::vector<TReal> peakmass_,peakint_, peakarea_; //results
+        std::vector<TReal> peakmass_, peakarea_; //results
         TReal smoothwith_;
         TReal integrationWidth_;
         ralab::base::ms::SimplePicker<TReal> simplepicker_;
         ralab::base::resample::SamplingWith sw_;
         PeakIntegrator integrator_;
         TReal intensitythreshold_;
+        bool area_;
 
         PeakPicker(TReal resolution, //!< instrument resolution
                    std::pair<TReal, TReal> & massrange, //!< mass range of spectrum
                    TReal width = 2., //!< smooth width
                    TReal intwidth = 2., //!< integration width used for area compuation
-                   TReal intensitythreshold = 10.
-            ): resolution_(resolution),smoothwith_(width),integrationWidth_(intwidth),sw_(),integrator_(integrationWidth_),intensitythreshold_(intensitythreshold)
+                   TReal intensitythreshold = 10., // intensity threshold
+                   bool area = true
+            ): resolution_(resolution),smoothwith_(width),
+          integrationWidth_(intwidth),sw_(),integrator_(integrationWidth_),
+          intensitythreshold_(intensitythreshold),area_(area)
         {
           c2d_.defBreak(massrange,ralab::base::resample::resolution2ppm(resolution));
           c2d_.getMids(resampledmz_);
@@ -193,23 +197,26 @@ namespace ralab{
           ralab::base::base::interpolate_linear( resampledmz_.begin() , resampledmz_.end() ,
                                                  zerocross_.begin(),  zerocross_.begin()+nrzerocross ,
                                                  peakmass_.begin());
-          //determine intensity
-          peakint_.resize(nrzerocross);
-          ralab::base::base::interpolate_cubic( smoothedintensity_.begin() , smoothedintensity_.end() ,
-                                                zerocross_.begin(),  zerocross_.begin()+nrzerocross ,
-                                                peakint_.begin());
+
           //determine peak area
-          peakarea_.resize(nrzerocross);
-          integrator_( zerocross_.begin(), zerocross_.begin() + nrzerocross ,
-                       smoothedintensity_.begin(),resampledintensity_.begin(), peakarea_.begin() );
+          if(area_){
+              peakarea_.resize(nrzerocross);
+              integrator_( zerocross_.begin(), zerocross_.begin() + nrzerocross ,
+                           smoothedintensity_.begin(),resampledintensity_.begin(), peakarea_.begin() );
+            }else{
+              //determine intensity
+              peakarea_.resize(nrzerocross);
+              ralab::base::base::interpolate_cubic( smoothedintensity_.begin() , smoothedintensity_.end() ,
+                                                    zerocross_.begin(),  zerocross_.begin()+nrzerocross ,
+                                                    peakarea_.begin());
+            }
+
         }
 
         const std::vector<TReal> & getPeakMass(){
           return peakmass_;
         }
-        const std::vector<TReal> & getPeakIntensity(){
-          return peakint_;
-        }
+
 
         const std::vector<TReal> & getPeakArea(){
           return peakarea_;
@@ -232,7 +239,6 @@ namespace ralab{
         {
           std::string tmp = filestem;
           ralab::base::utils::writeBin(peakmass_, tmp+"peakmass.bin");
-          ralab::base::utils::writeBin(peakint_, tmp+"peakintens.bin" );
           ralab::base::utils::writeBin(peakarea_, tmp+"peakarea.bin" );
           ralab::base::utils::writeBin(resampledmz_, tmp+"resampledmz.bin" );
           ralab::base::utils::writeBin(resampledintensity_, tmp+"resampledint.bin" );

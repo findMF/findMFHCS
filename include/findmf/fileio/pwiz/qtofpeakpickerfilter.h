@@ -6,7 +6,6 @@
 #ifndef QTOFPEAKPICKERFILTER_H
 #define QTOFPEAKPICKERFILTER_H
 
-
 #include <iostream>
 #include <iterator>
 
@@ -14,7 +13,6 @@
 #include "pwiz/data/msdata/SpectrumIterator.hpp"
 #include "pwiz/data/msdata/SpectrumInfo.hpp"
 #include "pwiz/data/msdata/SpectrumListWrapper.hpp"
-
 #include "base/ms/peakpicker.h"
 
 namespace ralab{
@@ -23,23 +21,24 @@ namespace ralab{
     double resolution_;
     double smoothwidth_;
     uint32_t integrationWidth_;
+    double intensityThreshold_;
     bool area_;
-    bool storestate_;
 
     QTOFPeakPickerFilter(
         const pwiz::msdata::SpectrumListPtr & inner, //!< spectrum list
         double resolution, //!< instrument resolution
         double smoothwidth = 2., //!< smoothwidth
         uint32_t integrationWidth = 4, //! integration width
-        bool area = true, //!< do you want to store are or intensity
-        bool storestate = false //!< do you want to serialize pp state for debugging.
+        double intensityThreshold = 10.,
+        bool area = true //!< do you want to store are or intensity
         ):SpectrumListWrapper(inner),
       resolution_(resolution),
       smoothwidth_(smoothwidth),
       integrationWidth_(integrationWidth),
-      area_(area),
-      storestate_(storestate)
+      intensityThreshold_(intensityThreshold),
+      area_(area)
     {
+
       // add processing methods to the copy of the inner SpectrumList's data processing
       pwiz::msdata::ProcessingMethod method;
       method.order = dp_->processingMethods.size();
@@ -47,10 +46,11 @@ namespace ralab{
       if (!dp_->processingMethods.empty())
         method.softwarePtr = dp_->processingMethods[0].softwarePtr;
       dp_->processingMethods.push_back(method);
+
     }
 
     pwiz::msdata::SpectrumPtr spectrum( std::size_t index,
-                                                bool getBinaryData ) const
+                                        bool getBinaryData ) const
     {
       pwiz::msdata::SpectrumPtr specptr = inner_->spectrum(index, true);
       try
@@ -65,33 +65,17 @@ namespace ralab{
               resolution_,
               range,
               smoothwidth_,
-              integrationWidth_
+              integrationWidth_,
+              intensityThreshold_,
+              area_
               );
-
-        // std::vector<double> pickedMZs, pickedIntensities, area;
-        // this deletes all binary data.
 
         pp( mzs.begin(), mzs.end(), intensities.begin());
 
 
-        if(storestate_){
-            mzs.assign(pp.getResampledMZ().begin(),pp.getResampledMZ().end());
-            if(area_){
-                intensities.assign(pp.getResampledIntensity().begin(),
-                                   pp.getResampledIntensity().end());
-              }else{
-                intensities.assign(pp.getSmoothedIntensity().begin(),pp.getSmoothedIntensity().end());
-              }
-          }else{
-            mzs.assign(pp.getPeakMass().begin(),pp.getPeakMass().end());
-            if(area_){
-                intensities.assign(pp.getPeakArea().begin(),
-                                   pp.getPeakArea().end());
-              }else{
-                intensities.assign( pp.getPeakIntensity().begin() , pp.getPeakIntensity().end() );
-              }
-          }
-
+        mzs.assign(pp.getPeakMass().begin(),pp.getPeakMass().end());
+        intensities.assign(pp.getPeakArea().begin(),
+                           pp.getPeakArea().end());
         specptr->defaultArrayLength = mzs.size();
 
       }
