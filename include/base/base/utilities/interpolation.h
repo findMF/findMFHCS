@@ -185,7 +185,7 @@ namespace ralab
             typename OutputIterator,
             typename TFunctor
             >
-        void interpolate_CH_worker
+        static void interpolate_CH_worker
         (
             YInputIterator begY, //!<
             YInputIterator endY, //!<
@@ -264,7 +264,7 @@ namespace ralab
 
 
         template <typename TReal, typename TFunctor>
-        void interpolate_CH_worker(
+        static void interpolate_CH_worker(
             const std::vector<TReal> & y, //!< y values equidistantly spaced. spacing is [0,1,2, .... ,len(y)]
             const std::vector<TReal> & x, //!< points to interpolate at
             std::vector<TReal> & out, //!< interpolated values, same length as x.
@@ -282,7 +282,7 @@ namespace ralab
             typename TReal,
             typename TFunctor
             >
-        void interpolate_LC_worker
+        static void interpolate_LC_worker
         (
             const std::vector<TReal> & y, //!< y values equidistantly spaced. spacing is [0,1,2, .... ,len(y)]
             const std::vector<TReal> & x, //!< points to interpolate at
@@ -307,7 +307,7 @@ namespace ralab
             typename OutputIterator,
             typename TFunctor
             >
-        void interpolate_LC_worker
+        static void interpolate_LC_worker
         (
             YInputIterator y_p, //!< y values equidistantly spaced. spacing is [0,1,2, .... ,len(y)]
             YInputIterator endY,

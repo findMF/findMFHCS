@@ -15,5 +15,5 @@ ADD_SUBDIRECTORY(resampletest)
 ADD_SUBDIRECTORY(statstest)
 ADD_SUBDIRECTORY(mstest)
 ADD_SUBDIRECTORY(chemistrytest)
-
+ADD_SUBDIRECTORY(utilstest)
 

@@ -27,17 +27,14 @@ namespace ralab{
     std::vector<double> zerocross_;
     //ctor
     projectionstats( const std::vector<float> & projection ,  int projectionStart ):
-      projectionStart_(projectionStart),
-      average_(0),variance_(0),kurtosis_(0),skewness_(0),simplePicker_(),zerocross_(2,0.)
+      projectionStart_(projectionStart), average_(0),variance_(0),kurtosis_(0),skewness_(0),peaklockation_(),simplePicker_(),zerocross_(2,0.)
     {
       this->computeStats(projection,projectionStart_);
     }
 
-
     //ctor
     projectionstats( ):
-      projectionStart_(0),
-      average_(0),variance_(0),kurtosis_(0),skewness_(0)
+      projectionStart_(0),average_(0),variance_(0),kurtosis_(0),skewness_(0),peaklockation_(),simplePicker_(),zerocross_(2,0.)
     {}
 
     /** location of peak maximum

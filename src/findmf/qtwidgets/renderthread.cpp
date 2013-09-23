@@ -169,13 +169,17 @@ uint RenderThread::rgbFromWaveLength(double wave)
       g = -1.0 * (wave - 645.0) / (645.0 - 580.0);
     } else if (wave >= 645.0 && wave <= 780.0) {
       r = 1.0;
-    }
+    } else {
+	  r =0.0;
+	}
 
   double s = 1.0;
   if (wave > 700.0)
     s = 0.3 + 0.7 * (780.0 - wave) / (780.0 - 700.0);
   else if (wave <  420.0)
     s = 0.3 + 0.7 * (wave - 380.0) / (420.0 - 380.0);
+  else
+	  s = 1.0;
 
   r = pow(r * s, 0.8);
   g = pow(g * s, 0.8);

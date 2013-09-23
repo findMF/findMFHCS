@@ -91,13 +91,13 @@ struct SimpleTopHat
     const int32_t size = int32_t(input.size());
     output.clear();
     output.resize(size);
-    std::vector<ValueT> dilation;
-    std::vector<ValueT> erosion;
-    SimpleTopHat::erosion(input,erosion,struc_elem_length);
-    SimpleTopHat::dilation(input,dilation,struc_elem_length);
+    std::vector<ValueT> dilation_;
+    std::vector<ValueT> erosion_;
+    erosion(input,erosion_,struc_elem_length);
+    dilation(input,dilation_,struc_elem_length);
     for ( int32_t index = 0; index < size; ++ index )
       {
-        output[index] = dilation[index] - erosion[index];
+        output[index] = dilation_[index] - erosion_[index];
       }
     return;
   }

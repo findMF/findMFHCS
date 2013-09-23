@@ -34,7 +34,7 @@ namespace ralab{
     std::string filestem_;
     boost::filesystem::path outdir_;
 
-    Params():infile(),outdir(),ppm(0.),mzscale(1.), rtscale(1.), rtpixelwidth(), mzpixelwidth(), minmass(), i_(), rt2sum_(), filestem_(), outdir_(){}
+    Params():infile(),outdir(),ppm(0.),mzscale(1.), rtscale(1.), rtpixelwidth(), mzpixelwidth(), minmass(), maxmass(), minintensity(), i_(), rt2sum_(), filestem_(), outdir_(){}
 
     //stern...
     void prepareOutputFile(bool create_dir=false)

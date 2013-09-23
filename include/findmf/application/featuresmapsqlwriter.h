@@ -4,8 +4,6 @@
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 
-
-
 #ifndef FEATURESQLPRINTER_H
 #define FEATURESQLPRINTER_H
 
@@ -14,7 +12,6 @@
 #include <boost/timer.hpp>
 #include <boost/shared_ptr.hpp>
 
-//#include "interfaces/ifeatureallaccess.h"
 
 #include "findmf/fileio/sqlite/sqlfeaturetable.h"
 #include "findmf/fileio/sqlite/sqlfeaturertree.h"

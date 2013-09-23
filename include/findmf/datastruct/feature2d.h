@@ -12,7 +12,6 @@
 
 #include <vector>
 #include "findmf/algo/projectionstats.h"
-//#include "datastruct/ifeatureallaccess.h"
 
 namespace ralab{
 
@@ -48,10 +47,12 @@ namespace ralab{
 
   public:
 
-    Feature2D():id_(0),minMZIndex_(0),minRTIndex_(0),sum_(0.),count_(0.)
+    Feature2D():id_(0),minMZsw_(),maxMZsw_(),swathid_(),minMZIndex_(0),minRTIndex_(0),sum_(0.),count_(0.)
     ,max_(0.),centerOfMassMZ_(0.),centerOfMassRT_(0.),maxLocationMZ_(0.),
       maxLocationRT_(0.)
     {}
+
+
     Feature2D(std::size_t mzMinIndex,
               std::size_t mzExtend,
               std::size_t rtMinIndex,

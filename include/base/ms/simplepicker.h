@@ -8,6 +8,7 @@
 
 #include <iterator>
 #include <vector>
+#include <stdexcept>
 
 namespace ralab{
   namespace base{
@@ -69,6 +70,8 @@ namespace ralab{
                   if((v3 < 0) && ((v1 - v3) > epsilon_)){
                       *zerocrossings = (i + lag/2 + 1.);
                     }
+                }else{
+                  throw std::logic_error("unhandled else block");
                 }
             }
           return crosscount;

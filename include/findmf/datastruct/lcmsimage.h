@@ -56,9 +56,9 @@ namespace ralab {
 
     // return map description...
     MapLCMSDescriptionPtr getMapDescription(){
-      if(bin_.breaks_.size() > 0){
+        // if(bin_.breaks_.size() > 0){
           descript_->mass_ = bin_.breaks_;
-        }
+        //}
       return descript_;
     }
 

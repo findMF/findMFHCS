@@ -69,7 +69,7 @@ namespace ralab
         {
           return NULL;
         }
-      return NULL;
+      
     }
   };
   //end LCMSImageReader

@@ -145,7 +145,7 @@ namespace ralab
           {
             result.push_back(result[result.size()-1] + by );
           }
-        else if( result.size() > length)
+        else
           {
             result.resize(length);
           }

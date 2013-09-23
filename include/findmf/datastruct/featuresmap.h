@@ -12,9 +12,6 @@
 
 #include "findmf/datastruct/featurereadadapterfm.h"
 
-//#include "application/featuresqlwriter.h"
-
-
 namespace ralab{
   //returns with idx
 

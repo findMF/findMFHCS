@@ -3,8 +3,6 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-
-
 #ifndef FEATUREFINDER_H
 #define FEATUREFINDER_H
 

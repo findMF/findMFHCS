@@ -69,8 +69,10 @@ namespace ralab
           TN differences //!< An integer indicating the order of the difference.
           )
       {
-        if(std::distance( begin,end ) <= static_cast<int>(lag * differences) )
+		  if(std::distance( begin,end ) <= static_cast<int>(lag * differences) ){
           return(begin);
+		  }
+		  else{
         TN i = TN();
         InputIterator itmp(end) ;
         while(differences > i )
@@ -86,6 +88,7 @@ namespace ralab
             ++i ;
           }
         return(itmp);
+		  }
       }
 
     }//end base

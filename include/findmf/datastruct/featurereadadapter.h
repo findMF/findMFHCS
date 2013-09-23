@@ -4,10 +4,6 @@
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 
-//author Witold Wolski
-
-
-
 #ifndef FEATUREREADADAPTER_H
 #define FEATUREREADADAPTER_H
 

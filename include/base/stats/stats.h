@@ -27,8 +27,6 @@ namespace ralab
       //This code is taken from C++ Cookbook... 11-9 page 404
       /*!
                                 \brief Descriptive Statistics
-
-
                                 Descriptive statistics are used to describe the basic features of the data
                                 in a study. They provide simple summaries about the sample and the measures.
                                 Together with simple graphics analysis, they form the basis of virtually

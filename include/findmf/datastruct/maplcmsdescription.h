@@ -30,9 +30,10 @@ namespace ralab{
     axesT mass_; //mass vector (is used convert index to mass)
 
     MapLCMSDescription():mslevel_(0),extractionWindowMZ_(),indices_(),
-      mzRange_(),rtRange_(),retentiontime_(),mass_(){
-      mzRange_ = std::make_pair(std::numeric_limits<double>::max(),std::numeric_limits<double>::min());
-      rtRange_ = std::make_pair(std::numeric_limits<double>::max(),std::numeric_limits<double>::min());
+      mzRange_(std::make_pair(std::numeric_limits<double>::max(),std::numeric_limits<double>::min())),
+      rtRange_(std::make_pair(std::numeric_limits<double>::max(),std::numeric_limits<double>::min())),
+      retentiontime_(),mass_()
+    {
     }
 
     // use for transforming index to RT

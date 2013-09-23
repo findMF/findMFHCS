@@ -7,14 +7,10 @@
 #ifndef SWATHPROPERTIESREADER_H
 #define SWATHPROPERTIESREADER_H
 
-
-
 #include <pwiz/data/msdata/MSDataFile.hpp>
 #include <glog/logging.h>
 
-
 #include "findmf/datastruct/swathinfo.h"
-
 
 namespace ralab{
 
@@ -90,6 +86,11 @@ namespace ralab{
                       map->mzRange_.second = std::max(map->mzRange_.second, specInf.mzHigh);
                     }
                 }
+				else
+				{
+					LOG(INFO) << "unhandled ms level" << std::endl;
+				}
+		
             }
         }
     }

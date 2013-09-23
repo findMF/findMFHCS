@@ -4,13 +4,11 @@
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 
-
-
 #ifndef FEATUREPRINTER_H
 #define FEATUREPRINTER_H
 
 #include <ostream>
-//#include "datastruct/ifeatureaccess.h"
+
 #include "findmf/datastruct/featuresmap.h"
 
 namespace ralab{

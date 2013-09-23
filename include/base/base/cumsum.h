@@ -27,8 +27,8 @@ namespace ralab
           std::vector<T> & res //!<[out] cumulative sum
           )
       {
-        if(beg==end)
-          return;
+		  if(beg!=end){
+          
         res.assign(beg,end);
         typename std::vector<T>::iterator begRes = res.begin();
         typename std::vector<T>::iterator begResDelayed = begRes;
@@ -39,6 +39,7 @@ namespace ralab
           {
             *begRes += *(begResDelayed) ;
           }
+		  }
       }
 
       //in place version of cumulative sum.

@@ -64,7 +64,9 @@ namespace ralab{
 
 
         // constructor
-        Deisotoper(double ppm = 10 ):ppmError_(ppm),hydrogenMass_(1.008){}
+        Deisotoper(double ppm = 10 ):ppmError_(ppm),hydrogenMass_(1.008){
+          ie_=NULL;
+        }
 
         template<class TintI>
         Deisotoper(TintI beginz , TintI endz, double ppm = 10):

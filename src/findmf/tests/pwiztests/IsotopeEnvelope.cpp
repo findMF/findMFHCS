@@ -35,21 +35,6 @@ using namespace pwiz::chemistry;
 ostream* os_ = 0;
 
 
-void testInstantiationWithNull()
-{
-    try
-    {
-        IsotopeEnvelopeEstimator::Config config;
-        IsotopeEnvelopeEstimator estimator(config);
-    }
-    catch (...)
-    {
-        if (os_) *os_ << "Null IsotopeCalculator* check ok.\n";
-        return;
-    }
-
-    throw runtime_error("Failed to check for null IsotopeCalculator*.");
-}
 
 
 void test()
@@ -97,7 +82,7 @@ int main(int argc, char* argv[])
         myfile.open ("example.txt");
         if (argc>1 && !strcmp(argv[1],"-v")) os_ = &myfile;
         //if (os_) *os_ << "IsotopeEnvelopeEstimatorTest" << std::endl;
-        //testInstantiationWithNull();
+       
         test();
     }
     catch (exception& e)

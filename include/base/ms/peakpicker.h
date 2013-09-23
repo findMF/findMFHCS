@@ -158,12 +158,14 @@ namespace ralab{
         ralab::base::ms::SimplePicker<TReal> simplepicker_;
         ralab::base::resample::SamplingWith sw_;
         PeakIntegrator integrator_;
+        TReal intensitythreshold_;
 
         PeakPicker(TReal resolution, //!< instrument resolution
                    std::pair<TReal, TReal> & massrange, //!< mass range of spectrum
                    TReal width = 2., //!< smooth width
-                   TReal intwidth = 2. //!< integration width
-            ): resolution_(resolution),smoothwith_(width),integrationWidth_(intwidth),sw_(),integrator_(integrationWidth_)
+                   TReal intwidth = 2., //!< integration width used for area compuation
+                   TReal intensitythreshold = 10.
+            ): resolution_(resolution),smoothwith_(width),integrationWidth_(intwidth),sw_(),integrator_(integrationWidth_),intensitythreshold_(intensitythreshold)
         {
           c2d_.defBreak(massrange,ralab::base::resample::resolution2ppm(resolution));
           c2d_.getMids(resampledmz_);
@@ -174,25 +176,30 @@ namespace ralab{
         template<typename Tmass, typename Tintensity>
         void operator()(Tmass begmz, Tmass endmz, Tintensity begint )
         {
+          //determine sampling with
           double a = sw_(begmz,endmz);
+          //resmpale the spectrum
           c2d_.am_ = a;
           c2d_.convert2dense(begmz,endmz, begint, resampledintensity_);
+
+          //smooth the resampled spectrum
           ralab::base::filter::filter(resampledintensity_ , filter_ , smoothedintensity_ , true);
+          //determine zero crossings
           zerocross_.resize( smoothedintensity_.size()/2 );
           size_t nrzerocross = simplepicker_( smoothedintensity_.begin( ) , smoothedintensity_.end() , zerocross_.begin());
 
           peakmass_.resize(nrzerocross);
+          //determine mass of zerocrossing
           ralab::base::base::interpolate_linear( resampledmz_.begin() , resampledmz_.end() ,
                                                  zerocross_.begin(),  zerocross_.begin()+nrzerocross ,
                                                  peakmass_.begin());
-
+          //determine intensity
           peakint_.resize(nrzerocross);
           ralab::base::base::interpolate_cubic( smoothedintensity_.begin() , smoothedintensity_.end() ,
                                                 zerocross_.begin(),  zerocross_.begin()+nrzerocross ,
                                                 peakint_.begin());
-
+          //determine peak area
           peakarea_.resize(nrzerocross);
-
           integrator_( zerocross_.begin(), zerocross_.begin() + nrzerocross ,
                        smoothedintensity_.begin(),resampledintensity_.begin(), peakarea_.begin() );
         }

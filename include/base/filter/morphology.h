@@ -92,10 +92,8 @@ namespace OpenMS
   public:
 
     /// Constructor
-    MorphologicalFilter() :
-      struct_size_in_datapoints_(0)
-    {
-    }
+    MorphologicalFilter() :struct_size_in_datapoints_(0),buffersize_(0),buffer_(),erosionbuffer_(),dilationbuffer_()
+    {}
 
 
     /** @brief Applies the morphological filtering operation to an iterator range.

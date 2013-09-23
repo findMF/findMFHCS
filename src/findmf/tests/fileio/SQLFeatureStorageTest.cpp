@@ -5,24 +5,19 @@
 
 //#include <boost/test/included/unit_test.hpp>
 #include <boost/timer.hpp>
-//#include <boost/test/unit_test.hpp>
-//using namespace boost::unit_test;
 
 
 #include "findmf/datastruct/feature2d.h"
 #include "findmf/datastruct/rangefeature.h"
-
 #include "findmf/datastruct/featuresmap.h"
 #include "findmf/datastruct/featurewriteadapter.h"
 
 #include "findmf/fileio/spectrastreader.h"
-
 #include "findmf/fileio/sqlite/sqlfeaturetableselects.h"
 #include "findmf/fileio/sqlite/sqlfeaturertreeselect.h"
 
 #include "findmf/fileio/sqlite/sqlfeaturetable.h"
 #include "findmf/fileio/sqlite/sqlfeaturertree.h"
-
 #include "findmf/application/featuresmapsqlwriter.h"
 
 
@@ -48,7 +43,7 @@ inline void testFeatureTable2(){
     {
       // std::cout << i << std::endl;
       f2D.setID(i);
-      float n = static_cast<float>(i);
+      //float n = static_cast<float>(i);
       f2D.setCount(i);
       f2D.setMaximum(i*2);
       mzproj[3] = i;
@@ -96,7 +91,7 @@ inline void testFeatureTable(){
       // std::cout << i << std::endl;
       f2D.setID(i);
       f2D.setSwathId(i % 1000);
-      float n = static_cast<float>(i);
+      //float n = static_cast<float>(i);
       f2D.setCount(i);
       f2D.setMaximum(i*2);
 

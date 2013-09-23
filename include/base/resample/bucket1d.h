@@ -62,7 +62,7 @@ namespace ralab{
     public:
 
       /*! \Assignment */
-      const Bucket1D& operator=(const Bucket1D &rhs)
+      Bucket1D& operator=(const Bucket1D &rhs)
       {
         if (this == &rhs) // protect against invalid self-assignment
           return *this; // See "4:"

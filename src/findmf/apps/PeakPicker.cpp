@@ -34,7 +34,10 @@ struct PPParams
     resolution_(0.) ,
     smoothwidth_(1.),
     integrationwidth_(4) ,
-    filestem_(), outdir_(){
+    area_(false),
+    ppstate_(false),
+    filestem_(),
+    outdir_(){
   }
 
   //stern...
@@ -111,42 +114,42 @@ inline int defineParameters(
     else
       {
         std::cerr << "Could not find config file." << std::endl;
-        exit(0);
+        return -1;
       }
 
     if(!vmgeneral.count("in"))
       {
         std::cerr << "input file is obligatory" << std::endl;
         std::cerr << cmdloptions << "\n";
-        exit(0);
+       return -1;
       }
     if(!vmgeneral.count("out"))
       {
         std::cerr << "output file is obligatory" << std::endl;
         std::cerr << cmdloptions << "\n";
-        exit(0);
+        return -1;
       }
     if(vmgeneral.count("help"))
       {
         std::cerr << cmdloptions << "\n";
-        exit(0);
+       return -1;
       }
     if(vmgeneral.count("version"))
       {
         std::cerr << "1.0.0.3" << "\n";
-        exit(0);
+        return -1;
       }
   }
   catch(std::exception& e)
   {
     std::cerr << "error: " << e.what() << "\n";
-    exit(0);
+    return -1;
   }
   catch(...)
   {
     std::cerr << "Exception of unknown type!\n";
   }
-  return 1;
+  return 0;
 }//end parse command line
 
 
@@ -172,7 +175,9 @@ inline void analysisParameters(PPParams & ap,b_po::variables_map & vmgeneral){
 int main(int argc, char *argv[])
 {
   b_po::variables_map vmgeneral;
-  defineParameters(argc, argv, vmgeneral);
+  if(defineParameters(argc, argv, vmgeneral) != 0){
+      return 0;
+    }
   PPParams aparam;
   analysisParameters(aparam,vmgeneral);
 

@@ -25,9 +25,8 @@ namespace ralab{
           return newnrcol;
         }
       else{
-          return newnrcol+1;
+          return ++newnrcol;
         }
-      return newnrcol;
     }
 
     //get column index

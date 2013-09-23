@@ -21,7 +21,7 @@ namespace ralab
         std::vector<int32_t> idx_;//small workder vecs
         std::vector<double> weight_;
         double am_; //parameter describing the sampling width
-        Convert2Dense(double am = 0.1):bin_(),idx_(),weight_(){
+        Convert2Dense(double am = 0.1):bin_(),idx_(),weight_(),am_(){
         }
 
         /// computes split points of an map.
@@ -64,14 +64,14 @@ namespace ralab
 
               double check = 0.;
               for(std::size_t i = 0 ; i < idx_.size();++i){
-                  if((idx_[i]>=0) &(idx_[i] < (bin_.breaks_.size() - 1)))
+                  if((idx_[i]>=0) &(idx_[i] < static_cast<int32_t>(bin_.breaks_.size() - 1)))
                     {
                       double bb= intensd * weight_[i]/nr;
                       *(ass + idx_[i])  += bb;
                       check += bb;
                     }
                 }
-              //BOOST_ASSERT( fabs(check - intensd) < 1e-5 );
+              BOOST_ASSERT( fabs(check - intensd) < 1e-5 );
             }
         }//convert2dense
 

@@ -55,7 +55,7 @@ namespace ralab
         {
           if(filename.empty())
             {
-              throw std::runtime_error("no filename specified");;
+              throw std::runtime_error("no filename specified");
             }
           std::ifstream file_stream;
           file_stream.open(filename.c_str());
