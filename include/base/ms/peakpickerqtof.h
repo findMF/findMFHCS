@@ -15,6 +15,8 @@
 #include "base/base/equispaceinterpolation.h"
 #include "base/utils/readwritebin.h"
 #include "base/resample/determinebinwidth.h"
+#include "base/utils/Copy_if.h"
+
 
 namespace ralab{
   namespace base{
@@ -97,14 +99,11 @@ namespace ralab{
             }
         }
 
-
       private:
         ///exend peak to left and rigth
         template<typename TInt >
         void mextend( TInt &start, TInt &end, TInt idx) const
         {
-
-
           typedef typename std::iterator_traits<TInt>::value_type Intensitytype;
           //
           for(TInt intens = idx ; intens >= start;  --intens){
@@ -138,7 +137,6 @@ namespace ralab{
             }
         }
       };
-
 
       /// resamples spectrum, apply smoothing,
       /// determines zero crossings,
@@ -210,13 +208,24 @@ namespace ralab{
                                                     zerocross_.begin(),  zerocross_.begin()+nrzerocross ,
                                                     peakarea_.begin());
             }
+          filter();
+        }
 
+
+        //clean the masses using the threshold
+        void filter(){
+          typename std::vector<TReal>::iterator a = ralab::base::utils::Copy_if(peakarea_.begin(),peakarea_.end(),peakmass_.begin(),
+                                      peakmass_.begin(),boost::bind(std::greater<TReal>(),_1,intensitythreshold_));
+          peakmass_.resize(std::distance(peakmass_.begin(),a));
+          typename std::vector<TReal>::iterator b = ralab::base::utils::Copy_if(peakarea_.begin(),peakarea_.end(),
+                                      peakarea_.begin(),boost::bind(std::greater<TReal>(),_1,intensitythreshold_));
+          peakarea_.resize(std::distance(peakarea_.begin(),b));
+          int x = 1;
         }
 
         const std::vector<TReal> & getPeakMass(){
           return peakmass_;
         }
-
 
         const std::vector<TReal> & getPeakArea(){
           return peakarea_;

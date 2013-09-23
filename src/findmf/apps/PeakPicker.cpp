@@ -23,7 +23,7 @@ struct PPParams
   double smoothwidth_;
   uint32_t integrationwidth_;
   bool area_;
-  bool ppstate_;
+  double threshold_;
 
   std::string filestem_;
   boost::filesystem::path outdir_;
@@ -34,7 +34,7 @@ struct PPParams
     smoothwidth_(1.),
     integrationwidth_(4) ,
     area_(false),
-    ppstate_(false),
+    threshold_(10.),
     filestem_(),
     outdir_(){
   }
@@ -86,7 +86,7 @@ inline int defineParameters(
         ("smoothwidth",b_po::value<double>()->default_value(1.5),"smoothing width")
         ("intwidth", b_po::value<uint32_t>()->default_value(2),"integration width")
         ("area", b_po::value<bool>()->default_value(true),"(default 1)  otherwise store intensity")
-        ("ppstate",b_po::value<bool>()->default_value(false),"default false - writes resampled spectrum into file")
+        ("threshold", b_po::value<double>()->default_value(10.),"(default 10)  peak intensity or area threshold")
         ;
 
 
@@ -120,7 +120,7 @@ inline int defineParameters(
       {
         std::cerr << "input file is obligatory" << std::endl;
         std::cerr << cmdloptions << "\n";
-       return -1;
+        return -1;
       }
     if(!vmgeneral.count("out"))
       {
@@ -131,7 +131,7 @@ inline int defineParameters(
     if(vmgeneral.count("help"))
       {
         std::cerr << cmdloptions << "\n";
-       return -1;
+        return -1;
       }
     if(vmgeneral.count("version"))
       {
@@ -167,7 +167,7 @@ inline void analysisParameters(PPParams & ap,b_po::variables_map & vmgeneral){
   ap.smoothwidth_ = vmgeneral["smoothwidth"].as<double>();
   ap.integrationwidth_ = vmgeneral["intwidth"].as<uint32_t>();
   ap.area_ = vmgeneral["area"].as<bool>(); //do you want to store areas
-  ap.ppstate_ = vmgeneral["ppstate"].as<bool>();
+  ap.threshold_ = vmgeneral["threshold"].as<double>();
 }
 
 
@@ -187,8 +187,8 @@ int main(int argc, char *argv[])
                                         aparam.resolution_,
                                         aparam.smoothwidth_,
                                         aparam.integrationwidth_,
-                                        aparam.area_,
-                                        aparam.ppstate_
+                                        aparam.threshold_,
+                                        aparam.area_
                                         )
         );
   msdataptr_->run.spectrumListPtr = mp;

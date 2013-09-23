@@ -13,12 +13,20 @@
 ./PeakPicker --in /home/witold/testdata/ludovic/lgillet_L121127_003_p_msconvert.mzXML --out  /home/witold/testdata/ludovic/lgillet_L121127_003_p_msconvert.i.c.mzML --resolution=30000 --smoothwidth=2.5 --intwidth=2 --area=0 --ppstate=0
 
 
-./PeakPicker --in /home/witold/testdata/ludovic/lgillet_L121127_001_p_msconvert.mzXML --out  /home/witold/testdata/ludovic/lgillet_L121127_001_p_msconvert.a2.c.mzXML --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=1 --ppstate=0 &
-./PeakPicker --in /home/witold/testdata/ludovic/lgillet_L121127_002_p_msconvert.mzXML --out  /home/witold/testdata/ludovic/lgillet_L121127_002_p_msconvert.a2.c.mzXML --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=1 --ppstate=0 &
-./PeakPicker --in /home/witold/testdata/ludovic/lgillet_L121127_003_p_msconvert.mzXML --out  /home/witold/testdata/ludovic/lgillet_L121127_003_p_msconvert.a2.c.mzXML --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=1 --ppstate=0 &
+./PeakPicker --in /home/witold/testdata/ludovic/lgillet_L121127_001_p_msconvert.mzXML --out  /home/witold/testdata/ludovic/lgillet_L121127_001_p_msconvert.a3.c.mzXML --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=1 --threshold=30 &
+./PeakPicker --in /home/witold/testdata/ludovic/lgillet_L121127_002_p_msconvert.mzXML --out  /home/witold/testdata/ludovic/lgillet_L121127_002_p_msconvert.a3.c.mzXML --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=1 --threshold=30 &
+./PeakPicker --in /home/witold/testdata/ludovic/lgillet_L121127_003_p_msconvert.mzXML --out  /home/witold/testdata/ludovic/lgillet_L121127_003_p_msconvert.a3.c.mzXML --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=1 --threshold=30 &
+
+./PeakPicker --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=1 --threshold=30 --in /home/witold/testdata/ludovic/nselevse_L120327_001_msconvert_p.mzXML --out /home/witold/testdata/ludovic/nselevse_L120327_001_msconvert_p.a.mzXML &
+./PeakPicker --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=1 --threshold=30 --in /home/witold/testdata/ludovic/nselevse_L120327_010_msconvert_p.mzXML --out /home/witold/testdata/ludovic/nselevse_L120327_010_msconvert_p.a.mzXML &
+./PeakPicker --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=1 --threshold=30 --in /home/witold/testdata/ludovic/nselevse_L120327_016_msconvert_p.mzXML --out /home/witold/testdata/ludovic/nselevse_L120327_016_msconvert_p.a.mzXML &
 
 
+./PeakPicker --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=0 --threshold=30 --in /home/witold/testdata/ludovic/nselevse_L120327_001_msconvert_p.mzXML --out /home/witold/testdata/ludovic/nselevse_L120327_001_msconvert_p.i.mzXML &
+./PeakPicker --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=0 --threshold=30 --in /home/witold/testdata/ludovic/nselevse_L120327_010_msconvert_p.mzXML --out /home/witold/testdata/ludovic/nselevse_L120327_010_msconvert_p.i.mzXML &
+./PeakPicker --resolution=30000 --smoothwidth=2.5 --intwidth=4 --area=0 --threshold=30 --in /home/witold/testdata/ludovic/nselevse_L120327_016_msconvert_p.mzXML --out /home/witold/testdata/ludovic/nselevse_L120327_016_msconvert_p.i.mzXML &
 
-./PeakPicker --in /home/witold/testdata/ludovic/lgillet_L121127_003_p_msconvert.mzXML --out  /home/witold/testdata/ludovic/lgillet_L121127_003_p_msconvert.i.c.mzML --resolution=30000 --smoothwidth=2.5 --intwidth=3 --area=0 --ppstate=0
+
+./PeakPicker --in /home/witold/testdata/ludovic/lgillet_L121127_003_p_msconvert.mzXML --out  /home/witold/testdata/ludovic/lgillet_L121127_003_p_msconvert.i.c.mzML --resolution=30000 --smoothwidth=2.5 --intwidth=3 --area=0 
 
 

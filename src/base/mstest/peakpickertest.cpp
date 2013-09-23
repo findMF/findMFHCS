@@ -3,7 +3,7 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-#include "base/ms/peakpicker.h"
+#include "base/ms/peakpickerqtof.h"
 
 #include "gtest/gtest.h"
 

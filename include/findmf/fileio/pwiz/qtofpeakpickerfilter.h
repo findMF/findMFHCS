@@ -13,7 +13,7 @@
 #include "pwiz/data/msdata/SpectrumIterator.hpp"
 #include "pwiz/data/msdata/SpectrumInfo.hpp"
 #include "pwiz/data/msdata/SpectrumListWrapper.hpp"
-#include "base/ms/peakpicker.h"
+#include "base/ms/peakpickerqtof.h"
 
 namespace ralab{
   /** This is used to write the filtered spectrum list*/
@@ -22,7 +22,7 @@ namespace ralab{
     double smoothwidth_;
     uint32_t integrationWidth_;
     double intensityThreshold_;
-    bool area_;
+    bool area_; // should area or intensities be determined
 
     QTOFPeakPickerFilter(
         const pwiz::msdata::SpectrumListPtr & inner, //!< spectrum list
@@ -38,7 +38,6 @@ namespace ralab{
       intensityThreshold_(intensityThreshold),
       area_(area)
     {
-
       // add processing methods to the copy of the inner SpectrumList's data processing
       pwiz::msdata::ProcessingMethod method;
       method.order = dp_->processingMethods.size();
@@ -46,21 +45,18 @@ namespace ralab{
       if (!dp_->processingMethods.empty())
         method.softwarePtr = dp_->processingMethods[0].softwarePtr;
       dp_->processingMethods.push_back(method);
-
     }
 
-    pwiz::msdata::SpectrumPtr spectrum( std::size_t index,
-                                        bool getBinaryData ) const
+    pwiz::msdata::SpectrumPtr spectrum( std::size_t index, bool getBinaryData ) const
     {
       pwiz::msdata::SpectrumPtr specptr = inner_->spectrum(index, true);
       try
       {
-
         std::vector<double>& mzs = specptr->getMZArray()->data;
         std::vector<double>& intensities = specptr->getIntensityArray()->data;
 
-
         std::pair<double, double> range = std::make_pair(mzs.front(),mzs.back());
+        //construct peak picker
         ralab::base::ms::PeakPicker<double, ralab::base::ms::SimplePeakArea > pp(
               resolution_,
               range,
