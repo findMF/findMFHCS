@@ -18,10 +18,10 @@ include/findmf - applications PeakPicker and FindMF
 src/finmf
 
 ccmake will ask you to specify header and library locations of the following libraries:
-gtest http://code.google.com/p/googletest/
-glog http://code.google.com/p/google-glog/
-vigra http://hci.iwr.uni-heidelberg.de/vigra/
-pwiz http://proteowizard.sourceforge.net/
-soci http://soci.sourceforge.net/
+- gtest http://code.google.com/p/googletest/
+- glog http://code.google.com/p/google-glog/
+- vigra http://hci.iwr.uni-heidelberg.de/vigra/
+- pwiz http://proteowizard.sourceforge.net/
+- soci http://soci.sourceforge.net/
 
 optionally
