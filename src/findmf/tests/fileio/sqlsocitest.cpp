@@ -1,4 +1,4 @@
-#include "findmf/fileio/sqlsoci/sqlfeaturestorage.h"
+#include "findmf/fileio/sqlsoci/sqlfindmfstorage.h"
 
 
 // Copyright : ETH Zurich
@@ -15,7 +15,6 @@
 #include <vector>
 #include <algorithm>
 #include "gtest/gtest.h"
-#include "findmf/fileio/sqlsoci/sqlfeaturestorage.h"
 
 
 namespace {

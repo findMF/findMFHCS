@@ -25,7 +25,6 @@ namespace ralab{
     SQLFindMFStorage(const std::string & dblocation):dblocation_(dblocation),
       db_(soci::sqlite3,dblocation)
     {
-      openDB();
     }
 
 
@@ -36,19 +35,15 @@ namespace ralab{
       dblocation_(makelocation(output_directory,outfileprefix)),
       db_(soci::sqlite3,dblocation_)
     {
-      openDB();
     }
 
     SQLFindMFStorage():db_(),dblocation_(){}
 
-  private:
-    SQLFindMFStorage(const SQLFindMFStorage & rh){}
 
 
     //open resource (alternative constructor)
-  private:
     static std::string makelocation(const std::string & output_directory,
-                      const std::string & outfileprefix)
+                                    const std::string & outfileprefix)
     {
       boost::filesystem::path p(output_directory);
       std::string outfile1 = outfileprefix;
@@ -59,22 +54,30 @@ namespace ralab{
       return dblocation;
     }
 
+  private:
+
+    SQLFindMFStorage(const SQLFindMFStorage & rh){}
+
+
   public:
+
     //close resources RAII
     ~SQLFindMFStorage(){
       LOG(INFO) << "db closing !" ;
-      //db_.close();
+      db_.close();
     }
+
+
 
     bool isOpen(){
-     return true;//db_.open();
+      return true;//db_.open();
     }
 
-    void openDB(){
-
+    void openDB(std::string & location){
+      db_.open(soci::sqlite3,location);
     }
 
-    soci::session & getDatabase(){
+    soci::session & session(){
       return db_;
     }
 
@@ -84,7 +87,7 @@ namespace ralab{
 
     // close db
     void closeDB(){
-      //db_.close();
+      db_.close();
     }
 
     //opens transaction

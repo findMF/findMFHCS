@@ -24,4 +24,4 @@ ccmake will ask you to specify header and library locations of the following lib
 - pwiz http://proteowizard.sourceforge.net/
 - soci http://soci.sourceforge.net/
 
-optionally
+
