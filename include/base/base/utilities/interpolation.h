@@ -133,7 +133,6 @@ namespace ralab
           TReal tension_;
           TReal bias_;
           TReal epsilon_;
-          /*!\brief constructor */
           HermiteInterpolate(
               TReal tension,//!< 1 is high, 0 normal, -1 is low
               TReal bias,//!< 0 is even, positive is towards first segment, negative towards the other

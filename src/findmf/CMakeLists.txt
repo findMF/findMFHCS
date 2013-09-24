@@ -1,10 +1,16 @@
+# Copyright : ETH Zurich
+# License   : three-clause BSD license
+# Authors   : Witold Wolski
+# for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
+
 FIND_PACKAGE(Glog)
 if(Glog_FOUND)
   message(STATUS "Glog found" ${Glog_INCLUDE_DIR})
   message(STATUS "Glog found" ${Glog_LIBRARY})
   SET(inc ${inc} ${Glog_INCLUDE_DIR})
 else()
-  message(STATUS " !!!!!!!!!!!!!!!! Glog not found !!!!!!!!!!!!!!!! ")
+  message(SEND_ERROR " !!!!!!!!!!!!!!!! Glog not found !!!!!!!!!!!!!!!! ")
   return()
 endif()
 
@@ -15,7 +21,7 @@ if(Pwiz_FOUND)
   message(STATUS "Pwiz found" ${Pwiz_LIBRARY})
   SET(inc ${inc} ${Pwiz_INCLUDE_DIR})
 else()
-  message(STATUS " !!!!!!!!!!!!!!!! Pwiz not found !!!!!!!!!!!!!!!! ")
+  message(SEND_ERROR " !!!!!!!!!!!!!!!! Pwiz not found !!!!!!!!!!!!!!!! ")
   return()
 endif()
 
@@ -24,21 +30,22 @@ if(VIGRA_FOUND)
   message(STATUS "Vigra include found" ${VIGRA_INCLUDE_DIR})
   message(STATUS "Vigra library found" ${VIGRA_LIBRARY})
 else()
-  message(STATUS " !!!!!!!!!!!!!!!! Vigra not found !!!!!!!!!!!!!!!! ")
+  message(SEND_ERROR " !!!!!!!!!!!!!!!! Vigra not found !!!!!!!!!!!!!!!! ")
   return()
 endif()
 SET(inc ${inc} ${VIGRA_INCLUDE_DIR})
 
+FIND_PACKAGE(Soci)
+if(Soci_FOUND)
+  message(STATUS "Soci include found" ${Soci_INCLUDE_DIR})
+  message(STATUS "Soci library found" ${Soci_LIBRARY})
+else()
+  message(SEND_ERROR " !!!!!!!!!!!!!!!! Soci not found !!!!!!!!!!!!!!!! ")
+  return()
+endif()
+SET(inc ${inc} ${Soci_INCLUDE_DIR})
+message(STATUS "inc with soci :::::::::::::"  ${inc})
 
-#FIND_PACKAGE(Soci)
-#if(SOCI_FOUND)
-#  message(STATUS "Vigra include found" ${SOCI_INCLUDE_DIR})
-#  message(STATUS "Vigra library found" ${SOCI_LIBRARY})
-#else()
-#  message(STATUS " !!!!!!!!!!!!!!!! Soci not found !!!!!!!!!!!!!!!! ")
-#  return()
-#endif()
-#SET(inc ${inc} ${SOCI_INCLUDE_DIR})
 
 
 FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtSql REQUIRED)
@@ -48,7 +55,6 @@ message( STATUS "<<<<<<<<<<<<<<QTQTsrc  ${QT_LIBRARIES} QTQT>>>>>>>>>>>>")
 #message(STATUS "incincincincinc")
 #message(STATUS "inc directory in src = ${inc}")
 #message(STATUS "incincincincinc")
-
 
 ADD_SUBDIRECTORY(application)
 ADD_SUBDIRECTORY(apps)

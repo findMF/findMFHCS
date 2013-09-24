@@ -1,4 +1,7 @@
-#Author : Witold Wolski
+# Copyright : ETH Zurich
+# License   : three-clause BSD license
+# Authors   : Witold Wolski
+# for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 include_directories(${inc})
 link_directories( ${VIGRA_LIBRARY} ${Glog_LIBRARY})

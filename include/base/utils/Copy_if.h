@@ -12,7 +12,7 @@ namespace ralab{
     namespace utils{
 
       template <class InputIterator,class InputIterator2, class OutputIterator, class Predicate>
-      OutputIterator Copy_if(
+      OutputIterator copy_if(
           InputIterator first,
           InputIterator last,
           InputIterator2 source,
@@ -33,7 +33,7 @@ namespace ralab{
       }
 
       template <class InputIterator,class InputIterator2, class OutputIterator, class Predicate>
-      OutputIterator Copy_if_not(
+      OutputIterator copy_if_not(
           InputIterator first,
           InputIterator last,
           InputIterator2 source,
@@ -53,7 +53,7 @@ namespace ralab{
         return result;
       }
 
-      /*! \brief Copy_if
+      /*! \brief copy_if
 
              Implementation of copy_if as suggested
              in Efficient STL (Scott Meyers) item 37.
@@ -61,7 +61,7 @@ namespace ralab{
       template < typename InputIterator,
                  typename OutputIterator,
                  typename Predicate >
-      OutputIterator Copy_if(
+      OutputIterator copy_if(
           InputIterator begin,
           InputIterator end,
           OutputIterator destBegin,
@@ -81,7 +81,7 @@ namespace ralab{
         return destBegin;
       }
 
-      /*! \brief Copy_if_not for containers
+      /*! \brief copy_if_not for containers
 
                         Implementation of copy_if as suggested
                         in Efficient STL (Scott Meyers) item 37.
@@ -89,7 +89,7 @@ namespace ralab{
       template < typename InputIterator,
                  typename OutputIterator,
                  typename Predicate >
-      OutputIterator Copy_if_not(
+      OutputIterator copy_if_not(
           InputIterator begin,
           InputIterator end,
           OutputIterator destBegin,

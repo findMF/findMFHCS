@@ -1,7 +1,10 @@
-#Author : Witold Wolski
+# Copyright : ETH Zurich
+# License   : three-clause BSD license
+# Authors   : Witold Wolski
+# for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 include_directories(${inc})
-link_directories(${Glog_LIBRARY})
+link_directories(${Glog_LIBRARY} ${Gtest_LIBRARY})
 
 message(STATUS ">>>>>>> ${Boost_LIBRARIES} >>>>")
 
@@ -12,11 +15,14 @@ TARGET_LINK_LIBRARIES(sqlfeaturestoragetest  ${QT_LIBRARIES} ${Boost_LIBRARIES} 
 ADD_EXECUTABLE(featureTable featureTable.cpp )
 TARGET_LINK_LIBRARIES(featureTable  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog)
 
-ADD_EXECUTABLE(testRtree testRtree.cpp )
+ADD_EXECUTABLE( testRtree testRtree.cpp )
 TARGET_LINK_LIBRARIES(testRtree  ${QT_LIBRARIES} ${Boost_LIBRARIES})
 
 ADD_EXECUTABLE(SQLFacadeTest SQLFacadeTest.cpp )
 TARGET_LINK_LIBRARIES(SQLFacadeTest  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog)
+
+ADD_EXECUTABLE(sqlsocitest sqlsocitest.cpp )
+TARGET_LINK_LIBRARIES(sqlsocitest  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog gtest)
 
 
 ENABLE_TESTING()

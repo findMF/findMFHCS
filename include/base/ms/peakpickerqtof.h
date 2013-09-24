@@ -214,10 +214,10 @@ namespace ralab{
 
         //clean the masses using the threshold
         void filter(){
-          typename std::vector<TReal>::iterator a = ralab::base::utils::Copy_if(peakarea_.begin(),peakarea_.end(),peakmass_.begin(),
+          typename std::vector<TReal>::iterator a = ralab::base::utils::copy_if(peakarea_.begin(),peakarea_.end(),peakmass_.begin(),
                                       peakmass_.begin(),boost::bind(std::greater<TReal>(),_1,intensitythreshold_));
           peakmass_.resize(std::distance(peakmass_.begin(),a));
-          typename std::vector<TReal>::iterator b = ralab::base::utils::Copy_if(peakarea_.begin(),peakarea_.end(),
+          typename std::vector<TReal>::iterator b = ralab::base::utils::copy_if(peakarea_.begin(),peakarea_.end(),
                                       peakarea_.begin(),boost::bind(std::greater<TReal>(),_1,intensitythreshold_));
           peakarea_.resize(std::distance(peakarea_.begin(),b));
           int x = 1;

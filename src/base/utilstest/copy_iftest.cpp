@@ -46,10 +46,10 @@ namespace {
 
     std::vector<double> res;
 
-    ralab::base::utils::Copy_if(x,x+sizeof(x)/sizeof(double),std::back_inserter(res),boost::bind(std::less<double>(), _1, 2 ) );
+    ralab::base::utils::copy_if(x,x+sizeof(x)/sizeof(double),std::back_inserter(res),boost::bind(std::less<double>(), _1, 2 ) );
     ASSERT_EQ(res.size(),4);
     res.clear();
-    ralab::base::utils::Copy_if_not(x,x+sizeof(x)/sizeof(double),std::back_inserter(res),boost::bind(std::less<double>(), _1, 2 ) );
+    ralab::base::utils::copy_if_not(x,x+sizeof(x)/sizeof(double),std::back_inserter(res),boost::bind(std::less<double>(), _1, 2 ) );
     ASSERT_EQ(res.size(),8);
     res.clear();
   }
@@ -61,13 +61,13 @@ namespace {
     double y[] = {2,4,6,2,4,6,2,4,6,2,4,6};
 
     std::vector<double> res;
-    ralab::base::utils::Copy_if(x,x+sizeof(x)/sizeof(double),y,
+    ralab::base::utils::copy_if(x,x+sizeof(x)/sizeof(double),y,
                                 std::back_inserter(res),
                                 boost::bind(std::less<double>(), _1, 2 ) );
     ASSERT_EQ(res.size(),4);
     ASSERT_EQ(res[0],2);
     res.clear();
-    ralab::base::utils::Copy_if_not(x,x+sizeof(x)/sizeof(double),y,
+    ralab::base::utils::copy_if_not(x,x+sizeof(x)/sizeof(double),y,
                                     std::back_inserter(res),boost::bind(std::less<double>(), _1, 2 ) );
     ASSERT_EQ(res.size(),8);
     ASSERT_EQ(res[0],4);

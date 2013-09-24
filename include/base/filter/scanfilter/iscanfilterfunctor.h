@@ -23,7 +23,7 @@ namespace ralab
         /*!	\brief	Scan filter functor.
     */
         template <typename TReal>
-        struct IScanFilterFunctor
+        struct IScanFilter
         {
           typedef TReal value_type;
           //virtual int32_t operator()(std::vector<TReal> & vector) = 0;
@@ -35,12 +35,12 @@ namespace ralab
 
           virtual int32_t operator()(std::vector<TReal> & in) = 0;
 
-          virtual boost::shared_ptr<IScanFilterFunctor < TReal > > clone() = 0;
-          virtual ~IScanFilterFunctor(){}
+          virtual boost::shared_ptr<IScanFilter < TReal > > clone() = 0;
+          virtual ~IScanFilter(){}
         };
 
-        typedef boost::shared_ptr<IScanFilterFunctor<double> > IScanFilterFunctorDoublePtr;
-        typedef boost::shared_ptr<IScanFilterFunctor<float> > IScanFilterFunctorFloatPtr;
+        typedef boost::shared_ptr<IScanFilter<double> > IScanFilterFunctorDoublePtr;
+        typedef boost::shared_ptr<IScanFilter<float> > IScanFilterFunctorFloatPtr;
       }
     }
 

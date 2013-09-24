@@ -16,7 +16,7 @@ namespace ralab{
 
 
         template <typename TReal, template <typename Telem> class Tfunctor>
-        class TransformFilter: public IScanFilterFunctor<TReal>
+        class TransformFilter: public IScanFilter<TReal>
         {
           std::string name_; //!< name of filter
         public:
@@ -26,9 +26,9 @@ namespace ralab{
           {}
 
           /*!\brief Clone */
-          boost::shared_ptr< IScanFilterFunctor<TReal> > clone()
+          boost::shared_ptr< IScanFilter<TReal> > clone()
           {
-            return boost::shared_ptr< IScanFilterFunctor<TReal> >(new TransformFilter<TReal, Tfunctor >(*this) );
+            return boost::shared_ptr< IScanFilter<TReal> >(new TransformFilter<TReal, Tfunctor >(*this) );
           }
 
 

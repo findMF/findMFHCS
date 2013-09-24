@@ -51,7 +51,6 @@ namespace ralab
         // Define a uniform random number distribution which produces "double"
         // values between 0 and 1 (0 inclusive, 1 exclusive).
       public:
-        /*!\brief Constructor */
         Uniform(
             double min, //!< lower limit of distribution
             double max, //!< upper limit of distribution

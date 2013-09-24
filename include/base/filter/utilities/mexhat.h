@@ -25,7 +25,7 @@ namespace ralab{
       */
         template<typename TReal >
         struct Mexican_Hat: std::unary_function< TReal, TReal> {
-          /*! \brief Constructor */
+
           Mexican_Hat(
               TReal mu, //!< mean
               TReal sigma //!<standard deviation

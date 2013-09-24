@@ -1,3 +1,8 @@
+# Copyright : ETH Zurich
+# License   : three-clause BSD license
+# Authors   : Witold Wolski
+# for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
 FIND_PATH(Pwiz_INCLUDE_DIR pwiz/Version.hpp)
 FIND_LIBRARY(Pwiz_LIBRARY NAMES pwiz)
 

@@ -25,7 +25,6 @@ namespace ralab{
         template<typename TReal>
         struct Gauss : std::unary_function <TReal, TReal> {
 
-          /*! \brief Constructor */
           Gauss(TReal mu, TReal sigma)
             :mu_(mu),
               sigma_(sigma)
@@ -54,7 +53,7 @@ namespace ralab{
       */
         template<typename TReal>
         struct Gauss_1deriv : std::unary_function< TReal ,TReal > {
-          /*! \brief Constructor */
+
           Gauss_1deriv(
               TReal mu//!< mean
               , TReal sigma //!< sigma

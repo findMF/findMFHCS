@@ -1,3 +1,8 @@
+# Copyright : ETH Zurich
+# License   : three-clause BSD license
+# Authors   : Witold Wolski
+# for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
 #moc headers are going here
 SET(widget_HEADERS renderthread.h mandelbrotwidget.h)
 QT4_WRAP_CPP(transition_HEADERS_MOC ${widget_HEADERS})

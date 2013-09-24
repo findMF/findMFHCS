@@ -1,8 +1,10 @@
-#Author : Witold Wolski
+# Copyright : ETH Zurich
+# License   : three-clause BSD license
+# Authors   : Witold Wolski
+# for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 include_directories(${inc})
 link_directories(${Gtest_LIBRARY})
-
 
 ADD_EXECUTABLE(simplepickertest simplepickertest.cpp )
 TARGET_LINK_LIBRARIES(simplepickertest  ${Boost_LIBRARIES} gtest)

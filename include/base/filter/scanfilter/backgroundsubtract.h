@@ -26,22 +26,19 @@ namespace ralab
       \tparam base type
     */
         template < typename TReal >
-        struct BackgroundSubtract : IScanFilterFunctor< TReal >
+        struct BackgroundSubtract : IScanFilter< TReal >
         {
           uint32_t pwm_;
           OpenMS::MorphologicalFilter<TReal> morphfilter_;
           std::vector<TReal> worker_;
-          /*!\brief Constructor */
-          BackgroundSubtract
+           BackgroundSubtract
           (
               uint32_t pwm = 5 //!<
               ):
             pwm_(pwm),morphfilter_()
           {}
 
-          /*!\brief Copy Constructor
-                        */
-          BackgroundSubtract
+         BackgroundSubtract
           (
               const BackgroundSubtract & rhs //!<
               ):
@@ -50,9 +47,9 @@ namespace ralab
           {}
 
           /*!\brief clone*/
-          boost::shared_ptr<IScanFilterFunctor<TReal > > clone()
+          boost::shared_ptr<IScanFilter<TReal > > clone()
           {
-            return boost::shared_ptr<IScanFilterFunctor <TReal > >
+            return boost::shared_ptr<IScanFilter <TReal > >
                 (
                   new BackgroundSubtract<TReal>(*this)
                   );

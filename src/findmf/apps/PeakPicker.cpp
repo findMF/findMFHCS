@@ -151,7 +151,6 @@ inline int defineParameters(
   return 0;
 }//end parse command line
 
-
 inline void analysisParameters(PPParams & ap,b_po::variables_map & vmgeneral){
   if(vmgeneral.count("in"))
     {
@@ -169,7 +168,6 @@ inline void analysisParameters(PPParams & ap,b_po::variables_map & vmgeneral){
   ap.area_ = vmgeneral["area"].as<bool>(); //do you want to store areas
   ap.threshold_ = vmgeneral["threshold"].as<double>();
 }
-
 
 int main(int argc, char *argv[])
 {

@@ -1,3 +1,8 @@
+# Copyright : ETH Zurich
+# License   : three-clause BSD license
+# Authors   : Witold Wolski
+# for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
 FIND_PATH(Soci_INCLUDE_DIR soci/soci.h)
 FIND_LIBRARY(Soci_LIBRARY NAMES soci)
 

@@ -1,3 +1,8 @@
+# Copyright : ETH Zurich
+# License   : three-clause BSD license
+# Authors   : Witold Wolski
+# for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
 FIND_PACKAGE(Gtest)
 if(Gtest_FOUND)
   message(STATUS "Gtest found" ${Gtest_INCLUDE_DIR})

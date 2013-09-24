@@ -44,8 +44,7 @@ namespace ralab{
 
   public:
 
-    ///Alternate constructor
-    LCMSImageReader(std::string & filename,
+   LCMSImageReader(std::string & filename,
                     double ppm = 100,
                     uint32_t rt2sum=1
         ):

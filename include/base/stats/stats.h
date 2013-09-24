@@ -82,7 +82,6 @@ namespace ralab
       template<typename TReal, uint32_t N>
       struct DiffNthPowerWeight : std::binary_function< TReal , TReal , TReal>
       {
-        //constructor
         DiffNthPowerWeight(TReal x): m_AverageMass(x){};
         TReal operator()(TReal value , TReal weight)
         {

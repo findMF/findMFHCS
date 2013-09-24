@@ -1,3 +1,8 @@
+# Copyright : ETH Zurich
+# License   : three-clause BSD license
+# Authors   : Witold Wolski
+# for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
 FIND_PATH(VIGRA_INCLUDE_DIR vigra/accessor.hxx)
 FIND_LIBRARY(VIGRA_LIBRARY NAMES vigraimpex)
 
