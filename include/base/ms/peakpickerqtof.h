@@ -178,6 +178,9 @@ namespace ralab{
         template<typename Tmass, typename Tintensity>
         void operator()(Tmass begmz, Tmass endmz, Tintensity begint )
         {
+          typename std::iterator_traits<Tintensity>::value_type minint = *std::upper_bound(begint,begint+std::distance(begmz,endmz),0.1);
+          TReal threshold = static_cast<TReal>(minint) * intensitythreshold_;
+
           //determine sampling with
           double a = sw_(begmz,endmz);
           //resmpale the spectrum
@@ -208,19 +211,21 @@ namespace ralab{
                                                     zerocross_.begin(),  zerocross_.begin()+nrzerocross ,
                                                     peakarea_.begin());
             }
-          filter();
+          if(threshold > 0.01){
+              filter(threshold);
+            }
         }
 
 
         //clean the masses using the threshold
-        void filter(){
+        void filter(TReal threshold){
           typename std::vector<TReal>::iterator a = ralab::base::utils::copy_if(peakarea_.begin(),peakarea_.end(),peakmass_.begin(),
-                                      peakmass_.begin(),boost::bind(std::greater<TReal>(),_1,intensitythreshold_));
+                                                                                peakmass_.begin(),boost::bind(std::greater<TReal>(),_1,threshold));
           peakmass_.resize(std::distance(peakmass_.begin(),a));
           typename std::vector<TReal>::iterator b = ralab::base::utils::copy_if(peakarea_.begin(),peakarea_.end(),
-                                      peakarea_.begin(),boost::bind(std::greater<TReal>(),_1,intensitythreshold_));
+                                                                                peakarea_.begin(),boost::bind(std::greater<TReal>(),_1,threshold));
           peakarea_.resize(std::distance(peakarea_.begin(),b));
-          int x = 1;
+          //int x = 1;
         }
 
         const std::vector<TReal> & getPeakMass(){

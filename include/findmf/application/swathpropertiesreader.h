@@ -86,11 +86,11 @@ namespace ralab{
                       map->mzRange_.second = std::max(map->mzRange_.second, specInf.mzHigh);
                     }
                 }
-				else
-				{
-					LOG(INFO) << "unhandled ms level" << std::endl;
-				}
-		
+              else
+                {
+                  LOG(INFO) << "unhandled ms level" << std::endl;
+                }
+
             }
         }
     }

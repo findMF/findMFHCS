@@ -20,11 +20,12 @@ namespace ralab{
 
     soci::session db_;
     std::string dblocation_;
-
+soci::statement st_;
     //open resources
     SQLFindMFStorage(const std::string & dblocation):dblocation_(dblocation),
       db_(soci::sqlite3,dblocation)
     {
+      st_.get_affected_rows()
     }
 
 

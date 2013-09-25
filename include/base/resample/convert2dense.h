@@ -71,7 +71,7 @@ namespace ralab
                       check += bb;
                     }
                 }
-              BOOST_ASSERT( fabs(check - intensd) < 1e-5 );
+              BOOST_ASSERT( fabs(check - intensd) < 1e-3 );
             }
         }//convert2dense
 

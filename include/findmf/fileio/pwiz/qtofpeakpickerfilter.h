@@ -50,12 +50,32 @@ namespace ralab{
     pwiz::msdata::SpectrumPtr spectrum( std::size_t index, bool getBinaryData ) const
     {
       pwiz::msdata::SpectrumPtr specptr = inner_->spectrum(index, true);
+      //if (!pwiz::msdata::msLevelsToPeakPick_.contains(s->cvParam(MS_ms_level).valueAs<int>()))
+      //  return specptr;
+
+      std::vector<pwiz::msdata::CVParam>& cvParams = specptr->cvParams;
+      std::vector<pwiz::msdata::CVParam>::iterator itr = std::find(cvParams.begin(), cvParams.end(), pwiz::msdata::MS_profile_spectrum);
+
+      // return non-profile spectra as-is
+      // (could have been acquired as centroid, or vendor may have done the centroiding)
+      if (itr == cvParams.end())
+        return specptr;
+
+      // make sure the spectrum has binary data
+      if (!specptr->getMZArray().get() || !specptr->getIntensityArray().get())
+        specptr = inner_->spectrum(index, true);
+
+      // replace profile term with centroid term
+      std::vector<pwiz::msdata::CVParam>& cvParams2 = specptr->cvParams;
+      *(std::find(cvParams2.begin(), cvParams2.end(), pwiz::msdata::MS_profile_spectrum)) = pwiz::msdata::MS_centroid_spectrum;
+
       try
       {
         std::vector<double>& mzs = specptr->getMZArray()->data;
         std::vector<double>& intensities = specptr->getIntensityArray()->data;
 
         std::pair<double, double> range = std::make_pair(mzs.front(),mzs.back());
+
         //construct peak picker
         ralab::base::ms::PeakPicker<double, ralab::base::ms::SimplePeakArea > pp(
               resolution_,
@@ -67,7 +87,6 @@ namespace ralab{
               );
 
         pp( mzs.begin(), mzs.end(), intensities.begin());
-
 
         mzs.assign(pp.getPeakMass().begin(),pp.getPeakMass().end());
         intensities.assign(pp.getPeakArea().begin(),
@@ -87,19 +106,4 @@ namespace ralab{
 
 
 #endif // QTOFPEAKPICKERFILTER_H
-//if(false)
-//  {
-//    std::string mzsf = "mz";
-//    mzsf += boost::lexical_cast<std::string>(index);
-//    mzsf += ".bin";
-//    std::string intf = "int";
-//    intf += boost::lexical_cast<std::string>(index);
-//    intf += ".bin";
 
-//    ralab::base::utils::writeBin(mzs,mzsf);
-//    ralab::base::utils::writeBin(intensities,intf);
-
-//    std::string file = "x" ;
-//    file += boost::lexical_cast<std::string>(index);
-//    pp.write(file);
-//  }

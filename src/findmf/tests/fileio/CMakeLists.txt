@@ -21,8 +21,8 @@ TARGET_LINK_LIBRARIES(testRtree  ${QT_LIBRARIES} ${Boost_LIBRARIES})
 ADD_EXECUTABLE(SQLFacadeTest SQLFacadeTest.cpp )
 TARGET_LINK_LIBRARIES(SQLFacadeTest  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog)
 
-ADD_EXECUTABLE(sqlsocitest sqlsocitest.cpp )
-TARGET_LINK_LIBRARIES(sqlsocitest  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog gtest)
+#ADD_EXECUTABLE(sqlsocitest sqlsocitest.cpp )
+#TARGET_LINK_LIBRARIES(sqlsocitest  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog gtest)
 
 
 ENABLE_TESTING()
