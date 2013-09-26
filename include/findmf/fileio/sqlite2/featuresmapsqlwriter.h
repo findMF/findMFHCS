@@ -13,17 +13,16 @@
 #include <boost/shared_ptr.hpp>
 
 
-#include "findmf/fileio/sqlite/sqlfeaturetable.h"
-#include "findmf/fileio/sqlite/sqlfeaturertree.h"
-#include "findmf/fileio/sqlite/sqlmapinfotable.h"
-#include "findmf/fileio/sqlite/sqlfeaturestorage.h"
+#include "findmf/fileio/sqlite2/sqlfeaturetable.h"
+#include "findmf/fileio/sqlite2/sqlfeaturertree.h"
+#include "findmf/fileio/sqlite2/sqlmapinfotable.h"
+#include "findmf/fileio/sqlite2/sqlfeaturestorage.h"
 
 #include "findmf/datastruct/featuresmap.h"
 
 
 namespace ralab
 {
-  /** Concrete visitor */
   class FeaturesMapSQLWriter //: public IFeatureVistor
   {
     SQLFeatureStorage sfstorage_;
@@ -63,10 +62,10 @@ namespace ralab
       mapid_(0)
     {}
 
-
     std::string & getDBLocation(){
       return sfstorage_.getDBLocation();
     }
+
 
     //create tables
     void createTables(){
@@ -75,41 +74,33 @@ namespace ralab
       smapinfotable_.createTable();
     }
 
+  private:
+
     //prepare the insert
+
     void prepareInserts(){
       sftreetable_.prepareInsertAuto();
       smapinfotable_.prepareInsert();
       sftable_.prepareInsert();
     }
 
-    void transaction(){
-      sfstorage_.transaction();
-    }
 
     void commit(){
       sfstorage_.commit();
     }
+
 
     //call it once per LCMS map
     void storeTableInfo(MapLCMSDescriptionPtr mlcmsd){
       mapid_ = smapinfotable_.insert(mlcmsd);
     }
 
-    //visitor method which writes the features
-    void visit(ralab::IFeatureAllAccess & feature) override {
-      uint32_t runningid_ = sftreetable_.insertFeature(feature);
-      sftable_.insertFeature(feature,runningid_,mapid_);
-    }
-
-    bool isValid(){
-      return sfstorage_.db_.isValid();
-    }
-
+  public:
     ///
     ///\todo think to make it simpler.
     /// This method was required to protect write acces into sql lite databse
     ///
-    void write2SQL( FeaturesMap & featuresMap )
+    void write( FeaturesMap & featuresMap )
     {
       boost::timer time;
       this->prepareInserts();
@@ -124,16 +115,13 @@ namespace ralab
           uint32_t runningid_ = sftreetable_.insertFeature(x);
           sftable_.insertFeature(x,runningid_,mapid_);
         }
-
       sfstorage_.commit();
-
     }
 
     //check if storage open
     bool isOpen(){
       return sfstorage_.isOpen();
     }
-
 
     ~FeaturesMapSQLWriter(){
       //sfstorage_.closeDB();

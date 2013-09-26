@@ -18,7 +18,7 @@
 
 #include "findmf/application/featuresmapprinter.h"
 #include "parseargExtract.h"
-#include "findmf/application/featuresmapsqlwriterfacade.h"
+#include "findmf/fileio/sqlite2/featuresmapsqlwriterfacade.h"
 #include "findmf/algo/vigra/featurefinder.h"
 
 #include "toolparameters.h"

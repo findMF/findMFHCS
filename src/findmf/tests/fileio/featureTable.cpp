@@ -11,8 +11,8 @@
 
 #include <iostream>
 #include "findmf/datastruct/maplcmsdescription.h"
-#include "findmf/fileio/sqlite/sqlfeaturestorage.h"
-#include "findmf/fileio/sqlite/sqlmapinfotable.h"
+#include "findmf/fileio/sqlite2/sqlfeaturestorage.h"
+#include "findmf/fileio/sqlite2/sqlmapinfotable.h"
 
 
 

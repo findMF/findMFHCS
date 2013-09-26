@@ -6,7 +6,7 @@
 
 //#include <boost/test/included/unit_test.hpp>
 
-#include "findmf/application/featuresmapsqlwriterfacade.h"
+#include "findmf/fileio/sqlite2/featuresmapsqlwriterfacade.h"
 
 #include <iostream>
 #include <stdexcept>

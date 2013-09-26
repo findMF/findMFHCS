@@ -9,7 +9,7 @@
 #include <string>
 #include <tbb/tbb.h>
 
-#include "findmf/application/featuresmapsqlwriter.h"
+#include "findmf/fileio/sqlite2/featuresmapsqlwriter.h"
 
 namespace ralab{
 
@@ -24,17 +24,15 @@ namespace ralab{
       db_location_(folder), db_name_(stem)
     {}
 
-
     void createDatabase(){
       FeaturesMapSQLWriter fw(db_location_,db_name_);
       fw.createTables();
     }
 
-
     void writeSQL2(FeaturesMap & featuresMap){
       FreeListMutexType::scoped_lock lock(freeListMutex_);
       FeaturesMapSQLWriter fw(db_location_,db_name_);
-      fw.write2SQL(featuresMap);
+      fw.write(featuresMap);
     }
 
   };

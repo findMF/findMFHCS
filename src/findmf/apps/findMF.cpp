@@ -20,7 +20,7 @@
 #include "findmf/fileio/helperfunctions.h"
 #include "parseargExtract.h"
 
-#include "findmf/application/featuresmapsqlwriterfacade.h"
+#include "findmf/fileio/sqlite2/featuresmapsqlwriterfacade.h"
 #include "findmf/application/lcmsimagefilter.h"
 
 #include "toolparameters.h"

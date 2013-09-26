@@ -13,12 +13,12 @@
 #include "findmf/datastruct/featurewriteadapter.h"
 
 #include "findmf/fileio/spectrastreader.h"
-#include "findmf/fileio/sqlite/sqlfeaturetableselects.h"
-#include "findmf/fileio/sqlite/sqlfeaturertreeselect.h"
+#include "findmf/fileio/sqlite2/sqlfeaturetableselects.h"
+#include "findmf/fileio/sqlite2/sqlfeaturertreeselect.h"
 
-#include "findmf/fileio/sqlite/sqlfeaturetable.h"
-#include "findmf/fileio/sqlite/sqlfeaturertree.h"
-#include "findmf/application/featuresmapsqlwriter.h"
+#include "findmf/fileio/sqlite2/sqlfeaturetable.h"
+#include "findmf/fileio/sqlite2/sqlfeaturertree.h"
+#include "findmf/fileio/sqlite2/featuresmapsqlwriter.h"
 
 
 inline void testFeatureTable2(){

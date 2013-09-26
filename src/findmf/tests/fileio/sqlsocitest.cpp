@@ -1,6 +1,4 @@
-#include "findmf/fileio/sqlsoci/sqlfindmfstorage.h"
-
-
+//#include "findmf/fileio/sqlsoci/sqlfindmfstorage.h"
 // Copyright : ETH Zurich
 // License   : three-clause BSD license
 // Authors   : Witold Wolski
@@ -9,9 +7,6 @@
 
 // Raplace ClassName with the name of the class to test...
 // Test one class per unit.
-
-#include "base/base/cumsum.h"
-
 #include <vector>
 #include <algorithm>
 #include "gtest/gtest.h"
@@ -23,6 +18,7 @@ namespace {
   protected:
     SQLSociTest(){}
   };
+
 
   TEST_F(SQLSociTest,testDBcreation)
   {
