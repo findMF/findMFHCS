@@ -67,10 +67,6 @@ namespace ralab{
       projectionStart_ = projectionStart;
       std::vector<float> positions_;
       ralab::base::base::seq(projection_.size(),positions_);
-
-      // std::vector<float> mzproj(mzprojection_.begin(),mzprojection_.end());
-      // std::transform(mzproj.begin(),mzproj.end(),mzproj.begin(),boost::bind(pow,_1,2.));
-
       average_ = ralab::stats::WeightedAverage(positions_,projection_);
       variance_ = ralab::stats::VarWeight(positions_,projection_, average_);
       float sd =sqrt( variance_ );

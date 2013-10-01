@@ -15,32 +15,36 @@
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 
-
 /*! \file ReadWriteLine.h
 \brief Read from Write in Lines File
 */
 
 namespace ralab
 {
-  namespace base{
+  namespace base
+  {
     namespace utils
     {
-
-      /*!\ Write lines to file */
-      template<typename T> bool writeLines
-      (
-          const std::vector<T> & source //!<[in] vector of lines to write
-          ,const std::string & dest //!<[out] name of file
-          )
-      {
-        std::fstream file(dest.c_str(), std::ios::out); //open connection
-        writeLines(source,file);
-        file.close();
-        return true;
+      /*!\brief read file into string
+      */
+      inline std::string read(const std::string & filename){
+        std::ifstream in(filename.c_str() , std::ios::in | std::ios::binary);
+        if( in )
+          {
+            std::string contents;
+            in.seekg(0, std::ios::end);
+            contents.resize(in.tellg());
+            in.seekg(0, std::ios::beg);
+            in.read(&contents[0], contents.size());
+            in.close();
+            return(contents);
+          }
+        throw std::logic_error("connection not open!");
       }
 
       /*!\brief write lines to a connection */
-      template<typename T> bool writeLines
+      template<typename T>
+      void writeLines
       (
           const std::vector<T> & source //!< [in] vector of lines to write
           ,std::fstream & dest //!<[out] file stream
@@ -53,7 +57,20 @@ namespace ralab
                 dest << source[i] << std::endl;
               }
           }
-        return true;
+
+      }
+
+      /*!\ Write lines to file */
+      template<typename T>
+      void writeLines
+      (
+          const std::vector<T> & source //!<[in] vector of lines to write
+          ,const std::string & dest //!<[out] name of file
+          )
+      {
+        std::fstream file(dest.c_str(), std::ios::out); //open connection
+        writeLines(source,file);
+        file.close();
       }
 
 
@@ -61,7 +78,7 @@ namespace ralab
       /*! \brief Read some or all text lines from a file.
             */
       template<typename T>
-      bool readLines(
+      void readLines(
           const std::string & sScanFile //!<[in] file name
           , std::vector<T> & res //!<[out] the lines
           , int n=-1 //!< Integer. The (maximal) number of lines to read. Negative values indicate that one should read up to the end of the connection.
@@ -75,23 +92,24 @@ namespace ralab
 
             if(n <= 0) // read until end of file
               {
-                while(!file.eof())
+
+                for( std::string line; std::getline( file, line ); )
                   {
-                    file >> line;
                     res.push_back(boost::lexical_cast<T>(line));
-                    line.clear();
                   }
+
+
                 file.close();
               }
             else // read until and of file or until line n
               {
-                while(!file.eof() && i < static_cast<unsigned int>(n))
+                for( std::string line; std::getline( file, line ) && i < static_cast<unsigned int>(n); )
                   {
-                    file >> line;
-                    res.push_back( boost::lexical_cast<T>(line) );
-                    line.clear();
+                    res.push_back(boost::lexical_cast<T>(line));
                     i++;
                   }
+
+
                 file.close();
               }
 
@@ -100,14 +118,10 @@ namespace ralab
               {
                 res.resize(res.size()-1);
               }
-            return true;
+            return;
           }//end if file.is_open()
-        return false;
+        throw std::logic_error("connection not open!");
       }
-      /*! \brief Read some or all text lines from a connection.
-            */
-
-      /*!@}*/
     }//end namespace fileio
   }//end namespace ralab
 }

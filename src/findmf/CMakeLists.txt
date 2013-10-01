@@ -4,17 +4,6 @@
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 
-FIND_PACKAGE(Glog)
-if(Glog_FOUND)
-  message(STATUS "Glog found" ${Glog_INCLUDE_DIR})
-  message(STATUS "Glog found" ${Glog_LIBRARY})
-  SET(inc ${inc} ${Glog_INCLUDE_DIR})
-else()
-  message(SEND_ERROR " !!!!!!!!!!!!!!!! Glog not found !!!!!!!!!!!!!!!! ")
-  return()
-endif()
-
-
 FIND_PACKAGE(Pwiz)
 if(Pwiz_FOUND)
   message(STATUS "Pwiz found" ${Pwiz_INCLUDE_DIR})
@@ -22,6 +11,17 @@ if(Pwiz_FOUND)
   SET(inc ${inc} ${Pwiz_INCLUDE_DIR})
 else()
   message(SEND_ERROR " !!!!!!!!!!!!!!!! Pwiz not found !!!!!!!!!!!!!!!! ")
+  return()
+endif()
+
+
+FIND_PACKAGE(Glog)
+if(Glog_FOUND)
+  message(STATUS "Glog found" ${Glog_INCLUDE_DIR})
+  message(STATUS "Glog found" ${Glog_LIBRARY})
+  SET(inc ${inc} ${Glog_INCLUDE_DIR})
+else()
+  message(SEND_ERROR " !!!!!!!!!!!!!!!! Glog not found !!!!!!!!!!!!!!!! ")
   return()
 endif()
 
@@ -45,7 +45,10 @@ else()
 endif()
 SET(inc ${inc} ${Soci_INCLUDE_DIR})
 message(STATUS "inc with soci :::::::::::::"  ${inc})
+message(STATUS "${Soci_LIBRARY}")
+SET(SOCI_LIBS "soci_sqlite3 soci_core")
 
+message(STATUS ${SOCI_LIBS})
 
 
 FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtSql REQUIRED)
@@ -55,7 +58,7 @@ message( STATUS "<<<<<<<<<<<<<<QTQTsrc  ${QT_LIBRARIES} QTQT>>>>>>>>>>>>")
 #message(STATUS "incincincincinc")
 #message(STATUS "inc directory in src = ${inc}")
 #message(STATUS "incincincincinc")
-
+ADD_SUBDIRECTORY(utils)
 ADD_SUBDIRECTORY(application)
 ADD_SUBDIRECTORY(apps)
 ADD_SUBDIRECTORY(appsqt)

@@ -17,12 +17,12 @@ namespace ralab{
 
         /*Background subtraction filter utilities
         */
-        inline IScanFilterFunctorFloatPtr getFilterTOPHAT(
+        inline IScanFilterFloatPtr getFilterTOPHAT(
             float withRT, //!< with of chromatographic peaks
             float factor = 2.5 //!< by how much to increase
             )
         {
-          IScanFilterFunctorFloatPtr bbss(
+          IScanFilterFloatPtr bbss(
                 new ralab::base::filter::scanfilter::BackgroundSubtract<float>(static_cast<unsigned int>(withRT * factor)));
            return bbss;
         }

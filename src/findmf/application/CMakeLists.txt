@@ -5,7 +5,6 @@
 
 SET(datastruct_SOURCES lcmsimage.cpp)
 
-
 include_directories(${inc})
 link_directories(${Glog_LIBRARY})
 

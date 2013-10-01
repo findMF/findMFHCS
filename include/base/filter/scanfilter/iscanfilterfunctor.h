@@ -39,8 +39,8 @@ namespace ralab
           virtual ~IScanFilter(){}
         };
 
-        typedef boost::shared_ptr<IScanFilter<double> > IScanFilterFunctorDoublePtr;
-        typedef boost::shared_ptr<IScanFilter<float> > IScanFilterFunctorFloatPtr;
+        typedef boost::shared_ptr<IScanFilter<double> > IScanFilterDoublePtr;
+        typedef boost::shared_ptr<IScanFilter<float> > IScanFilterFloatPtr;
       }
     }
 

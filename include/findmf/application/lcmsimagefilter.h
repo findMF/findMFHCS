@@ -35,7 +35,7 @@ namespace ralab{
                             );
     }
 
-    void filterRT(LCMSImage::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFunctorFloatPtr  f ) override {
+    void filterRT(LCMSImage::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFloatPtr  f ) override {
       size_t xx = mp_.size(0);
       for( std::size_t i = 0 ; i < xx; ++i )
         {
@@ -47,7 +47,7 @@ namespace ralab{
     }
 
     //apply filter to all spectra in MZ dimension
-    void filterMZ(LCMSImage::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFunctorFloatPtr  f ) override{
+    void filterMZ(LCMSImage::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFloatPtr  f ) override{
       for(std::ptrdiff_t i = 0 ; i < mp_.size(1); ++i)
         {
           signal_.assign( mp_.bindOuter(i).begin(), mp_.bindOuter(i).end() );
@@ -71,7 +71,7 @@ namespace ralab{
       filter(mp_.getMap(),mzscale,rtscale);
       mp_.updateMax();
       if(rtpixelwidth > 0){
-          ralab::base::filter::scanfilter::IScanFilterFunctorFloatPtr sfpfRT =
+          ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfRT =
               ralab::base::filter::scanfilter::getFilterTOPHAT(
                 rtpixelwidth
                 ,factor
@@ -79,7 +79,7 @@ namespace ralab{
           filterRT(mp_.getMap(),sfpfRT);
         }
       if(mzpixelwidth > 0){
-          ralab::base::filter::scanfilter::IScanFilterFunctorFloatPtr sfpfMZ =
+          ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfMZ =
              ralab::base::filter::scanfilter::getFilterTOPHAT(
                 mzpixelwidth
                 ,factor

@@ -3,8 +3,9 @@
 # Authors   : Witold Wolski
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-#ADD_SUBDIRECTORY(denoise)
-#ADD_SUBDIRECTORY(featurefind)
+
+
+
 
 FIND_PACKAGE(Tbb)
 if(Tbb_FOUND)

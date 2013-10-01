@@ -82,8 +82,8 @@ namespace ralab
     double rtscale_;
 
 
-    MapFilter(uint32_t mzresolution, uint32_t rtresolution, double mzscale=1., double rtscale=1.):tbb::filter(parallel),
-      mzpixelwidth_(mzresolution),rtpixelwidth_(rtresolution),mzscale_(mzscale), rtscale_(rtscale)
+    MapFilter(uint32_t mzpixwidth, uint32_t rtpixwidth, double mzscale=1., double rtscale=1.):tbb::filter(parallel),
+      mzpixelwidth_(mzpixwidth),rtpixelwidth_(rtpixwidth),mzscale_(mzscale), rtscale_(rtscale)
     {
     }
 
