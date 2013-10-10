@@ -14,7 +14,7 @@
 
 #include <glog/logging.h>
 
-#include "findmf/application/lcmsimagereader.h"
+#include "findmf/fileiopwiz/lcmsimagereader.h"
 #include "findmf/algo/vigra/featurefinder.h"
 
 #include "findmf/fileio/helperfunctions.h"
@@ -23,7 +23,7 @@
 #include "findmf/fileio/sqlite2/featuresmapsqlwriterfacade.h"
 #include "findmf/application/lcmsimagefilter.h"
 
-#include "toolparameters.h"
+#include "findmf/apps/toolparameters.h"
 
 namespace ralab
 {
@@ -33,11 +33,11 @@ namespace ralab
   struct LCMSImageReaderFilter : tbb::filter{
     std::vector<std::size_t> keys;
     ralab::SwathInfoPtr sip_;
-    Params anap_;
+    ralab::findmf::apps::Params anap_;
     uint32_t count_;
 
     LCMSImageReaderFilter(
-        const Params & ap, // the analysis parameter
+        const ralab::findmf::apps::Params & ap, // the analysis parameter
         ralab::SwathInfoPtr sip // swath info pointer
         ) :tbb::filter(serial_in_order),sip_(sip), anap_(ap),count_(0)
     {
@@ -149,7 +149,7 @@ namespace ralab
   };
 }//end namespace ralab
 
-int run_pipeline( int nthreads, ralab::Params & params, ralab::SwathInfoPtr sip )
+int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::SwathInfoPtr sip )
 {
   // Create the pipeline
   tbb::pipeline pipeline;
@@ -189,7 +189,7 @@ int main(int argc, char *argv[])
   b_po::variables_map vmgeneral;
   parsecommandlineExtract(argc, argv, vmgeneral);
 
-  ralab::Params pars;
+  ralab::findmf::apps::Params pars;
   analysisParameters(pars,vmgeneral);
 
   boost::timer time;

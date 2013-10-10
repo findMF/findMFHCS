@@ -1,9 +1,12 @@
 -- all information is stored in pixel coordinates.
 -- use information in mzaxis and rtaxis to map to rt and mz and back.
 
--- basic sample information
+-- database version
+PRAGMA user_version = 0.1;
+-- database end
 PRAGMA foreign_keys = ON;
 
+-- basic sample information
 drop table if exists sample;
 CREATE TABLE sample (
 id integer primary key,
@@ -11,7 +14,6 @@ name text,
 file text,
 description text
 );
-
 
 -- table containing processing parameters
 drop table if exists softwareparam;

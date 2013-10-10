@@ -9,7 +9,7 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <fstream>
-#include "toolparameters.h"
+#include "findmf/apps/toolparameters.h"
 
 namespace b_po = boost::program_options;
 namespace b_fs = boost::filesystem;
@@ -17,7 +17,7 @@ namespace b_fs = boost::filesystem;
  *\brief parses the command line arguments using boost::program_options
 */
 
-inline void analysisParameters(ralab::Params & ap,b_po::variables_map & vmgeneral){
+inline void analysisParameters(ralab::findmf::apps::Params & ap,b_po::variables_map & vmgeneral){
   if(vmgeneral.count("in"))
     {
       ap.infile =  vmgeneral["in"].as<std::string>();

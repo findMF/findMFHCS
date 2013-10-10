@@ -15,11 +15,14 @@
 #include "pwiz/data/msdata/SpectrumIterator.hpp"
 #include "pwiz/data/msdata/SpectrumInfo.hpp"
 #include "pwiz/data/msdata/SpectrumListWrapper.hpp"
+
 #include "findmf/datastruct/lcmsimage.h"
 #include "findmf/application/RT2sum.h"
 
 
 namespace ralab{
+
+
   /** This is used to write the filtered spectrum list*/
   struct FilteredSpectrumList : pwiz::msdata::SpectrumListWrapper{
     mutable ralab::LCMSImage mmap_;

@@ -8,6 +8,9 @@
 #define SWATHPROPERTIESREADER_H
 
 #include <pwiz/data/msdata/MSDataFile.hpp>
+#include <pwiz/data/msdata/SpectrumIterator.hpp>
+#include <pwiz/data/msdata/SpectrumInfo.hpp>
+
 #include <glog/logging.h>
 
 #include "findmf/datastruct/swathinfo.h"

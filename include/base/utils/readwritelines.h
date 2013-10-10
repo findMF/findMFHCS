@@ -3,7 +3,6 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-
 #ifndef READWRITELINES_H
 #define READWRITELINES_H
 

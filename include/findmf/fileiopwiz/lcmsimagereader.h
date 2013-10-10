@@ -15,13 +15,13 @@
 #include <pwiz/data/msdata/MSDataFile.hpp>
 #include <glog/logging.h>
 
+#include "findmf/datastruct/lcmsimage.h"
+#include "findmf/datastruct/swathinfo.h"
+
+#include "findmf/fileiopwiz/swathpropertiesreader.h"
+#include "findmf/fileiopwiz/filteredspectralist.h"
 
 #include "findmf/application/RT2sum.h"
-#include "findmf/datastruct/lcmsimage.h"
-
-#include "findmf/fileio/pwiz/filteredspectralist.h"
-#include "findmf/datastruct/swathinfo.h"
-#include "findmf/application/swathpropertiesreader.h"
 
 namespace ralab{
 
@@ -30,7 +30,6 @@ namespace ralab{
 
    default initialization is performed with an file name.
   */
-
   struct LCMSImageReader{
   private:
     pwiz::msdata::MSDataPtr msdataptr_;
@@ -72,10 +71,6 @@ namespace ralab{
       //for ms1 maps we do not limit the mass range.
       getMap( 0 , 0., std::numeric_limits<double>::max(), image);
     }
-
-  private:
-
-  public:
 
     //returns ms2 map for key
     void getMap(unsigned int key,double minMass, double maxMass, LCMSImage & map_)
@@ -121,21 +116,21 @@ namespace ralab{
 
   private :
     /// Converts a sparse spec to a dense spec
-    void convert2dense(pwiz::msdata::BinaryDataArrayPtr mz,
-                       pwiz::msdata::BinaryDataArrayPtr intens,
+    void convert2dense(std::vector<double> & mz,
+                       std::vector<double> & intens,
                        std::size_t specnr,
                        LCMSImage & map_
                        ){
-      std::size_t l = mz->data.size();
+      std::size_t l = mz.size();
       for(std::size_t i = 0 ; i < (l-1) ; ++i){
 
           std::size_t bin;
-          double mass1 = mz->data[i];
-          double mass2 = mz->data[i+1];
+          double mass1 = mz[i];
+          double mass2 = mz[i+1];
           if(map_.inRange(mass1))
             {
               map_.getBin(mass1,mass2,idx_,weight_);
-              double intensd = static_cast<double>(intens->data[i]);
+              double intensd = static_cast<double>(intens[i]);
               double nr = mass2-mass1;
               for(std::size_t i = 0 ; i < idx_.size();++i){
                   map_.put(idx_[i], specnr, intensd * weight_[i]/nr );
@@ -147,8 +142,8 @@ namespace ralab{
 
     /* fills the map  */
     void fillLCMSImage(pwiz::msdata::MSDataPtr msd,
-                       const std::vector<std::size_t> & indices,
-                       LCMSImage & map_
+                       const std::vector<std::size_t> & indices, // spectrum indices
+                       LCMSImage & map_ // output map.
                        ){
       pwiz::msdata::SpectrumListPtr sl = msd->run.spectrumListPtr;
       if (sl.get())
@@ -166,7 +161,7 @@ namespace ralab{
 
               intensity = sp->getIntensityArray();
               size_t idx = rt2sum_.getCols(i);
-              convert2dense(mz, intensity, idx , map_);
+              convert2dense(mz->data, intensity->data, idx , map_);
               //std::cout << idx << " " << i << std::endl;
             }
         }

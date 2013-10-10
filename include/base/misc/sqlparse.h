@@ -1,18 +1,22 @@
 #ifndef SQLPARSE_H
 #define SQLPARSE_H
 
-namespace ralab{
-  namespace findmf{
-    namespace utils{
-      namespace utilities{
+#include <string>
 
-        //match begin of line or empty line
+///
+/// misc functions for parsing sql files.
+///
+namespace ralab{
+  namespace base{
+    namespace misc{
+
+        //find lines beginning with comment.
         struct beginMatch : std::unary_function<bool,std::string>{
-          std::string begstatement_;
-          beginMatch(const std::string & linebeg ):begstatement_(linebeg){}
+          std::string comment_;
+          beginMatch(const std::string & linebeg ):comment_(linebeg){}
           bool operator()(const std::string & bla)
           {
-            if( bla.length() == 0 || bla.compare( 0,3,begstatement_.c_str() ) == 0)
+            if( bla.length() == 0 || bla.compare( 0,comment_.size(),comment_.c_str() ) == 0)
               return true;
             else
               return false;
@@ -29,7 +33,7 @@ namespace ralab{
           }
         };
 
-        //merge str til delimiter
+        //merge strings in first last til delimiter
         template<typename Tstrit, typename Toutstr>
         void strmerge( Tstrit first, Tstrit last,  Toutstr out, std::string delimiter)
         {
@@ -52,7 +56,7 @@ namespace ralab{
         }
       }//end utilities
 
-    }
+
   }
 }
 #endif // SQLPARSE_H

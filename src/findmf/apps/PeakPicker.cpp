@@ -8,7 +8,7 @@
 #include <glog/logging.h>
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
-#include "findmf/fileio/pwiz/qtofpeakpickerfilter.h"
+#include "findmf/fileiopwiz/qtofpeakpickerfilter.h"
 
 namespace b_po = boost::program_options;
 namespace b_fs = boost::filesystem3;

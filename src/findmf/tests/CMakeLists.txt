@@ -3,6 +3,20 @@
 # Authors   : Witold Wolski
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
+FIND_PACKAGE(Soci)
+if(Soci_FOUND)
+  message(STATUS "Soci include found" ${Soci_INCLUDE_DIR})
+  message(STATUS "Soci library found" ${Soci_LIBRARY})
+else()
+  message(SEND_ERROR " !!!!!!!!!!!!!!!! Soci not found !!!!!!!!!!!!!!!! ")
+  return()
+endif()
+SET(inc ${inc} ${Soci_INCLUDE_DIR})
+message(STATUS "inc with soci :::::::::::::"  ${inc})
+message(STATUS "${Soci_LIBRARY}")
+SET(SOCI_LIBS "soci_sqlite3 soci_core")
+
+
 FIND_PACKAGE(Gtest)
 if(Gtest_FOUND)
   message(STATUS "Gtest found" ${Gtest_INCLUDE_DIR})

@@ -35,18 +35,6 @@ else()
 endif()
 SET(inc ${inc} ${VIGRA_INCLUDE_DIR})
 
-FIND_PACKAGE(Soci)
-if(Soci_FOUND)
-  message(STATUS "Soci include found" ${Soci_INCLUDE_DIR})
-  message(STATUS "Soci library found" ${Soci_LIBRARY})
-else()
-  message(SEND_ERROR " !!!!!!!!!!!!!!!! Soci not found !!!!!!!!!!!!!!!! ")
-  return()
-endif()
-SET(inc ${inc} ${Soci_INCLUDE_DIR})
-message(STATUS "inc with soci :::::::::::::"  ${inc})
-message(STATUS "${Soci_LIBRARY}")
-SET(SOCI_LIBS "soci_sqlite3 soci_core")
 
 message(STATUS ${SOCI_LIBS})
 

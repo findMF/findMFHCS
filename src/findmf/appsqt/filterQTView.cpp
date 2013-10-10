@@ -7,7 +7,7 @@
 #include <iostream>
 #include <boost/filesystem.hpp>
 
-#include "findmf/application/lcmsimagereader.h"
+#include "findmf/fileiopwiz/lcmsimagereader.h"
 #include "findmf/application/lcmsimagefilter.h"
 #include "findmf/application/featuresmapprinter.h"
 
@@ -15,13 +15,12 @@
 #include "findmf/fileio/helperfunctions.h"
 #include "../apps/parseargExtract.h"
 #include "findmf/algo/vigra/featurefinder.h"
-//!<
 
 int main(int argc, char *argv[])
 {
   b_po::variables_map vmgeneral;
   parsecommandlineExtract(argc, argv, vmgeneral);
-  ralab::Params aparam;
+  ralab::findmf::apps::Params aparam;
   analysisParameters(aparam,vmgeneral);
   int res = 0;
   boost::filesystem::path p1,p2;

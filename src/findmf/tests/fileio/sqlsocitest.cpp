@@ -26,20 +26,12 @@ namespace {
   };
 
 
-
-
   TEST_F(SQLSociTest,testDBcreation)
   {
-
-    //std::string y = "-- ";
     std::string testfile("../sql/dbschema.sql");
-
-
     std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
-
     std::string bla = "heresql.sqlite";
     soci::session sql_( soci::sqlite3 , bla );
-
     for(size_t i = 0 ; i < lines.size() ; ++i)
       {
         try{
@@ -50,20 +42,6 @@ namespace {
       }
     sql_.commit();
     sql_.close();
-  }
-
-  TEST_F(SQLSociTest,testCumProd)
-  {
-  }
-
-  TEST_F(SQLSociTest,testCumMin)
-  {
-
-  }
-
-  TEST_F(SQLSociTest,testCumMax)
-  {
-
   }
 
 }//end namespace UNITTEST
