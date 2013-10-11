@@ -12,14 +12,14 @@
 
 namespace ralab
 {
-  inline ralab::LCMSImagePtr makeImageforTranstion(
+  inline ralab::findmf::datastruct::LCMSImagePtr makeImageforTranstion(
       ralab::TransitionGroup t,
-      ralab::LCMSImage& map,
+      ralab::findmf::datastruct::LCMSImage & map,
       double acc
       )
   {
     t.sort();
-    ralab::LCMSImagePtr out = ralab::LCMSImagePtr(new ralab::LCMSImage());
+    ralab::findmf::datastruct::LCMSImagePtr out = ralab::findmf::datastruct::LCMSImagePtr(new ralab::findmf::datastruct::LCMSImage());
     {
       std::vector<double> x;
       map.getMZ(x);
@@ -36,16 +36,16 @@ namespace ralab
     return out;
   }
 
-  inline ralab::LCMSImagePtr createImageForAllTranstionsInSwath(
+  inline ralab::findmf::datastruct::LCMSImagePtr createImageForAllTranstionsInSwath(
       ralab::SpectrastTSVReader & stsv,
       uint32_t swath,
-      ralab::LCMSImage & map,
+      ralab::findmf::datastruct::LCMSImage & map,
       double acc
       )
   {
     std::vector<uint32_t> keys;
     stsv.getTransitionsForSwath(swath , keys);
-    ralab::LCMSImagePtr out = ralab::LCMSImagePtr(new ralab::LCMSImage());
+    ralab::findmf::datastruct::LCMSImagePtr out = ralab::findmf::datastruct::LCMSImagePtr(new ralab::findmf::datastruct::LCMSImage());
     {
       std::vector<double> x;
       map.getMZ(x);
@@ -56,12 +56,10 @@ namespace ralab
     for(int i = 0 ; i < 1  ; ++i){
         ralab::TransitionGroup t;
         stsv.getTranstionGroup(keys[i],t);
-        ralab::LCMSImagePtr tmp = makeImageforTranstion(t,map,acc);
+        ralab::findmf::datastruct::LCMSImagePtr tmp = makeImageforTranstion(t,map,acc);
       }
     return out;
   }
 }
 
 #endif // TRANSITIONHELPERS_H
-
-

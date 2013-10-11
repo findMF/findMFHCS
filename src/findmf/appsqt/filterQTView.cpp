@@ -42,19 +42,19 @@ int main(int argc, char *argv[])
         }
 
       double ppm = aparam.ppm;
-      ralab::LCMSImageReader sm(aparam.infile, ppm, aparam.rt2sum_ );
-      ralab::LCMSImage mp;
+      ralab::findmf::LCMSImageReader sm(aparam.infile, ppm, aparam.rt2sum_ );
+      ralab::findmf::datastruct::LCMSImage mp;
       sm.getMap( 0 , aparam.minmass, aparam.maxmass, mp);
       LOG(INFO) << " " << mp.getMZsize() << " " << mp.getRTsize();
 
-      ralab::LCMSImage mp2( mp );
+      ralab::findmf::datastruct::LCMSImage mp2( mp );
       {
-        ralab::LCMSImageFilter imgf;
+        ralab::findmf::LCMSImageFilter imgf;
         imgf.filterMap( mp2 , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
       }
-      ralab::FeatureFinder ff;
+      ralab::findmf::FeatureFinder ff;
       ff.findFeature( mp2.getMap(), aparam.minintensity );
-      ralab::FeaturesMap map;
+      ralab::findmf::datastruct::FeaturesMap map;
       map.setMapDescription(mp2.getMapDescription());
       ff.extractFeatures(map,mp2.getMap());
       //this writes the accessor....

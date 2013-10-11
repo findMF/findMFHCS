@@ -31,7 +31,8 @@ inline void testMapInfoTable(){
   rtproj.push_back(3.);
   rtproj.push_back(4.);
 
-  ralab::MapLCMSDescriptionPtr x = ralab::MapLCMSDescriptionPtr(new ralab::MapLCMSDescription());
+  ralab::findmf::datastruct::MapLCMSDescriptionPtr x =
+      ralab::findmf::datastruct::MapLCMSDescriptionPtr(new ralab::findmf::datastruct::MapLCMSDescription());
 
   x->mslevel_ = 1;
   x->extractionWindowMZ_.first = 100.;
@@ -46,7 +47,7 @@ inline void testMapInfoTable(){
 
   std::string dbname("../data/fmap.sqlite");
   ralab::SQLFeatureStorage sfs(dbname);
-  ralab::SQLMapInfoTable fsqlw(sfs.getDatabase() );
+  ralab::findmf::SQLMapInfoTable fsqlw(sfs.getDatabase() );
   fsqlw.createTable();
   fsqlw.executeTestQuery();
   fsqlw.prepareInsert();

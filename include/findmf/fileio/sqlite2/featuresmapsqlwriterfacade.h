@@ -12,30 +12,32 @@
 #include "findmf/fileio/sqlite2/featuresmapsqlwriter.h"
 
 namespace ralab{
+  namespace findmf{
 
-  struct FeaturesMapSQLWriterFacade{
-    typedef tbb::spin_mutex FreeListMutexType;
-    FreeListMutexType freeListMutex_;
-    std::string db_location_;
-    std::string db_name_;
+    struct FeaturesMapSQLWriterFacade{
+      typedef tbb::spin_mutex FreeListMutexType;
+      FreeListMutexType freeListMutex_;
+      std::string db_location_;
+      std::string db_name_;
 
-    FeaturesMapSQLWriterFacade(const std::string & folder,
-              const std::string & stem):freeListMutex_(),
-      db_location_(folder), db_name_(stem)
-    {}
+      FeaturesMapSQLWriterFacade(const std::string & folder,
+                                 const std::string & stem):freeListMutex_(),
+        db_location_(folder), db_name_(stem)
+      {}
 
-    void createDatabase(){
-      FeaturesMapSQLWriter fw(db_location_,db_name_);
-      fw.createTables();
-    }
+      void createDatabase(){
+        FeaturesMapSQLWriter fw(db_location_,db_name_);
+        fw.createTables();
+      }
 
-    void writeSQL2(FeaturesMap & featuresMap){
-      FreeListMutexType::scoped_lock lock(freeListMutex_);
-      FeaturesMapSQLWriter fw(db_location_,db_name_);
-      fw.write(featuresMap);
-    }
+      void writeSQL2(datastruct::FeaturesMap & featuresMap){
+        FreeListMutexType::scoped_lock lock(freeListMutex_);
+        FeaturesMapSQLWriter fw(db_location_,db_name_);
+        fw.write(featuresMap);
+      }
 
-  };
+    };
+  }
 }
 
 #endif // SQLFACADE_H

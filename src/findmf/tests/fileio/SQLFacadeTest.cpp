@@ -14,7 +14,7 @@
 
 inline void testMapInfoTable(){
 
-  ralab::FeaturesMapSQLWriterFacade sql("test","bla");
+  ralab::findmf::FeaturesMapSQLWriterFacade sql("test","bla");
   sql.createDatabase();
 }
 

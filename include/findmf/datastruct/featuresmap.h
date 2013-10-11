@@ -13,53 +13,58 @@
 #include "findmf/datastruct/featurereadadapterfm.h"
 
 namespace ralab{
-  //returns with idx
+  namespace findmf{
+    namespace datastruct{
 
-  /** List of features */
-  struct FeaturesMap
-  {
+      //returns with idx
 
-    typedef std::vector<Feature2D > Features;
-  private:
-    MapLCMSDescriptionPtr mapdescription_; // map description
+      /** List of features */
+      struct FeaturesMap
+      {
 
-    Features features_;
-    std::pair<double, double> swathw_; //the rttimes
+        typedef std::vector<Feature2D > Features;
+      private:
+        MapLCMSDescriptionPtr mapdescription_; // map description
 
-  public :
+        Features features_;
+        std::pair<double, double> swathw_; //the rttimes
+      public :
 
-    FeaturesMap(){}
-    FeaturesMap(MapLCMSDescriptionPtr mapdescription ):mapdescription_(mapdescription), features_(){}
-    FeaturesMap(std::size_t & s):features_(s){}
+        FeaturesMap(){}
+        FeaturesMap(MapLCMSDescriptionPtr mapdescription ):mapdescription_(mapdescription), features_(){}
+        FeaturesMap(std::size_t & s):features_(s){}
 
 
-    void setMapDescription(MapLCMSDescriptionPtr map){
-      mapdescription_ = map;
+        void setMapDescription(MapLCMSDescriptionPtr map){
+          mapdescription_ = map;
+        }
+
+        MapLCMSDescriptionPtr getMapDescription(){
+          return mapdescription_;
+        }
+
+        void resize(std::size_t size ){
+          features_.resize(size);
+        }
+
+        Feature2D & at(std::size_t i){
+          return features_[i];
+        }
+
+        std::size_t size(){
+          return features_.size();
+        }
+
+
+        Features & features(){
+          return features_;
+        }
+
+
+      };
     }
+  }
 
-    MapLCMSDescriptionPtr getMapDescription(){
-      return mapdescription_;
-    }
-
-    void resize(std::size_t size ){
-      features_.resize(size);
-    }
-
-    Feature2D & at(std::size_t i){
-      return features_[i];
-    }
-
-    std::size_t size(){
-      return features_.size();
-    }
-
-
-    Features & features(){
-      return features_;
-    }
-
-
-  };
 }
 
 

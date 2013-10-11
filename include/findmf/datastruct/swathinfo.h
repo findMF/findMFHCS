@@ -18,48 +18,52 @@
 #include "findmf/datastruct/maplcmsdescription.h"
 
 namespace ralab{
+  namespace findmf{
+    namespace datastruct{
 
-  struct SwathInfo{
-  private:
-    typedef std::map< uint32_t , MapLCMSDescriptionPtr > SwathIndic;
-    SwathIndic swathindices_;
+      struct SwathInfo{
+      private:
+        typedef std::map< uint32_t , MapLCMSDescriptionPtr > SwathIndic;
+        SwathIndic swathindices_;
 
-  public:
-    void getKeys(std::vector<std::size_t> & keys){
-      SwathInfo::SwathIndic::iterator it,end;
-      it = swathindices_.begin();
-      end = swathindices_.end();
-      for( ; it!=end ; ++it ){
-          keys.push_back(it->first);
-        }
-    }
-
-    void getMapForKey(unsigned int key, MapLCMSDescriptionPtr maplcms ){
-      SwathIndic::iterator it = swathindices_.find(key);
-      if(it != swathindices_.end())
-        {
-          maplcms = it->second;
-        }
-    }
-
-    /** use to update */
-    MapLCMSDescriptionPtr getMapForKey(uint32_t key){
-      SwathIndic::iterator it = swathindices_.find(key);
-      if(it != swathindices_.end())
-        {
-          MapLCMSDescriptionPtr map = it->second;
-          return map;
-        }
-      else{
-          //
-          std::pair<SwathIndic::iterator,bool> it = swathindices_.insert(std::make_pair(key, MapLCMSDescriptionPtr(new MapLCMSDescription())));
-          return it.first->second;
+      public:
+        void getKeys(std::vector<std::size_t> & keys){
+          SwathInfo::SwathIndic::iterator it,end;
+          it = swathindices_.begin();
+          end = swathindices_.end();
+          for( ; it!=end ; ++it ){
+              keys.push_back(it->first);
+            }
         }
 
-    }
-  };
+        void getMapForKey(unsigned int key, MapLCMSDescriptionPtr maplcms ){
+          SwathIndic::iterator it = swathindices_.find(key);
+          if(it != swathindices_.end())
+            {
+              maplcms = it->second;
+            }
+        }
 
-  typedef boost::shared_ptr<SwathInfo> SwathInfoPtr;
-}//
+        /** use to update */
+        MapLCMSDescriptionPtr getMapForKey(uint32_t key){
+          SwathIndic::iterator it = swathindices_.find(key);
+          if(it != swathindices_.end())
+            {
+              MapLCMSDescriptionPtr map = it->second;
+              return map;
+            }
+          else{
+              //
+              std::pair<SwathIndic::iterator,bool> it = swathindices_.insert(std::make_pair(key, MapLCMSDescriptionPtr(new MapLCMSDescription())));
+              return it.first->second;
+            }
+
+        }
+      };
+
+      typedef boost::shared_ptr<SwathInfo> SwathInfoPtr;
+    }//
+  }
+}
 
 #endif

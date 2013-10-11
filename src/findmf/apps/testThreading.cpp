@@ -26,13 +26,13 @@ namespace ralab
   //process single swath or ms map.
   struct SwathProcessor{
     std::vector< std::size_t > keys;
-    ralab::SwathInfoPtr sip_ ;
+    ralab::findmf::datastruct::SwathInfoPtr sip_ ;
     ralab::findmf::apps::Params anap_ ;
-    FeaturesMapSQLWriterFacade sqlwriter_ ;
+    ralab::findmf::FeaturesMapSQLWriterFacade sqlwriter_;
 
     SwathProcessor( const ralab::findmf::apps::Params & ap, // the analysis parameter
-                    ralab::SwathInfoPtr sip, // swath info pointer
-                    FeaturesMapSQLWriterFacade &sfs
+                    ralab::findmf::datastruct::SwathInfoPtr sip, // swath info pointer
+                    ralab::findmf::FeaturesMapSQLWriterFacade &sfs
                     ) :sip_(sip), anap_(ap),sqlwriter_(sfs)
     {
       anap_.prepareOutputFile();
@@ -41,10 +41,10 @@ namespace ralab
     //test ...
     void operator()(void) {
       sip_->getKeys(keys);
-      ralab::LCMSImage mp;
+      ralab::findmf::datastruct::LCMSImage mp;
       try{
         pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));
-        ralab::LCMSImageReader tmp ( msdataptr , sip_ , anap_.ppm );
+        ralab::findmf::LCMSImageReader tmp ( msdataptr , sip_ , anap_.ppm );
         LOG(INFO) << "processing map : " << anap_.i_ << " with key : " << keys[anap_.i_] ;
         tmp.getMap( keys[ anap_.i_ ] , anap_.minmass,anap_.maxmass, mp );
       }catch(std::exception &e){
@@ -54,7 +54,7 @@ namespace ralab
 
       boost::timer time;
       try{
-        LCMSImageFilter imgf;
+        ralab::findmf::LCMSImageFilter imgf;
         imgf.filterMap(mp, anap_.mzpixelwidth , anap_.rtpixelwidth, anap_.mzscale , anap_.rtscale );
         boost::filesystem::path x = anap_.outdir_ / anap_.filestem_ ;
         mp.write_image( x.string() );
@@ -66,12 +66,12 @@ namespace ralab
       }
 
       LOG(INFO) << "map i : " << anap_.i_ << " read and filtered : " << time.elapsed() ;
-      ralab::FeaturesMap map;
+      ralab::findmf::datastruct::FeaturesMap map;
       map.setMapDescription( mp.getMapDescription() );
 
       try{
         time.restart();
-        ralab::FeatureFinder ff;
+        ralab::findmf::FeatureFinder ff;
         ff.findFeature( mp.getMap(), 10. );
         LOG(INFO) << "swath i : " << anap_.i_ << ">>> computed segments done " << time.elapsed() << std::endl;
         ff.extractFeatures(map,mp.getMap());
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 
   ///// prepare single feature storage for all lscms's
   pars.prepareOutputFile();
-  ralab::FeaturesMapSQLWriterFacade facade(pars.outdir,pars.filestem_);
+  ralab::findmf::FeaturesMapSQLWriterFacade facade(pars.outdir,pars.filestem_);
   facade.createDatabase();
 
   //////
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
   pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(pars.infile));
   LOG(INFO)  << "time to open file " << time.elapsed() << std::endl;
 
-  ralab::SwathPropertiesReader swathPropReader(msdataptr);
+  ralab::findmf::SwathPropertiesReader swathPropReader(msdataptr);
   std::vector<std::size_t> keys;
   swathPropReader.getSwathInfo()->getKeys(keys);
 
@@ -141,13 +141,11 @@ int main(int argc, char *argv[])
 
   tbb::task_scheduler_init init(pars.nrthreads);
   std::vector<ralab::SwathProcessor> tasks;
-
   for(std::size_t i = 0 ; i < keys.size() ; ++i){
       pars.i_ = i;
       tasks.push_back(ralab::SwathProcessor( pars , swathPropReader.getSwathInfo(),facade));
     }
   tbb::parallel_for_each(tasks.begin(),tasks.end(),invoker<ralab::SwathProcessor>());
-
   return 0;
 }
 

@@ -25,20 +25,19 @@
 
 #include "findmf/apps/toolparameters.h"
 
-namespace ralab
-{
+namespace ralab{
 
 
   //process single swath or ms map
   struct LCMSImageReaderFilter : tbb::filter{
     std::vector<std::size_t> keys;
-    ralab::SwathInfoPtr sip_;
+    ralab::findmf::datastruct::SwathInfoPtr sip_;
     ralab::findmf::apps::Params anap_;
     uint32_t count_;
 
     LCMSImageReaderFilter(
         const ralab::findmf::apps::Params & ap, // the analysis parameter
-        ralab::SwathInfoPtr sip // swath info pointer
+        ralab::findmf::datastruct::SwathInfoPtr sip // swath info pointer
         ) :tbb::filter(serial_in_order),sip_(sip), anap_(ap),count_(0)
     {
       anap_.prepareOutputFile(false);
@@ -54,10 +53,10 @@ namespace ralab
       if(count_ < keys.size())
         {
 
-          ralab::LCMSImage * mp = new ralab::LCMSImage();
+          ralab::findmf::datastruct::LCMSImage * mp = new ralab::findmf::datastruct::LCMSImage();
           {
             pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));
-            ralab::LCMSImageReader tmp (msdataptr,sip_ , anap_.ppm , anap_.rt2sum_);
+            ralab::findmf::LCMSImageReader tmp (msdataptr,sip_ , anap_.ppm , anap_.rt2sum_);
             LOG(INFO) << "processing map : " << count_ << " with key : " << keys[count_] ;
             tmp.getMap( keys[count_] ,anap_.minmass , anap_.maxmass, *mp);
             count_++;
@@ -89,12 +88,12 @@ namespace ralab
 
     void * operator()(void * queue)
     {
-      ralab::LCMSImage * mp = static_cast<ralab::LCMSImage *>(queue);
+      ralab::findmf::datastruct::LCMSImage * mp = static_cast<ralab::findmf::datastruct::LCMSImage *>(queue);
 
       boost::timer time;
       time.restart();
       LOG(INFO) << "> start Image filtering";
-      LCMSImageFilter imgf;
+      ralab::findmf::LCMSImageFilter imgf;
       imgf.filterMap( *mp , mzpixelwidth_ , rtpixelwidth_ , mzscale_, rtscale_);
       LOG(INFO) << "> Image Filtered in : " << time.elapsed() << " [s]";
       return mp;
@@ -111,13 +110,13 @@ namespace ralab
 
     void * operator()(void * image)
     {
-      ralab::LCMSImage * mp = static_cast<ralab::LCMSImage *>(image);
+      ralab::findmf::datastruct::LCMSImage * mp = static_cast<ralab::findmf::datastruct::LCMSImage *>(image);
 
       boost::timer time;
       time.restart();
       LOG(INFO) << "> start Feature Find";
-      ralab::FeatureFinder ff;
-      ralab::FeaturesMap * map = new ralab::FeaturesMap();
+      ralab::findmf::FeatureFinder ff;
+      ralab::findmf::datastruct::FeaturesMap * map = new ralab::findmf::datastruct::FeaturesMap();
       map->setMapDescription(mp->getMapDescription());
 
       ff.findFeature( mp->getMap(), minitensity_ );
@@ -129,27 +128,26 @@ namespace ralab
   };
 
   struct WriteSQLFeatures : tbb::filter{
-    ralab::FeaturesMapSQLWriterFacade facade_;
+    ralab::findmf::FeaturesMapSQLWriterFacade facade_;
     WriteSQLFeatures(const std::string & outdir,const std::string & filestem):tbb::filter(serial_in_order),
       facade_( outdir , filestem )
     {}
 
     void * operator()(void * map)
     {
-      ralab::FeaturesMap * fm = static_cast<ralab::FeaturesMap *>( map );
+      ralab::findmf::datastruct::FeaturesMap * fm = static_cast<ralab::findmf::datastruct::FeaturesMap *>( map );
 
       boost::timer time;
       LOG(INFO) << "> start writing SQL" ;
       facade_.writeSQL2(*fm);
       LOG(INFO) << "> Features Written in " << time.elapsed() << " [s]";
       delete fm;
-
       return NULL;
     }
   };
 }//end namespace ralab
 
-int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::SwathInfoPtr sip )
+int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::findmf::datastruct::SwathInfoPtr sip )
 {
   // Create the pipeline
   tbb::pipeline pipeline;
@@ -196,7 +194,7 @@ int main(int argc, char *argv[])
   LOG(INFO) << "start reading properties" << std::endl;
   pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(pars.infile));
   LOG(INFO)  << "time to open file " << time.elapsed() << std::endl;
-  ralab::SwathPropertiesReader swathPropReader(msdataptr);
+  ralab::findmf::SwathPropertiesReader swathPropReader(msdataptr);
 
   LOG(INFO)  << "time required to scan through file :" << time.elapsed() << std::endl;
 
@@ -204,7 +202,7 @@ int main(int argc, char *argv[])
 
   LOG(INFO) << "ppm = " << pars.ppm ;
   pars.prepareOutputFile(false);
-  ralab::FeaturesMapSQLWriterFacade facade(pars.outdir,pars.filestem_);
+  ralab::findmf::FeaturesMapSQLWriterFacade facade(pars.outdir,pars.filestem_);
   facade.createDatabase();
   LOG(INFO) << "run pipeline with :" << pars.nrthreads ;
   run_pipeline(pars.nrthreads,pars,swathPropReader.getSwathInfo() );

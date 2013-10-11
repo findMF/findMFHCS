@@ -13,7 +13,7 @@
 /** test an explain LCMSImage interface. */
 Map2test::Map2test()
 {
-  ralab::LCMSImagePtr ip = ralab::LCMSImagePtr( new ralab::LCMSImage() );
+  ralab::findmf::datastruct::LCMSImagePtr ip = ralab::findmf::datastruct::LCMSImagePtr( new ralab::findmf::datastruct::LCMSImage() );
   try{
     ip->read("../data/napedro_L120420_009_SWfitered.tiff");
     std::cout << ip->getRTsize() << " " << ip->getMZsize() << " " << ip->getNrCols()

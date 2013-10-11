@@ -9,7 +9,7 @@ if(Gtest_FOUND)
   message(STATUS "Gtest found" ${Gtest_LIBRARY})
   SET(inc ${inc} ${Gtest_INCLUDE_DIR})
 else()
-  message(STATUS " !!!!!!!!!!!!!!!! Gtest not found !!!!!!!!!!!!!!!! ")
+  message(STATUS "!!!!!!!!!!!!!!!! Gtest not found !!!!!!!!!!!!!!!! ")
   return()
 endif()
 

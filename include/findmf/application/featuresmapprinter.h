@@ -24,7 +24,7 @@ namespace ralab{
 
     void writeFeatures(const std::string & output_directory,
                        const std::string & outfileprefix,
-                       FeaturesMap & map
+                       findmf::datastruct::FeaturesMap & map
                        ){
       std::fstream featureAcc;
       boost::filesystem::path p(output_directory);
@@ -40,11 +40,11 @@ namespace ralab{
           printHeader(featureAcc);
 
           //iterate over feature map.
-          FeaturesMap::Features::iterator beg, end;
+          findmf::datastruct::FeaturesMap::Features::iterator beg, end;
           beg = map.features().begin();
           end = map.features().end();
           for(int i = 0;beg != end; ++beg, ++i){
-              FeatureReadAdapterFM x(*beg, map.getMapDescription());
+              findmf::datastruct::FeatureReadAdapterFM x(*beg, map.getMapDescription());
               visit( x , featureAcc);
             }
           featureAcc.close();

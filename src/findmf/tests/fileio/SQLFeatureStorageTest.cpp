@@ -36,8 +36,11 @@ inline void testFeatureTable2(){
   rtproj.push_back(3.);
   rtproj.push_back(4.);
 
-  ralab::MapLCMSDescriptionPtr x = ralab::MapLCMSDescriptionPtr(new ralab::MapLCMSDescription());
-  ralab::FeaturesMap fm(x);
+  ralab::findmf::datastruct::MapLCMSDescriptionPtr x =
+      ralab::findmf::datastruct::MapLCMSDescriptionPtr(
+        new ralab::findmf::datastruct::MapLCMSDescription()
+        );
+  ralab::findmf::datastruct::FeaturesMap fm(x);
 
   for(int i = 0 ; i < 1000; ++i)
     {
@@ -54,12 +57,13 @@ inline void testFeatureTable2(){
     }
 
   std::string dbname("../data/test2.sqlite");
-  ralab::FeaturesMapSQLWriter fsqlw(dbname);
+  ralab::findmf::FeaturesMapSQLWriter fsqlw(dbname);
   //fm.accept(fsqlw);
 }
 
 // Feature table
-inline void testFeatureTable(){
+inline void testFeatureTable()
+{
   std::cout << "testFeatureTable" << std::endl;
   ralab::SQLFeatureStorage sfs("../data/test.sqlite");
   ralab::SQLFeatureTable sfrt( sfs.getDatabase() );

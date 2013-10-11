@@ -15,9 +15,9 @@ namespace ralab{
 
   void PreliminaryTests::testImaging()
   {
-    ralab::LCMSImage ms1;
+    findmf::datastruct::LCMSImage ms1;
     ms1.read("../data/example.vx");
-    ralab::SpectrastTSVReader stsv;
+    SpectrastTSVReader stsv;
     stsv.readtable("../data/RCCcons_trans.txt");
     stsv.table2Groups();
     ralab::SwathWindowRange swR;
@@ -25,7 +25,7 @@ namespace ralab{
     std::vector<uint32_t> keys;
     swR.getKeys(keys);
     stsv.groupTransitionsBySwath(swR);
-    ralab::LCMSImagePtr sss = ralab::createImageForAllTranstionsInSwath(
+    findmf::datastruct::LCMSImagePtr sss = ralab::createImageForAllTranstionsInSwath(
           stsv,
           1,
           ms1,
@@ -34,7 +34,7 @@ namespace ralab{
   }
 
   void PreliminaryTests::testMap(){
-   ralab::LCMSImagePtr ms1 = ralab::LCMSImagePtr(new ralab::LCMSImage);
+   findmf::datastruct::LCMSImagePtr ms1 = findmf::datastruct::LCMSImagePtr(new ralab::findmf::datastruct::LCMSImage);
     ms1->read( "../data/examplems1.vx" );
     std::cout << "nr cols " <<
                  ms1->getMZsize() << "nr rows" <<

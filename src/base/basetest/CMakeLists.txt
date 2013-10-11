@@ -33,3 +33,4 @@ WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 COMMAND ${BinOut}/difftest )
 set_tests_properties(difftest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
 
+

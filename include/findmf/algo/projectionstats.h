@@ -15,8 +15,8 @@ namespace ralab{
 
   /**computes projection statistics
 */
-  struct projectionstats{
-
+  struct projectionstats
+  {
     float projectionStart_;
     float average_;
     float variance_;
