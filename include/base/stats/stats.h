@@ -197,10 +197,7 @@ namespace ralab
       skew = computeSkew(first, last, mean);
       kurt = computeKurtosisExcess(first, last, mean);
     }
-    /*@}*/
 
-    /*!\name weighted mean and standard deviation and higher moments...
-                        */
 
     /*! \brief Weighted average \f[ \sum(vValues \cdot vWeights) / \sum(vWeights) \f] */
     template< typename TReal >

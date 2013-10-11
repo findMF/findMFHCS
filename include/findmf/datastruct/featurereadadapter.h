@@ -17,11 +17,11 @@ namespace ralab{
   //
 
   struct FeatureReadAdapter : IFeatureAllAccess {
-    Feature2D & feature_;
-    ralab::projectionstats & mzstats_;
-    ralab::projectionstats & rtstats_;
+    findmf::datastruct::Feature2D & feature_;
+    ralab::findmf::projstats & mzstats_;
+    ralab::findmf::projstats & rtstats_;
 
-    FeatureReadAdapter(Feature2D & feature)
+    FeatureReadAdapter(ralab::findmf::datastruct::Feature2D & feature)
       :feature_(feature),
         mzstats_(feature.getMZStats()),
         rtstats_(feature.getRTStats())
@@ -140,14 +140,14 @@ namespace ralab{
     char * getRTProjectionData(std::size_t & size) override {
       //char * res = boost::lexical_cast<char *>(feature_.getProjectionRT());
       char * res = reinterpret_cast<char *>( &(feature_.getProjectionRT())[0] );
-      size = feature_.getProjectionRT().size() * (sizeof(Feature2D::value_type)/sizeof(char));
+      size = feature_.getProjectionRT().size() * (sizeof(findmf::datastruct::Feature2D::value_type)/sizeof(char));
       return res;
     }
 
     char * getMZProjectionData(std::size_t & size) override {
       //char * res = boost::lexical_cast<char *>(feature_.getProjectionMZ());
       char * res = reinterpret_cast<char *>( &(feature_.getProjectionMZ())[0] );
-      size = feature_.getProjectionMZ().size() * (sizeof(Feature2D::value_type)/sizeof(char));
+      size = feature_.getProjectionMZ().size() * (sizeof(findmf::datastruct::Feature2D::value_type)/sizeof(char));
       return res;
     }
 

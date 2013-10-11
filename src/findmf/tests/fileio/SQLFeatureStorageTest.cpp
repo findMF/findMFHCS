@@ -23,7 +23,7 @@
 
 inline void testFeatureTable2(){
   std::cout << "testFeatureTable2" << std::endl;
-  ralab::Feature2D f2D;
+  ralab::findmf::datastruct::Feature2D f2D;
   std::vector<float> rtproj,mzproj;
 
   mzproj.push_back(0.);
@@ -75,7 +75,7 @@ inline void testFeatureTable()
   myTimer.start();
   // do something..
   sfs.transaction();
-  ralab::Feature2D f2D;
+  ralab::findmf::datastruct::Feature2D f2D;
 
   std::vector<float> rtproj,mzproj;
   mzproj.push_back(0.);

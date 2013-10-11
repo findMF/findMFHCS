@@ -111,9 +111,34 @@ namespace ralab{
         this->createFeaturesFromStatistics( features, mac_);
         LOG(INFO)<< " >>>> created features statistics " ;
         this->extractFeaturesI( gradient , features );
+        LOG(INFO)<< " >>>> create projection stats " ;
+        this->creatProjectionStats(features);
+        LOG(INFO)<< " >>>> done " ;
+
       }
 
     private:
+      void creatProjectionStats(ralab::findmf::datastruct::FeaturesMap & map){
+        ralab::findmf::datastruct::FeaturesMap::Features::iterator beg , end ;
+        ralab::findmf::utilities::Pick picker;
+        try{
+          int count = 0;
+          for( beg = map.features().begin() ; beg != map.features().end() ; ++beg ){
+              ralab::findmf::datastruct::Feature2D &x = *beg;
+              ralab::findmf::utilities::computeStats(x.getProjectionMZ(),x.getMinMZIdx(),x.getMZStats());
+              picker.pick(x.getProjectionMZ(),x.getMZStats());
+              ralab::findmf::utilities::computeStats(x.getProjectionRT(),x.getMinRTIdx(),x.getRTStats());
+              picker.pick(x.getProjectionRT(),x.getRTStats());
+              ++count;
+              //std::cout << map.features().size() <<" " << count << " " << x.getProjectionMZ().size() << " " << x.getProjectionRT().size() << std::endl;
+            }
+        }catch(std::exception &e){
+          LOG(INFO) << e.what();
+        }
+
+        LOG(INFO) << "picking done";
+      }
+
       //method to extract the features
       void extractFeatureChain(Gradient & data,
                                ralab::featurefind::MyAccumulatorChain & acummulatorChain)
@@ -144,16 +169,16 @@ namespace ralab{
 
         DLOG(INFO) << " Length of accumulator chain " << lengthAC ;
 
-        --lengthAC;//decrease because you are skipping the background...
+        --lengthAC; //decrease because you are skipping the background...
         features.resize(lengthAC);
         for(int i=0; i < lengthAC; ++i)
           {
             int j = i + 1; // ignore background
             TinyVector<int, 2> blaImax = get< Coord< Maximum> >(chain, j);
             TinyVector<int, 2> blaImin = get< Coord< Minimum > >(chain, j);
-            int xsize = blaImax[0]-blaImin[0] + 1;
-            int ysize = blaImax[1]-blaImin[1] + 1;
-            features.features()[i] = Feature2D(
+            int xsize = blaImax[0] - blaImin[0] + 1;
+            int ysize = blaImax[1] - blaImin[1] + 1;
+            features.features()[i] = findmf::datastruct::Feature2D(
                   blaImin[0],
                 xsize,
                 blaImin[1],
@@ -172,14 +197,14 @@ namespace ralab{
 
             features.at(i).setCenterOfMassMZ(mz);
             features.at(i).setCenterOfMassRT(rt);
-            tvFloat = vigac::get<Coord<ArgMaxWeight> >(chain, j);
+            tvFloat = vigac::get< Coord< ArgMaxWeight > >(chain, j);
 
-            mz =(tvFloat[0]);
-            rt =(tvFloat[1]);
+            mz =( tvFloat[0] );
+            rt =( tvFloat[1] );
 
-            features.at(i).setMaxLocationMZ(mz);
-            features.at(i).setMaxLocationRT(rt);
-            features.at(i).setID(i);
+            features.at( i ).setMaxLocationMZ(mz);
+            features.at( i ).setMaxLocationRT(rt);
+            features.at( i ).setID(i);
           }
       }
 
