@@ -60,8 +60,15 @@ namespace ralab{
                   x+=boost::lexical_cast<std::string>(nzercross);
                   x+=" crosscount:";
                   x+=boost::lexical_cast<std::string>(crosscount);
-                  x+=__FILE__;
+                  x+=" i: ";
+                  x+= boost::lexical_cast<std::string>(i);
+                  x+=" worker size ";
+                  x+= boost::lexical_cast<std::string>( worker_.size() );
+                  x+=" : ";
                   x+=boost::lexical_cast<std::string>(__LINE__);
+                  x+=" : ";
+                  x+= __FILE__;
+
                   throw std::length_error(x.c_str());
                 }
               TReal v1 = (*pworkerBeg);

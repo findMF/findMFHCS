@@ -25,7 +25,11 @@ namespace {
 
   class SQLSociTest: public ::testing::Test{
   protected:
-    SQLSociTest(){}
+    SQLSociTest(){
+    }
+
+    virtual void SetUp(){
+    }
   };
 
 
@@ -55,13 +59,52 @@ namespace {
   TEST_F(SQLSociTest,testDBcreation2)
   {
     std::string testfile("../sql/dbschema.sql");
-    //std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
 
     std::string bla = "heresql2.sqlite";
     soci::session sql_( soci::sqlite3 , bla );
-    ralab::findmf::fileio::CreateTables(bla,testfile);
-
+    try{
+      ralab::findmf::fileio::CreateTables(bla,testfile);
+    }catch(std::exception const& e){
+      std::cout << e.what() << std::endl;
+    }
     ASSERT_TRUE(1);
+  }
+
+
+  TEST_F(SQLSociTest, testSampleInsterts)
+  {
+    std::string testfile("../sql/dbschema.sql");
+    std::string bla = "heresql3.sqlite";
+    {
+      ralab::findmf::fileio::CreateTables(bla,testfile);
+    }
+    //std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
+
+    ralab::findmf::datastruct::Instrument inst;
+    inst.analyser = "bla";
+    inst.detector = "detect";
+    inst.ionisation = "ionize";
+    inst.manufacturer = "flying horse";
+    inst.model = "newest bit of shit";
+
+    ralab::findmf::fileio::WriteSampleParams wsp("heresql3.sqlite");
+    ralab::findmf::apps::Params params;
+    params.maxmass = 1000;
+    params.minintensity = 100;
+    params.minmass = 10;
+    params.filestem_ = "blaxbla";
+
+    try{
+    for(int i = 0 ; i < 10 ; ++i){
+        uint32_t tmp = wsp.insertSample("test","greatest sample ever","test.mzML");
+        std::cout << tmp << std::endl;
+        wsp.insertInstrumentInfo(tmp, inst);
+        wsp.insertProcessParameters(tmp, params);
+      }
+    }catch(std::exception & e)
+    {
+      std::cout << e.what() << std::endl;
+    }
   }
 }//end namespace UNITTEST
 

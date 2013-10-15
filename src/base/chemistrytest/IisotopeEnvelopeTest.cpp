@@ -11,12 +11,9 @@
 
 // a sample implementation of the IisotopeEnvelope interface
 namespace ralab{
-
-
   struct IsotopeEnvelope : ralab::base::chemistry::IIsotopeEnvelope
   {
     IsotopeEnvelope(){}
-
     //just a dummy implementation
     void isotopeEnvelope(double mass, ralab::base::chemistry::MassAbundance & massabundance) const override
     {

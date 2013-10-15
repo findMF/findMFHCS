@@ -25,18 +25,11 @@ namespace ralab
     namespace utils
     {
       //This code is taken from C++ Cookbook... 11-9 page 404
-      /*!
-                                \brief Descriptive Statistics
-                                Descriptive statistics are used to describe the basic features of the data
-                                in a study. They provide simple summaries about the sample and the measures.
-                                Together with simple graphics analysis, they form the basis of virtually
-                                every quantitative analysis of data.
 
 
-                                */
-
-
-      /*! @brief nthPower */
+      /**
+        nthPower
+      */
       template<int N, typename TReal>
       TReal nthPower(TReal x) {
         TReal ret = x;
@@ -47,7 +40,8 @@ namespace ralab
       }
 
 
-      /*! \brief Functor \f[ sum + (current - mu)\f] */
+      /**
+       * Functor \f[ sum + (current - mu)\f] */
       template<typename TReal, uint32_t N>
       struct SumDiffNthPower : std::binary_function<TReal, TReal, TReal>
       {
@@ -58,14 +52,14 @@ namespace ralab
         TReal mean_;
       };
 
-      /*! \brief nth central moment \$[ mu_n = \sum((x_i - mean)^n) \$] */
+      /** nth central moment \$[ mu_n = \sum((x_i - mean)^n) \$] */
       template<class TReal, int N, class Iter_T>
       TReal nthMoment(Iter_T first, Iter_T last, TReal mean)  {
         size_t cnt = distance(first, last);
         return std::accumulate(first, last, TReal( ), SumDiffNthPower<TReal, N>(mean)) / cnt;
       }
 
-      /*! \brief \f[ X * X * W \f] */
+      /** \f[ X * X * W \f] */
       template<typename TReal>
       struct XXW : std::binary_function<TReal, TReal, TReal>
       {
@@ -75,7 +69,7 @@ namespace ralab
         TReal mean_;
       };
 
-      /*! \brief Functor for computing Nth Power differences and to multiply them with a weight.
+      /** Functor for computing Nth Power differences and to multiply them with a weight.
 
                                 computes \f[ weight \cdot (value - m_{AverageMass})^N \f]
                                 */
@@ -99,13 +93,13 @@ namespace ralab
 
 
 
-    /*! \brief variance \f[ mu_2 = 1/N \cdot \sum(x_i - \mu)^2 \f] */
+    /** variance \f[ mu_2 = 1/N \cdot \sum(x_i - \mu)^2 \f] */
     template<class TReal, class Iter_T>
     TReal computeVariance(Iter_T first, Iter_T last, TReal mean) {
       return utils::nthMoment<TReal, 2>(first, last, mean);
     }
 
-    /*! \brief variance \f[ mu_2 = 1/N \cdot \sum{(x_i - \mu)^2} \f] */
+    /** variance \f[ mu_2 = 1/N \cdot \sum{(x_i - \mu)^2} \f] */
     template<class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type  computeVariance(Iter_T first, Iter_T last) {
       typedef typename std::iterator_traits<Iter_T>::value_type TReal;
@@ -113,7 +107,7 @@ namespace ralab
       return utils::nthMoment<TReal, 2>(first, last, mean);
     }
 
-    /*! \brief unbiased variance \f[ 1/(n-1) \sum{(x - \mu)^2} \f] */
+    /** unbiased variance \f[ 1/(n-1) \sum{(x - \mu)^2} \f] */
     template<class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type computeVarianceUnbiased(Iter_T first, Iter_T last)
     {
@@ -123,14 +117,14 @@ namespace ralab
       return std::accumulate(first, last, TReal( ), utils::SumDiffNthPower<TReal, 2>(mean)) / cnt;
     }
 
-    /*! \brief standard deviation \f[ \sqrt{\mu_2} \f], with \f$ \mu_2 \f$ - second moment \sa nthMoment.  */
+    /** standard deviation \f[ \sqrt{\mu_2} \f], with \f$ \mu_2 \f$ - second moment \sa nthMoment.  */
     template<class TReal, class Iter_T>
     TReal computeStdDev(Iter_T first, Iter_T last, TReal mean) {
       return sqrt(computeVariance(first, last, mean));
     }
 
 
-    /*! \brief standard deviation \f[ \sqrt{\mu_2} \f], with \f$ \mu_2 \f$ - second moment \sa nthMoment. */
+    /** standard deviation \f[ \sqrt{\mu_2} \f], with \f$ \mu_2 \f$ - second moment \sa nthMoment. */
     template<class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type computeStdDev(Iter_T first, Iter_T last)
     {
@@ -139,7 +133,7 @@ namespace ralab
       return sqrt(computeVariance(first, last, meanVal));
     }
 
-    /*! \brief unbiased stdv \f[ \sqrt{1/(n-1) \sum(x - \mu)^2} \f] */
+    /** unbiased stdv \f[ \sqrt{1/(n-1) \sum(x - \mu)^2} \f] */
     template< class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type computeStdDevUnbiased(Iter_T first, Iter_T last)
     {
@@ -147,7 +141,7 @@ namespace ralab
       return sqrt(computeVarianceUnbiased(first, last));
     }
 
-    /*! \brief Skew \f[ \mu_3 / (\mu_2 \cdot \sqrt{\mu_2}) \f], with \f$ \mu_2 \f$ - second moment. */
+    /** Skew \f[ \mu_3 / (\mu_2 \cdot \sqrt{\mu_2}) \f], with \f$ \mu_2 \f$ - second moment. */
     template< class TReal , class Iter_T>
     TReal computeSkew(
         Iter_T begin, Iter_T end, TReal mean)
@@ -157,7 +151,7 @@ namespace ralab
       return m3 / (m2 * sqrt(m2));
     }
 
-    /*! \brief Skew \f[ \mu_3 / (\mu_2 \cdot \sqrt{(\mu_2)}) \f], with \f$ \mu_2 \f$ - second moment.  */
+    /** Skew \f[ \mu_3 / (\mu_2 \cdot \sqrt{(\mu_2)}) \f], with \f$ \mu_2 \f$ - second moment.  */
     template<class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type computeSkew(Iter_T begin, Iter_T end){
       typedef typename std::iterator_traits<Iter_T>::value_type TReal;
@@ -165,7 +159,7 @@ namespace ralab
       return (computeSkew(begin,end,meanVal));
     }
 
-    /*! \brief Kurtosis \f[ \mu_4 / (\mu_2 \cdot \mu_2) - 3 \f], with \f$ \mu_2 \f$ - second moment.  */
+    /** Kurtosis \f[ \mu_4 / (\mu_2 \cdot \mu_2) - 3 \f], with \f$ \mu_2 \f$ - second moment.  */
     template<class TReal, class Iter_T>
     TReal computeKurtosisExcess(Iter_T begin, Iter_T end, TReal mean)
     {
@@ -174,7 +168,7 @@ namespace ralab
       return m4 / (m2 * m2) - 3;
     }
 
-    /*! \brief Kurtosis \f[ \mu_4 / (\mu_2 \cdot \mu_2) - 3 \f], with \f$ \mu_2 \f$ - second moment.  */
+    /** Kurtosis \f[ \mu_4 / (\mu_2 \cdot \mu_2) - 3 \f], with \f$ \mu_2 \f$ - second moment.  */
     template<class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type computeKurtosisExcess(Iter_T begin, Iter_T end){
       typedef typename std::iterator_traits<Iter_T>::value_type TReal;
@@ -182,7 +176,7 @@ namespace ralab
       return (computeKurtosisExcess(begin,end,meanVal));
     }
 
-    /*! \brief computes sum, mean, var, std_dev, skew, kurt */
+    /** computes sum, mean, var, std_dev, skew, kurt */
     template<class TReal, class Iter_T>
     void computeStats(
         Iter_T first, Iter_T last, TReal& sum, TReal& mean,
@@ -199,7 +193,7 @@ namespace ralab
     }
 
 
-    /*! \brief Weighted average \f[ \sum(vValues \cdot vWeights) / \sum(vWeights) \f] */
+    /** Weighted average \f[ \sum(vValues \cdot vWeights) / \sum(vWeights) \f] */
     template< typename TReal >
     const TReal
     WeightedAverage
@@ -218,7 +212,7 @@ namespace ralab
       return(dWeightedSum/dSumOfWeights);
     }
 
-    /*! \brief Weighted Variance \f[ 1/\sum{w_i} \cdot \sum{ w_i ( x_i - \mu )^2 } \f]
+    /** Weighted Variance \f[ 1/\sum{w_i} \cdot \sum{ w_i ( x_i - \mu )^2 } \f]
       */
     template< typename TReal >
     const TReal
@@ -253,7 +247,7 @@ namespace ralab
       return var;
     }
 
-    /*! \brief Weighted Variance \f[ 1/\sum{w_i} \cdot \sum{ w_i ( x_i - \mu )^2 } \f] */
+    /** Weighted Variance \f[ 1/\sum{w_i} \cdot \sum{ w_i ( x_i - \mu )^2 } \f] */
     template<typename TReal>
     const TReal
     VarWeight
@@ -266,7 +260,7 @@ namespace ralab
       return(
             VarWeight<TReal>( vValues , vWeights, dAverageMass ));
     }
-    /*! \brief Weighted standard deviation \f[ \sqrt{var} \f] */
+    /** Weighted standard deviation \f[ \sqrt{var} \f] */
     template<typename TReal>
     const TReal
     SdWeight
@@ -280,7 +274,7 @@ namespace ralab
             );
     }
 
-    /*! \brief Weighted standard deviation \f[ \sqrt{var} \f] */
+    /** Weighted standard deviation \f[ \sqrt{var} \f] */
     template<typename TReal>
     const TReal
     SdWeight
@@ -394,7 +388,7 @@ namespace ralab
     /*!\name unbiased versions of weighted variance and standard deviation */
 
 
-    /*! \brief Weighted variance unbiased (see GSL documentation)
+    /** Weighted variance unbiased (see GSL documentation)
 
                         \f[ ( sum(wx^2) sum(w) - sum(wx)^2 ) / ( sum(w)^2 - sum(w^2) )  \f]
                         */
@@ -421,7 +415,7 @@ namespace ralab
       return ( var );
     }
 
-    /*! \brief Weighted standard deviation unbiased (see GSL documentation)
+    /** Weighted standard deviation unbiased (see GSL documentation)
 
                         \f[ \sqrt{VarUnbiasedWeight} \f]
                         */
@@ -500,7 +494,7 @@ namespace ralab
       return Median( tmp.begin() , tmp.end() );
     }
 
-    /*! \brief Sample Quantiles
+    /** Sample Quantiles
 
                         The generic function quantile produces sample quantiles
                         corresponding to the given probabilities. The smallest
@@ -561,7 +555,7 @@ namespace ralab
         }
     }
 
-    /*! \brief Tukey Five-Number Summaries
+    /** Tukey Five-Number Summaries
                         Returns Tukey's five numb
 //  Archive locater summary (minimum, lower-hinge, median, upper-hinge, maximum) for the input data.
                         */

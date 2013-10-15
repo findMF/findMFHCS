@@ -1,3 +1,8 @@
+// Copyright : ETH Zurich
+// License   : three-clause BSD license
+// Authors   : Witold Wolski
+// for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
 #ifndef SCALE_H
 #define SCALE_H
 
@@ -10,11 +15,6 @@
 
 #include "base/stats/stats.h"
 
-/*! \file Scale.h
-\brief statistic functions for package base: scale(x, center = TRUE, scale = TRUE)
-
-\ingroup BASE
-*/
 
 namespace ralab
 {
@@ -24,15 +24,6 @@ namespace ralab
     {
 
 
-      /*! \defgroup SCALE scale - centers and/or scales the columns of a numeric matrix.
-
-                        -# The value of <b>center</b> determines how column centering is performed. If center is a numeric vector with length equal to the number of columns of x, then each column of x has the corresponding value from center subtracted from it. If center is TRUE then centering is done by subtracting the column means (omitting NAs) of x from their corresponding columns, and if center is FALSE, no centering is done.
-                        -# The value of <b>scale</b> determines how column scaling is performed (after centering). If scale is a numeric vector with length equal to the number of columns of x, then each column of x is divided by the corresponding value from scale. If scale is TRUE then scaling is done by dividing the (centered) columns of x by their root-mean-square, and if scale is FALSE, no scaling is done.
-                        -# The root-mean-square for a column is obtained by computing the square-root of the sum-of-squares of the non-missing values in the column divided by the number of non-missing values minus one.
-
-                        \ingroup BASE
-                        @{
-                        */
       template<int N, typename TReal>
       struct NthPower : std::unary_function<TReal,TReal>
       {
@@ -65,11 +56,13 @@ namespace ralab
       }
 
 
-      /*! \brief scale centers and/or scales all values from begin in to end.  */
+      /**
+        scale centers and/or scales all values from begin in to end.
+      */
       template<typename InputIterator>
       void scale(
-          InputIterator begin, //!< [in] start iterator
-          InputIterator end, //!< [in] end iterator
+          InputIterator begin,
+          InputIterator end,
           std::pair<typename std::iterator_traits<InputIterator>::value_type,typename std::iterator_traits<InputIterator>::value_type> & scaled, //!<[out] scaled.first = center, scaled.second = scale
           bool center = true,//!<[in] either a logical value or a numeric vector of length equal to the number of columns of x.
           bool scale = true //!<[in] 	either a logical value or a numeric vector of length equal to the number of columns of x.
@@ -97,11 +90,11 @@ namespace ralab
             scaled.second = std::numeric_limits<TReal>::quiet_NaN();
           }
       }
-      /*!@}*/
 
     }
   }
 }
+
 #endif
 
 

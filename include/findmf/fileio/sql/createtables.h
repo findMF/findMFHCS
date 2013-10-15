@@ -17,20 +17,28 @@ namespace ralab
         WriteSampleParams(const std::string & fileloc):sql_(soci::sqlite3,fileloc)
         {}
 
+        ~WriteSampleParams(){
+          sql_.close();
+        }
         ///
         ///return sample id
         /// this stuff you need to get from the db.
-        int insertSample(const std::string & name, const std::string & description,
-                         const std::string & file)
+        uint32_t insertSample(const std::string & name, const std::string & description,
+                              const std::string & file)
         {
           using namespace soci;
-
           std::string p1 =  "insert into sample(name, file, description )";
-          std::string p2 =  "values(:name,:file, :description)";
-          std::string name1;
-          std::string file1;
-          std::string description1;
-          sql_ << p1 + " " + p2, use(name1,":name"), use(file1,":file"),use(description1,":description");
+          p1 +=  " values(:name,:file, :description)";
+
+          sql_ << p1, use(name,"name"),
+              use(file,"file"),
+              use(description,"description");
+                  ;
+
+//          sql_ << p1, use(name),//":name"),
+//              use(file),//":file"),
+//              use(description)//",:description");
+                  ;
           int lastid;
           sql_ << "SELECT last_insert_rowid()" , into(lastid);
           return lastid;
@@ -41,10 +49,10 @@ namespace ralab
           using namespace soci;
 
           std::string p1 = "insert into instrumentinfo(id,manufacturer,model,ionisation,analyser,detector)";
-          std::string p2 = "values(:id, :manufacturer, :model, :ionisation, :analyser, :detector)";
-          sql_ << p1 + " " + p2, use(sampleid, ":id"), use(inst.manufacturer, ":manufacturer"),
-              use(inst.model, ":model"), use(inst.ionisation,":ionisation"),
-              use(inst.analyser,":analyser"),use(inst.detector,":detector");
+          p1 += " values(:id, :manufacturer, :model, :ionisation, :analyser, :detector)";
+          sql_ << p1, use(sampleid, "id"), use(inst.manufacturer, "manufacturer"),
+              use(inst.model, "model"), use(inst.ionisation,"ionisation"),
+              use(inst.analyser,"analyser"),use(inst.detector,"detector");
         }
 
         //
@@ -52,11 +60,11 @@ namespace ralab
           using namespace soci;
 
           std::string p1 = "insert into sofwareparam(id, resolution,nrthreads,mzpixelwidth,rtpixelwidth,scalemz,scalert,minintensity,minmass,maxmass,rt2sum)";
-          std::string p2 = "values(:id, :ppm,:nrthreads,:mzpixelwidth,:rtpixelwidth,:scalemz,:scalert,:minintensity,:minmass,:maxmass,:rt2sum)";
-          sql_ << p1 + " " + p2, use(sampleid,":id"), use(1/params.ppm*1e6,":ppm"),
-              use(params.nrthreads,":nrthreads"),use(params.mzpixelwidth,":mzpixelwidth"),use(params.rtpixelwidth,":rtpixelwidth"),
-              use(params.mzscale , ":scalemz"),use(params.rtscale,":scalert:"),use(params.minintensity,":minintensity"),
-              use(params.minmass , ":minmass"),use(params.maxmass,":maxmass"),use(params.rt2sum_,":rt2su");
+          p1 += " values(:id, :ppm,:nrthreads,:mzpixelwidth,:rtpixelwidth,:scalemz,:scalert,:minintensity,:minmass,:maxmass,:rt2sum)";
+          sql_ << p1, use(sampleid,"id"), use(1/params.ppm*1e6,"ppm"),
+              use(params.nrthreads,"nrthreads"),use(params.mzpixelwidth,"mzpixelwidth"),use(params.rtpixelwidth,"rtpixelwidth"),
+              use(params.mzscale , "scalemz"),use(params.rtscale,"scalert"),use(params.minintensity,"minintensity"),
+              use(params.minmass , "minmass"),use(params.maxmass,"maxmass"),use(params.rt2sum_,"rt2su");
         }
       };
 
@@ -64,13 +72,18 @@ namespace ralab
       struct CreateTables{
         soci::session sql_;
 
-        CreateTables(const std::string & fileloc, const std::string & schemafile):sql_(soci::sqlite3,fileloc)
+        CreateTables(const std::string & fileloc, const std::string & schemafile):sql_()
         {
           using namespace soci;
+          bool eschem = boost::filesystem3::exists( schemafile );
+          boost::filesystem3::path path = boost::filesystem3::path(fileloc).parent_path();
+          bool fpath = boost::filesystem3::exists( boost::filesystem3::path(fileloc).parent_path()) || path.empty();
 
-          if(boost::filesystem3::exists(schemafile) && boost::filesystem3::exists(boost::filesystem3::path(fileloc).parent_path()) ){
+          if(eschem && fpath)
+            {
               std::vector<std::string> creatstatements = ralab::findmf::utils::sqlparse(schemafile);
-              sql_.open(fileloc);
+
+              sql_.open(soci::sqlite3,fileloc);
               for(int i = 0 ; i < creatstatements.size(); ++i )
                 {
                   try{
@@ -79,10 +92,15 @@ namespace ralab
                   catch( std::exception const &e )
                   {
                     LOG(INFO) << e.what() << std::endl;
+                    throw;
                   }
                 }
-              sql_.close();
+
             }
+        }
+
+        ~CreateTables(){
+          sql_.close();
         }
       };
     }//end fileio
