@@ -120,20 +120,18 @@ namespace ralab{
       void creatProjectionStats(ralab::findmf::datastruct::FeaturesMap & map){
         ralab::findmf::datastruct::FeaturesMap::Features::iterator beg , end ;
         ralab::findmf::utilities::Pick picker;
-        try{
-          int count = 0;
-          end = map.features().end();
-          for( beg = map.features().begin() ; beg != end ; ++beg ){
-              ralab::findmf::datastruct::Feature2D &x = *beg;
-              ralab::findmf::utilities::computeStats(x.getProjectionMZ(),x.getMinMZIdx(),x.getMZStats());
-              x.getMZStats().peaklockation_ = picker.pick(x.getProjectionMZ(),x.getMZStats());
-              ralab::findmf::utilities::computeStats(x.getProjectionRT(),x.getMinRTIdx(),x.getRTStats());
-              x.getRTStats().peaklockation_ = picker.pick(x.getProjectionRT(),x.getRTStats());
-              ++count;
-            }
-        }catch(std::exception &e){
-          LOG(INFO) << e.what();
-        }
+        int count = 0;
+        end = map.features().end();
+        for( beg = map.features().begin() ; beg != end ; ++beg ){
+            ralab::findmf::datastruct::Feature2D &x = *beg;
+            ralab::findmf::utilities::computeStats(x.getProjectionMZ(),x.getMinMZIdx(),x.getMZStats());
+            x.getMZStats().peaklockation_ = picker.pick(x.getProjectionMZ(),x.getMZStats());
+            x.setProblem(picker.problem_);
+            ralab::findmf::utilities::computeStats(x.getProjectionRT(),x.getMinRTIdx(),x.getRTStats());
+            x.getRTStats().peaklockation_ = picker.pick(x.getProjectionRT(),x.getRTStats());
+            x.setProblem(picker.problem_);
+            ++count;
+          }
         LOG(INFO) << "picking done";
       }
 
@@ -348,7 +346,7 @@ namespace ralab{
                             );*/
         //likely faster
         vigra::localMinima(srcImageRange(gradient_), destImage(labels_),
-                              vigra::LocalMinmaxOptions().neighborhood(4).allowAtBorder());
+                           vigra::LocalMinmaxOptions().neighborhood(4).allowAtBorder());
 
         int max_region_label = labelImageWithBackground(srcImageRange(labels_), destImage(labels_), false, 0);
         // create a statistics functor for region growing
@@ -357,6 +355,7 @@ namespace ralab{
         // perform region growing, starting from the minima of the gradient magnitude;
         // as the feature (first input) image contains the gradient magnitude,
         // this calculates the catchment basin of each minimum
+        // TODO look into seeded region growing how to fix issue of not split features.
         seededRegionGrowing(srcImageRange(gradient_), srcImage(labels_),
                             destImage(labels_),
                             gradstat,

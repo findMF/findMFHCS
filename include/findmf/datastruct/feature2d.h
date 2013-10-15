@@ -21,7 +21,10 @@ namespace ralab
       /** */
       struct Feature2D{
         typedef float value_type;
+
       private:
+        bool problem_;
+
         std::vector<value_type> mzprojection_;
         std::vector<value_type> rtprojection_;
         unsigned int id_;
@@ -49,7 +52,7 @@ namespace ralab
 
       public:
 
-        Feature2D():id_(0),minMZsw_(),maxMZsw_(),swathid_(),minMZIndex_(0),minRTIndex_(0),sum_(0.),count_(0.)
+        Feature2D():problem_(false),id_(0),minMZsw_(),maxMZsw_(),swathid_(),minMZIndex_(0),minRTIndex_(0),sum_(0.),count_(0.)
         ,max_(0.),centerOfMassMZ_(0.),centerOfMassRT_(0.),maxLocationMZ_(0.),
           maxLocationRT_(0.)
         {}
@@ -66,6 +69,13 @@ namespace ralab
         {
         }
 
+        void setProblem(bool p){
+          problem_ = p;
+        }
+
+        bool getProblem(){
+          return problem_;
+        }
 
         /**/
         void setID(unsigned int id){

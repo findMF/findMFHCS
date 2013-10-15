@@ -11,19 +11,21 @@
 #include <stdexcept>
 #include <boost/lexical_cast.hpp>
 
-namespace ralab{
-  namespace base{
-    namespace ms{
+namespace ralab
+{
+  namespace base
+  {
+    namespace ms
+    {
       /*! computes first derivative of a sequence, looks for zero crossings
        */
       template<class TReal>
       struct SimplePicker{
         std::vector<TReal> worker_;
         double epsilon_;
+        bool problem_; //indicates if not the whole signal was picked.
 
-        SimplePicker(TReal epsilon = 1e-3):epsilon_(epsilon){}
-
-
+        SimplePicker(TReal epsilon = 1e-3):epsilon_(epsilon),problem_(false){}
         /*!
          *returns number of zero crossings found
          */
@@ -37,7 +39,6 @@ namespace ralab{
           if((lag % 2 ) == 1){
               return -1;
             }
-
           worker_.resize(std::distance(beg,end) - lag);
           TReal * pworkerBeg = &worker_[0];
           TReal * pworkerEnd = &worker_[0] + worker_.size();
@@ -52,10 +53,11 @@ namespace ralab{
           //reset worker
           pworkerBeg = &worker_[0];
           std::size_t crosscount = 0;
-
           for( int i = 0 ; (pworkerBeg != pworkerEnd-1) ; ++pworkerBeg , ++i )
             {
-              if(crosscount >= 2){
+              if(crosscount >= nzercross){
+                  problem_ = true;
+                  return crosscount; // protect against memmory violations
                   std::string x = "nzerocross:";
                   x+=boost::lexical_cast<std::string>(nzercross);
                   x+=" crosscount:";
@@ -68,7 +70,6 @@ namespace ralab{
                   x+=boost::lexical_cast<std::string>(__LINE__);
                   x+=" : ";
                   x+= __FILE__;
-
                   throw std::length_error(x.c_str());
                 }
               TReal v1 = (*pworkerBeg);
@@ -92,6 +93,10 @@ namespace ralab{
                 }
             }
           return crosscount;
+        }
+
+        bool getProblem() const{
+          return problem_;
         }
 
       };

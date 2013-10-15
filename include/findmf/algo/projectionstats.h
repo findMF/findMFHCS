@@ -62,13 +62,16 @@ namespace ralab
     /** computes projection statistics */
     namespace utilities{
 
+      // TODO provide apex peakfinder.
       struct Pick{
         ralab::base::ms::SimplePicker<float> simplePicker_;
         std::vector<double> zerocross_;
-        Pick():zerocross_(5,0.){}
+        bool problem_; // indicates if there was some problem i.e. no peak could be detected, or
+        //more than one apex found
 
-        //TODO - create class
-        inline float pick(const std::vector<float> & projection_,
+        Pick():zerocross_(5,0.),problem_(false){}
+
+        inline double pick(const std::vector<float> & projection_,
                           projstats & ps
                           )
         {
@@ -80,14 +83,19 @@ namespace ralab
                     zerocross_.begin(),
                     zerocross_.size()
                     );
+              if(t!=1){
+                  problem_ = true;
+                }
               if(t > 0){
-                  double x = ps.projectionStart_ + zerocross_[0];
+                   double x = ps.projectionStart_ + zerocross_[0];
                   return x;
                 }
               else{
+                  problem_ = true;
                   return ps.getCenterOfMass();
                 }
             }else{
+              problem_ = true;
               return ps.getCenterOfMass();
             }
         }
