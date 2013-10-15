@@ -130,12 +130,10 @@ namespace ralab{
               ralab::findmf::utilities::computeStats(x.getProjectionRT(),x.getMinRTIdx(),x.getRTStats());
               x.getRTStats().peaklockation_ = picker.pick(x.getProjectionRT(),x.getRTStats());
               ++count;
-              //std::cout << map.features().size() <<" " << count << " " << x.getProjectionMZ().size() << " " << x.getProjectionRT().size() << std::endl;
             }
         }catch(std::exception &e){
           LOG(INFO) << e.what();
         }
-
         LOG(INFO) << "picking done";
       }
 
@@ -156,7 +154,6 @@ namespace ralab{
         //acummulatorChain.ignoreLabel(0); //statistics will not be computed for region 0 (e.g. background)
         vigra::acc::extractFeatures(start,end,acummulatorChain);
       }
-
 
       //copy statistics generated in accumulator chain into features
       static void createFeaturesFromStatistics( datastruct::FeaturesMap & features ,
@@ -316,7 +313,7 @@ namespace ralab{
       //method to find features
       void findFeat(Gradient & data, //[inout]
                     float threshold,
-                    float tolerance = 2.//minima tolerance
+                    float tolerance = .1//minima tolerance
           ){
         using namespace vigra;
         Gradient & gradient_ = data;//you work with the data
@@ -341,13 +338,17 @@ namespace ralab{
           }
         //vigra::LocalMinmaxOptions lmx;
         //lmx.markWith(1).allowPlateaus().thresh(10.);
-        extendedLocalMinima(srcImageRange(gradient_),
+
+        /*extendedLocalMinima(srcImageRange(gradient_),
                             destImage(labels_),
                             1,
                             FourNeighborCode(),
                             //EightNeighborCode(),
                             EqualWithToleranceFunctor<float>(tolerance)
-                            );
+                            );*/
+        //likely faster
+        vigra::localMinima(srcImageRange(gradient_), destImage(labels_),
+                              vigra::LocalMinmaxOptions().neighborhood(4).allowAtBorder());
 
         int max_region_label = labelImageWithBackground(srcImageRange(labels_), destImage(labels_), false, 0);
         // create a statistics functor for region growing

@@ -141,7 +141,9 @@ namespace ralab{
           }
       }
 
-      /* fills the map  */
+      /**
+       * fills the map
+*/
       void fillLCMSImage(pwiz::msdata::MSDataPtr msd,
                          const std::vector<std::size_t> & indices, // spectrum indices
                          datastruct::LCMSImage & map_ // output map.
@@ -162,7 +164,9 @@ namespace ralab{
 
                 intensity = sp->getIntensityArray();
                 size_t idx = rt2sum_.getCols(i);
-                convert2dense(mz->data, intensity->data, idx , map_);
+                if(!mz->data.empty()){
+                    convert2dense(mz->data, intensity->data, idx , map_);
+                  }
                 //std::cout << idx << " " << i << std::endl;
               }
           }

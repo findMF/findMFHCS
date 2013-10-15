@@ -55,7 +55,7 @@ namespace ralab{
 
           for( int i = 0 ; (pworkerBeg != pworkerEnd-1) ; ++pworkerBeg , ++i )
             {
-              if(crosscount >= nzercross){
+              if(crosscount >= 2){
                   std::string x = "nzerocross:";
                   x+=boost::lexical_cast<std::string>(nzercross);
                   x+=" crosscount:";
