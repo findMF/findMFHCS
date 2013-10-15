@@ -7,7 +7,7 @@
 
 // Raplace ClassName with the name of the class to test...
 // Test one class per unit.
-#include <iostream>
+//#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <gtest/gtest.h>
@@ -19,6 +19,7 @@
 //#include "base/utils/Copy_if.h"
 #include "base/utils/split.h"
 #include "findmf/utils/parsesql.h"
+#include "findmf/fileio/sql/createtables.h"
 
 namespace {
 
@@ -50,6 +51,18 @@ namespace {
     ASSERT_TRUE(1);
   }
 
+
+  TEST_F(SQLSociTest,testDBcreation2)
+  {
+    std::string testfile("../sql/dbschema.sql");
+    //std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
+
+    std::string bla = "heresql2.sqlite";
+    soci::session sql_( soci::sqlite3 , bla );
+    ralab::findmf::fileio::CreateTables(bla,testfile);
+
+    ASSERT_TRUE(1);
+  }
 }//end namespace UNITTEST
 
 int main(int argc, char **argv) {

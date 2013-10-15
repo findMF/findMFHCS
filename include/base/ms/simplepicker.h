@@ -58,7 +58,7 @@ namespace ralab{
               if(crosscount >= nzercross){
                   std::string x = "nzerocross:";
                   x+=boost::lexical_cast<std::string>(nzercross);
-                  x+=" nzerocross:";
+                  x+=" crosscount:";
                   x+=boost::lexical_cast<std::string>(crosscount);
                   x+=__FILE__;
                   x+=boost::lexical_cast<std::string>(__LINE__);

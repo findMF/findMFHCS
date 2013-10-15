@@ -48,13 +48,9 @@ message( STATUS ">>>> ${Boost_LIBRARIES} <<<<" )
 SET(inc ${inc} ${CMAKE_SOURCE_DIR})
 SET(inc ${inc} ${CMAKE_SOURCE_DIR}/include)
 
-
 #QT tweak so that it sees headers
 file(GLOB Demo_HEADERS "sql/*.sql" "include/*.h" "include/**/*.h" "include/**/**/*.h" "include/**/**/**/*.h" "src/**/*.h" "src/**/**/*.h")
-
 add_library(headers SHARED ${Demo_HEADERS} Dummy.cpp)
-
-
 
 ENABLE_TESTING()
 ADD_SUBDIRECTORY(src)
