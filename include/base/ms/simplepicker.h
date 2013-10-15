@@ -9,6 +9,7 @@
 #include <iterator>
 #include <vector>
 #include <stdexcept>
+#include <boost/lexical_cast.hpp>
 
 namespace ralab{
   namespace base{
@@ -29,6 +30,7 @@ namespace ralab{
         template<typename Tit, typename Outit>
         size_t operator()(Tit beg, Tit end ,
                           Outit zerocrossings, //! picked peaks
+                          size_t nzercross,
                           std::ptrdiff_t lag = 2 //must be even (leave odd out)
             )
         {
@@ -51,9 +53,17 @@ namespace ralab{
           pworkerBeg = &worker_[0];
           std::size_t crosscount = 0;
 
-          for( int i = 0 ; pworkerBeg != pworkerEnd-1 ; ++pworkerBeg , ++i )
+          for( int i = 0 ; (pworkerBeg != pworkerEnd-1) ; ++pworkerBeg , ++i )
             {
-
+              if(crosscount >= nzercross){
+                  std::string x = "nzerocross:";
+                  x+=boost::lexical_cast<std::string>(nzercross);
+                  x+=" nzerocross:";
+                  x+=boost::lexical_cast<std::string>(crosscount);
+                  x+=__FILE__;
+                  x+=boost::lexical_cast<std::string>(__LINE__);
+                  throw std::length_error(x.c_str());
+                }
               TReal v1 = (*pworkerBeg);
               TReal v2 = *(pworkerBeg + 1);
               //peak detected ... detect a zero crossing

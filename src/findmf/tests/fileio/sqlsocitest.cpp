@@ -31,14 +31,11 @@ namespace {
   TEST_F(SQLSociTest,testDBcreation)
   {
     std::string testfile("../sql/dbschema.sql");
-    std::cout << "db open" << std::endl;
 
     std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
-    std::cout  << "db open" << std::endl;
 
     std::string bla = "heresql.sqlite";
     soci::session sql_( soci::sqlite3 , bla );
-    std::cout  << "db open" << std::endl;
 
     for(size_t i = 0 ; i < lines.size() ; ++i)
       {

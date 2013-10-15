@@ -46,8 +46,11 @@ TEST_F(ProjectionStatsTest, testconst){
       ralab::findmf::utilities::computeStats(rtproj,100,rtp);
       ralab::findmf::utilities::Pick p;
       float peakrt =  p.pick( rtproj , rtp );
+      ASSERT_NEAR(peakrt,103.975906,1e-6);
       ralab::findmf::utilities::computeStats(mzproj,100,mzp);
       float peakmz =  p.pick( mzproj , mzp );
+      ASSERT_NEAR(peakmz, 103.835617, 1e-6 );
+
     }
 }
 

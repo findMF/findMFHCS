@@ -77,7 +77,8 @@ namespace ralab
               std::size_t t = simplePicker_(
                     projection_.begin(),
                     projection_.end(),
-                    zerocross_.begin()
+                    zerocross_.begin(),
+                    zerocross_.size()
                     );
               if(t > 0){
                   double x = ps.projectionStart_ + zerocross_[0];
@@ -96,7 +97,7 @@ namespace ralab
                                int projectionStart,
                                projstats & ps)
       {
-ps.projectionStart_ = projectionStart;
+        ps.projectionStart_ = projectionStart;
         std::vector<float> positions_;
         ralab::base::base::seq(projection_.size(),positions_);
         ps.average_ = ralab::stats::WeightedAverage(positions_,projection_);

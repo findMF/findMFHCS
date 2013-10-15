@@ -191,7 +191,7 @@ namespace ralab{
           ralab::base::filter::filter(resampledintensity_ , filter_ , smoothedintensity_ , true);
           //determine zero crossings
           zerocross_.resize( smoothedintensity_.size()/2 );
-          size_t nrzerocross = simplepicker_( smoothedintensity_.begin( ) , smoothedintensity_.end() , zerocross_.begin());
+          size_t nrzerocross = simplepicker_( smoothedintensity_.begin( ) , smoothedintensity_.end() , zerocross_.begin(), zerocross_.size());
 
           peakmass_.resize(nrzerocross);
           //determine mass of zerocrossing
