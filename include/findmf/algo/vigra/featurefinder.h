@@ -35,7 +35,6 @@ namespace ralab{
       T t;
     };
 
-
     template <class T>
     struct ImageTransformatorFlip
     {
@@ -123,12 +122,13 @@ namespace ralab{
         ralab::findmf::utilities::Pick picker;
         try{
           int count = 0;
-          for( beg = map.features().begin() ; beg != map.features().end() ; ++beg ){
+          end = map.features().end();
+          for( beg = map.features().begin() ; beg != end ; ++beg ){
               ralab::findmf::datastruct::Feature2D &x = *beg;
               ralab::findmf::utilities::computeStats(x.getProjectionMZ(),x.getMinMZIdx(),x.getMZStats());
-              picker.pick(x.getProjectionMZ(),x.getMZStats());
+              x.getMZStats().peaklockation_ = picker.pick(x.getProjectionMZ(),x.getMZStats());
               ralab::findmf::utilities::computeStats(x.getProjectionRT(),x.getMinRTIdx(),x.getRTStats());
-              picker.pick(x.getProjectionRT(),x.getRTStats());
+              x.getRTStats().peaklockation_ = picker.pick(x.getProjectionRT(),x.getRTStats());
               ++count;
               //std::cout << map.features().size() <<" " << count << " " << x.getProjectionMZ().size() << " " << x.getProjectionRT().size() << std::endl;
             }
@@ -370,6 +370,7 @@ namespace ralab{
         LOG(INFO) << " >>> segments done  ";
 
       }
+
       //Write the acc chain into csv
       void writeFeatures(const std::string & output_directory,
                          const std::string & outfileprefix){

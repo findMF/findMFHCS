@@ -12,9 +12,9 @@
 #include <stdexcept>
 
 
-inline void testMapInfoTable(){
-
-  ralab::findmf::FeaturesMapSQLWriterFacade sql("test","bla");
+inline void testMapInfoTable()
+{
+  ralab::findmf::FeaturesMapSQLWriterFacade sql(".","bla");
   sql.createDatabase();
 }
 

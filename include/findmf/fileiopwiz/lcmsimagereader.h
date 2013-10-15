@@ -183,8 +183,10 @@ namespace ralab{
                 pwiz::msdata::SpectrumPtr sp = sl->spectrum(indices[i],true);
                 pwiz::msdata::BinaryDataArrayPtr mz;
                 mz = sp->getMZArray();
-                if(min_ > mz->data.front()) min_ = mz->data.front();
-                if(max_ < mz->data.back()) max_ = mz->data.back();
+                if(!mz->data.empty()){
+                    if(min_ > mz->data.front()) min_ = mz->data.front();
+                    if(max_ < mz->data.back()) max_ = mz->data.back();
+                  }
               }
             return std::pair<double, double>(min_,max_);
           }

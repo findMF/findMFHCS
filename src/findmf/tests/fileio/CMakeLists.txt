@@ -49,7 +49,7 @@ COMMAND ${BinOut}/SQLFacadeTest )
 set_tests_properties(SQLFacadeTest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
 
 add_test(NAME sqlsocitest
-WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+WORKING_DIRECTORY ${BinOut}
 COMMAND ${BinOut}/sqlsocitest )
 set_tests_properties(sqlsocitest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
 

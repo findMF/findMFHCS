@@ -26,7 +26,7 @@ namespace ralab{
       {}
 
       void createDatabase(){
-        FeaturesMapSQLWriter fw(db_location_,db_name_);
+        FeaturesMapSQLWriter fw( db_location_ , db_name_ );
         fw.createTables();
       }
 
