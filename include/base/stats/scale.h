@@ -13,8 +13,7 @@
 #include <numeric>
 #include <iterator>
 
-#include "base/stats/stats.h"
-
+#include "base/stats/momentsW.h"
 
 namespace ralab
 {

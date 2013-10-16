@@ -8,7 +8,7 @@
 
 #include <algorithm>
 #include <numeric>
-#include "base/stats/stats.h"
+#include "base/stats/momentsW.h"
 #include "base/ms/simplepicker.h"
 
 
@@ -61,7 +61,6 @@ namespace ralab
 
     /** computes projection statistics */
     namespace utilities{
-
       // TODO provide apex peakfinder.
       struct Pick{
         ralab::base::ms::SimplePicker<float> simplePicker_;
@@ -70,7 +69,6 @@ namespace ralab
         //more than one apex found
 
         Pick():zerocross_(5,0.),problem_(false){}
-
         inline double pick(const std::vector<float> & projection_,
                           projstats & ps
                           )
@@ -108,11 +106,11 @@ namespace ralab
         ps.projectionStart_ = projectionStart;
         std::vector<float> positions_;
         ralab::base::base::seq(projection_.size(),positions_);
-        ps.average_ = ralab::stats::WeightedAverage(positions_,projection_);
-        ps.variance_ = ralab::stats::VarWeight(positions_,projection_, ps.average_);
+        ps.average_ = ralab::stats::meanW(positions_,projection_);
+        ps.variance_ = ralab::stats::varW(positions_,projection_, ps.average_);
         float sd =sqrt( ps.variance_ );
-        ps.kurtosis_ = ralab::stats::WeightedKurtosis(positions_,projection_,ps.average_,sd );
-        ps.skewness_ = ralab::stats::WeightedSkewness(positions_,projection_,ps.average_,sd );
+        ps.kurtosis_ = ralab::stats::kurtW(positions_,projection_,ps.average_,sd );
+        ps.skewness_ = ralab::stats::skewW(positions_,projection_,ps.average_,sd );
         //  ps.peaklockation_ = pick(projection_,ps);
       }
 

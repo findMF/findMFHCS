@@ -14,8 +14,6 @@
 #include <boost/bind.hpp>
 #include <math.h>
 
-#include "base/base/constants.h"
-
 
 #include <boost/random/linear_congruential.hpp>
 #include <boost/random/normal_distribution.hpp>
@@ -23,9 +21,7 @@
 #include <boost/generator_iterator.hpp>
 
 #include "base/base/timesince69.h"
-
-/*! \file Normal.h
-\brief The Normal Distribution. */
+#include "base/base/constants.h"
 
 namespace ralab
 {
@@ -34,12 +30,11 @@ namespace ralab
     namespace stats
     {
 
-      /*!  DISTR Utility functions for Distributions
-                        */
 
       typedef boost::minstd_rand base_generator_type;
-      /*!
-                        \brief Generates random numbers to fill data structures.
+
+      /**
+                        Generates random numbers to fill data structures.
                         */
 
 
@@ -87,7 +82,7 @@ namespace ralab
         Normal<value_type> & operator=(const Normal<value_type> & );
       };
 
-      /*! \brief The Normal Distribution - runif generates random deviates.
+      /** The Normal Distribution - runif generates random deviates.
 
                         returns seed;
                         */
@@ -132,8 +127,6 @@ namespace ralab
         return beg;
       }
 
-
-
       template<typename TReal>
       struct Dnorm : std::unary_function<TReal, TReal>
       {
@@ -147,7 +140,7 @@ namespace ralab
         }
       };
 
-      /*!\brief Density, distribution function, quantile function and random generation for the normal distribution with mean
+      /** Density, distribution function, quantile function and random generation for the normal distribution with mean
                         equal to mean and standard deviation equal to sd. */
       template<typename TInputIterator>
       TInputIterator dnorm(
@@ -173,7 +166,7 @@ namespace ralab
         return end;
       }
 
-      /*!\brief Density, distribution function, quantile function and random generation for the normal distribution with mean
+      /** Density, distribution function, quantile function and random generation for the normal distribution with mean
                         equal to mean and standard deviation equal to sd. */
       template<typename TInputIterator, typename TOutputIterator >
       TOutputIterator dnorm(
@@ -200,7 +193,7 @@ namespace ralab
         return yend;
       }
 
-      /*!\brief Density, distribution function, quantile function and random generation for the normal distribution with mean
+      /** Density, distribution function, quantile function and random generation for the normal distribution with mean
                         equal to mean and standard deviation equal to sd. */
       template<typename TReal>
       TReal dnorm_1(TReal x, TReal mean = 0., TReal sd = 1., bool logb =false)
@@ -230,7 +223,7 @@ namespace ralab
         }
       };
 
-      /*!\brief Density, distribution function, quantile function and random generation for the normal distribution with mean
+      /** Density, distribution function, quantile function and random generation for the normal distribution with mean
                         equal to mean and standard deviation equal to sd. */
       template<typename TInputIterator>
       TInputIterator pnorm(
@@ -252,7 +245,7 @@ namespace ralab
       }
 
 
-      /*!\brief Density, distribution function, quantile function and random generation for the normal distribution with mean
+      /** Density, distribution function, quantile function and random generation for the normal distribution with mean
                         equal to mean and standard deviation equal to sd. */
       template<typename TInputIterator, typename TOutputIterator >
       TOutputIterator pnorm(
@@ -276,7 +269,7 @@ namespace ralab
         return yend;
       }
 
-      /*!\brief Density, distribution function, quantile function and random generation for the normal distribution with mean
+      /** Density, distribution function, quantile function and random generation for the normal distribution with mean
                         equal to mean and standard deviation equal to sd. */
       template<typename TReal>
       TReal pnorm_1(TReal x, TReal mean = 0., TReal sd = 1.
@@ -307,7 +300,7 @@ namespace ralab
       };
 
 
-      /*!\brief Density, distribution function, quantile function and random generation for the normal distribution with mean
+      /** Density, distribution function, quantile function and random generation for the normal distribution with mean
                         equal to mean and standard deviation equal to sd. */
       template<typename TInputIterator, typename TOutputIterator >
       TOutputIterator qnorm(
@@ -339,7 +332,7 @@ namespace ralab
         return yend;
       }
 
-      /*!\brief Density, distribution function, quantile function and random generation for the normal distribution with mean
+      /** Density, distribution function, quantile function and random generation for the normal distribution with mean
                         equal to mean and standard deviation equal to sd. */
       template<typename TReal>
       TReal qnorm_1(TReal x, TReal mean = 0., TReal sd = 1.

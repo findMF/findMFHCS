@@ -5,7 +5,11 @@
 
 
 #include "gtest/gtest.h"
-#include "base/stats/stats.h"
+#include "base/stats/quantiles.h"
+
+#include "base/stats/momentsW.h"
+#include "base/stats/moments.h"
+
 #include "base/base/base.h"
 #include "base/resample/masscomparefunctors.h"
 #include "base/stats/uniform.h"
@@ -73,37 +77,37 @@ namespace {
   // Tests that Foo does Xyz.
   TEST_F(StatsTest, moments) {
     double res, epsilon = 0.0001;
-    res = ralab::stats::computeVariance( m_data.begin( ), m_data.end( ));
+    res = ralab::stats::var( m_data.begin( ), m_data.end( ));
     ASSERT_NEAR(res, 1237.222222, epsilon);
-    res = ralab::stats::computeStdDev( m_data.begin( ) , m_data.end( ));
+    res = ralab::stats::sd( m_data.begin( ) , m_data.end( ));
     ASSERT_NEAR(res, 35.1742, epsilon);
-    res = ralab::stats::computeSkew( m_data.begin( ), m_data.end( ));
+    res = ralab::stats::skew( m_data.begin( ), m_data.end( ));
     ASSERT_NEAR(res, 1.75664, epsilon);
-    res = ralab::stats::computeKurtosisExcess( m_data.begin( ) , m_data.end( ));
+    res = ralab::stats::kurtosis( m_data.begin( ) , m_data.end( ));
     ASSERT_NEAR(res, 1.14171, epsilon);
     //test the unbiased versions.
-    res = ralab::stats::computeVarianceUnbiased( m_data.begin( ), m_data.end( ));
+    res = ralab::stats::varUnbiased( m_data.begin( ), m_data.end( ));
     ASSERT_NEAR(res, 1484.66666, epsilon);
-    res = ralab::stats::computeStdDevUnbiased( m_data.begin( ), m_data.end( ));
+    res = ralab::stats::sdUnbiased( m_data.begin( ), m_data.end( ));
     ASSERT_NEAR(res, 38.53137, epsilon);
   }
 
   TEST_F(StatsTest, weightedmoment){
     double res , epsilon(0.0001);
-    res = ralab::stats::WeightedAverage(m_data , m_weight);
+    res = ralab::stats::meanW(m_data , m_weight);
     ASSERT_NEAR(res,33.0,epsilon);
-    res = ralab::stats::VarWeight(m_data , m_weight , 33.0 );
+    res = ralab::stats::varW(m_data , m_weight , 33.0 );
     ASSERT_NEAR(res,1750.0,epsilon);
-    res = ralab::stats::VarWeight(m_data , m_weight);
+    res = ralab::stats::varW(m_data , m_weight);
     ASSERT_NEAR(res,1750.0,epsilon);
 
-    res = ralab::stats::SdWeight(m_data , m_weight , 33.0 );
+    res = ralab::stats::sdW(m_data , m_weight , 33.0 );
     ASSERT_NEAR(res,41.833,epsilon);
-    res = ralab::stats::SdWeight(m_data , m_weight);
+    res = ralab::stats::sdW(m_data , m_weight);
     ASSERT_NEAR(res,41.833,epsilon);
-    res = ralab::stats::VarUnbiasedWeight(m_data, m_weight);
+    res = ralab::stats::varWUnbiased(m_data, m_weight);
     ASSERT_NEAR(res,2205,epsilon);
-    res = ralab::stats::SdUnbiasedWeight(m_data, m_weight);
+    res = ralab::stats::sdWUnbiased(m_data, m_weight);
     ASSERT_NEAR(res,46.95743,epsilon);
   }
 
@@ -115,8 +119,8 @@ namespace {
      m_data.assign(data,data+12);
      m_weight.assign(weight, weight+12);
 
-     res = ralab::stats::WeightedSkewness(m_data, m_weight, 0.0, 1.);
-     res = ralab::stats::WeightedSkewness(m_data , m_weight);
+     res = ralab::stats::skewW(m_data, m_weight, 0.0, 1.);
+     res = ralab::stats::skewW(m_data , m_weight);
 
      /*exponential distribution with mean 1 and rate 1.*/
      double dataexp [13] = {0.25, 0.75, 1.25, 1.75, 2.25, 2.75, 3.25, 3.75, 4.25, 4.75, 5.25, 5.75, 6.25 };
@@ -125,16 +129,16 @@ namespace {
      m_data.assign(dataexp,dataexp+12);
      m_weight.assign(weightexp, weightexp+12);
 
-     res = ralab::stats::WeightedSkewness(m_data, m_weight, 1., 1.);
+     res = ralab::stats::skewW(m_data, m_weight, 1., 1.);
      ASSERT_TRUE( res > 0 );
-     res = ralab::stats::WeightedSkewness(m_data , m_weight);
+     res = ralab::stats::skewW(m_data , m_weight);
      ASSERT_TRUE( res > 0 );
 
 
      std::reverse(m_weight.begin(), m_weight.end());
-     res = ralab::stats::WeightedSkewness(m_data, m_weight, 5., 1.);
+     res = ralab::stats::skewW(m_data, m_weight, 5., 1.);
      ASSERT_TRUE( res < 0 );
-     res = ralab::stats::WeightedSkewness(m_data , m_weight);
+     res = ralab::stats::skewW(m_data , m_weight);
      ASSERT_TRUE( res < 0 );
    }
 
@@ -146,8 +150,8 @@ namespace {
 
      m_data.assign(data,data+12);
      m_weight.assign(weight, weight+12);
-     res = ralab::stats::WeightedKurtosis(m_data , m_weight , 0.0 , 1. );
-     res = ralab::stats::WeightedKurtosis(m_data , m_weight );
+     res = ralab::stats::kurtW(m_data , m_weight , 0.0 , 1. );
+     res = ralab::stats::kurtW(m_data , m_weight );
 
      /*cauchi distribution with mean 0 and rate 1.*/
      double datacauchy[13] = { -125,  -75,  -25,   25,   75,  125,  175,  225,  275,  325,  375,  425, 475 };
@@ -156,11 +160,10 @@ namespace {
      m_data.assign(datacauchy,datacauchy+12);
      m_weight.assign(weightcauchy, weightcauchy+12);
 
-     res = ralab::stats::WeightedKurtosis(m_data, m_weight, 1.0, 1.);
+     res = ralab::stats::kurtW(m_data, m_weight, 1.0, 1.);
      ASSERT_TRUE( res > 0 ); // spitz zulaufende Verteilung
-     res = ralab::stats::WeightedSkewness(m_data , m_weight);
+     res = ralab::stats::skewW(m_data , m_weight);
      ASSERT_TRUE( res > 0 ); // spitz zulaufende verteilung
-
    }
 
    TEST_F(StatsTest,testQuantileStats2){
@@ -169,12 +172,12 @@ namespace {
      ralab::base::base::seq(1.,20.,values);
 
      //Test Median
-     double median = ralab::stats::Median(values.begin(),values.end());
+     double median = ralab::stats::median(values.begin(),values.end());
      ASSERT_NEAR( median , 10.5, epsilon);
 
      //Test Five numbers
      std::vector<double> quantiles;
-     ralab::stats::Fivenum(values,quantiles);
+     ralab::stats::fivenum(values,quantiles);
      std::vector<double> probs;
      probs.clear();
      probs.push_back(1.0);
@@ -204,7 +207,7 @@ namespace {
      ref.push_back(18.5);
      ref.push_back(20.00);
 
-     ralab::stats::Quantile(values, probs, quantiles);
+     ralab::stats::quantile(values, probs, quantiles);
 
      ASSERT_TRUE(std::equal(ref.begin(), ref.end(), quantiles.begin(), ralab::base::resample::DaCompFunctor<double>(0.01)) );
      //Test Range
@@ -220,7 +223,7 @@ namespace {
      std::vector<double> values ;
      ralab::base::stats::runif(10000,values, 0.,1.) ;
      //Test Median
-     double median = ralab::stats::Median(values.begin(),values.end());
+     double median = ralab::stats::median(values.begin(),values.end());
      ASSERT_NEAR( median , 0.5, epsilon );
      //Test Quantiles
      std::vector<double> probs;
@@ -233,11 +236,11 @@ namespace {
      probs.push_back(0.9);
      probs.push_back(1);
      std::vector<double> quantiles;
-     ralab::stats::Quantile(values, probs, quantiles);
+     ralab::stats::quantile(values, probs, quantiles);
      ASSERT_TRUE(std::equal(probs.begin(), probs.end(), quantiles.begin(), ralab::base::resample::DaCompFunctor<double>(epsilon) ));
 
      //Test Five numbers
-     ralab::stats::Fivenum(values,quantiles);
+     ralab::stats::fivenum(values,quantiles);
      probs.clear();
      probs.push_back(0);
      probs.push_back(0.25);
