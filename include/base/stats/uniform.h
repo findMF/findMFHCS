@@ -3,7 +3,6 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-
 #ifndef UNIFORM_H
 #define UNIFORM_H
 
@@ -18,12 +17,8 @@
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
 
-
 #include "base/base/constants.h"
 #include "base/base/timesince69.h"
-
-/*! \file Uniform.h
-\brief The Uniform Distribution. */
 
 namespace ralab
 {
@@ -31,10 +26,6 @@ namespace ralab
   {
     namespace stats
     {
-
-      /*!  DISTR Utility functions for Distributions
-
-      */
 
       typedef boost::minstd_rand base_generator_type;
       /*!

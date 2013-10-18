@@ -24,38 +24,40 @@ namespace ralab
   {
     namespace base
     {
-      // class generator:
-      template<typename TReal>
-      struct CseqPlus {
-        TReal m_from;
-        TReal m_by;
+      namespace utilities{
+        // class generator:
+        template<typename TReal>
+        struct SeqPlus {
+          TReal m_from;
+          TReal m_by;
 
-        CseqPlus(TReal from)
-          : m_from(from), m_by(1)
-        {}
-        TReal operator()()
-        {
-          TReal current = m_from ;
-          m_from += m_by;
-          return current;
-        }
-      };
+          SeqPlus(TReal from)
+            : m_from(from), m_by(1)
+          {}
+          TReal operator()()
+          {
+            TReal current = m_from ;
+            m_from += m_by;
+            return current;
+          }
+        };
 
-      template<typename TReal>
-      struct CseqMinus {
-        TReal m_from;
-        TReal m_by;
+        template<typename TReal>
+        struct SeqMinus {
+          TReal m_from;
+          TReal m_by;
 
-        CseqMinus(TReal from)
-          : m_from(from), m_by(1)
-        {}
-        TReal operator()()
-        {
-          TReal current = m_from ;
-          m_from -= m_by;
-          return current;
-        }
-      };
+          SeqMinus(TReal from)
+            : m_from(from), m_by(1)
+          {}
+          TReal operator()()
+          {
+            TReal current = m_from ;
+            m_from -= m_by;
+            return current;
+          }
+        };
+      }
 
 
 
@@ -74,13 +76,13 @@ namespace ralab
           {
             size_type length = static_cast<size_type>(to - from) + 1;
             result.resize(length);
-            std::generate(result.begin() , result.end() , CseqPlus<TReal>(from));
+            std::generate(result.begin() , result.end() , utilities::SeqPlus<TReal>(from));
           }
         else
           {
             size_type length = static_cast<size_type>(from - to) + 1 ;
             result.resize(length);
-            std::generate(result.begin() , result.end() , CseqMinus<TReal>(from));
+            std::generate(result.begin() , result.end() , utilities::SeqMinus<TReal>(from));
           }
       }
 

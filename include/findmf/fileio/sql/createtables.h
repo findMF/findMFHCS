@@ -11,8 +11,19 @@ namespace ralab
   {
     namespace fileio
     {
-      struct WriteSampleParams{
+      struct WriteMapInfo{
+        soci::session sql_;
+        WriteMapInfo(const std::string & fileloc):sql_(soci::sqlite3,fileloc)
+        {}
 
+        ~WriteMapInfo(){
+          sql_.close();
+        }
+        void writeMapInfo(){}
+      };
+
+
+      struct WriteSampleParams{
         soci::session sql_;
         WriteSampleParams(const std::string & fileloc):sql_(soci::sqlite3,fileloc)
         {}
@@ -33,12 +44,12 @@ namespace ralab
           sql_ << p1, use(name,"name"),
               use(file,"file"),
               use(description,"description");
-                  ;
+          ;
 
-//          sql_ << p1, use(name),//":name"),
-//              use(file),//":file"),
-//              use(description)//",:description");
-                  ;
+          //          sql_ << p1, use(name),//":name"),
+          //              use(file),//":file"),
+          //              use(description)//",:description");
+          ;
           int lastid;
           sql_ << "SELECT last_insert_rowid()" , into(lastid);
           return lastid;
@@ -59,12 +70,17 @@ namespace ralab
         void insertProcessParameters(int sampleid, ralab::findmf::apps::Params & params){
           using namespace soci;
 
-          std::string p1 = "insert into sofwareparam(id, resolution,nrthreads,mzpixelwidth,rtpixelwidth,scalemz,scalert,minintensity,minmass,maxmass,rt2sum)";
-          p1 += " values(:id, :ppm,:nrthreads,:mzpixelwidth,:rtpixelwidth,:scalemz,:scalert,:minintensity,:minmass,:maxmass,:rt2sum)";
-          sql_ << p1, use(sampleid,"id"), use(1/params.ppm*1e6,"ppm"),
-              use(params.nrthreads,"nrthreads"),use(params.mzpixelwidth,"mzpixelwidth"),use(params.rtpixelwidth,"rtpixelwidth"),
-              use(params.mzscale , "scalemz"),use(params.rtscale,"scalert"),use(params.minintensity,"minintensity"),
-              use(params.minmass , "minmass"),use(params.maxmass,"maxmass"),use(params.rt2sum_,"rt2su");
+          std::string p1 = "insert into softwareparam(id, resolution,nrthreads,mzpixelwidth,";
+          p1+= "rtpixelwidth,scalemz,scalert,minintensity,minmass,maxmass,rt2sum)";
+          p1 += " values(:id, :resolution,:nrthreads,:mzpixelwidth,:rtpixelwidth,:scalemz,:scalert,";
+          p1 +=  ":minintensity,:minmass,:maxmass,:rt2sum)";
+          double resolution = 1/params.ppm*1e6;
+          sql_ << p1, use(sampleid,"id"), use(resolution,"resolution"),
+              use(params.nrthreads,"nrthreads"),use(params.mzpixelwidth,"mzpixelwidth"),
+              use(params.rtpixelwidth,"rtpixelwidth"),use(params.mzscale , "scalemz"),
+              use(params.rtscale,"scalert"),use(params.minintensity,"minintensity"),
+              use(params.minmass , "minmass"),use(params.maxmass,"maxmass"),
+              use(params.rt2sum_,"rt2sum");
         }
       };
 

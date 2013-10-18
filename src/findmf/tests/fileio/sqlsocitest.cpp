@@ -27,49 +27,43 @@ namespace {
   protected:
     SQLSociTest(){
     }
-
     virtual void SetUp(){
     }
   };
 
 
-  TEST_F(SQLSociTest,testDBcreation)
-  {
-    std::string testfile("../sql/dbschema.sql");
+//  TEST_F(SQLSociTest,testDBcreation)
+//  {
+//    std::string testfile("../sql/dbschema.sql");
+//    std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
+//    std::string bla = "heresql.sqlite";
+//    soci::session sql_( soci::sqlite3 , bla );
 
-    std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
+//    for(size_t i = 0 ; i < lines.size() ; ++i)
+//      {
+//        try{
+//          sql_.once << lines[i];
+//        }catch( std::exception const &e ){
+//          LOG(INFO) << e.what() << std::endl;
+//        }
+//      }
+//    sql_.close();
+//    ASSERT_TRUE(1);
+//  }
 
-    std::string bla = "heresql.sqlite";
-    soci::session sql_( soci::sqlite3 , bla );
+//  TEST_F(SQLSociTest,testDBcreation2)
+//  {
+//    std::string testfile("../sql/dbschema.sql");
 
-    for(size_t i = 0 ; i < lines.size() ; ++i)
-      {
-        try{
-          sql_.once << lines[i];
-        }catch( std::exception const &e ){
-          LOG(INFO) << e.what() << std::endl;
-        }
-      }
-    //sql_.commit();
-    sql_.close();
-    ASSERT_TRUE(1);
-  }
-
-
-  TEST_F(SQLSociTest,testDBcreation2)
-  {
-    std::string testfile("../sql/dbschema.sql");
-
-    std::string bla = "heresql2.sqlite";
-    soci::session sql_( soci::sqlite3 , bla );
-    try{
-      ralab::findmf::fileio::CreateTables(bla,testfile);
-    }catch(std::exception const& e){
-      std::cout << e.what() << std::endl;
-    }
-    ASSERT_TRUE(1);
-  }
-
+//    std::string bla = "heresql2.sqlite";
+//    soci::session sql_( soci::sqlite3 , bla );
+//    try{
+//      ralab::findmf::fileio::CreateTables(bla,testfile);
+//    }catch(std::exception const& e){
+//      std::cout << e.what() << std::endl;
+//    }
+//    ASSERT_TRUE(1);
+//  }
 
   TEST_F(SQLSociTest, testSampleInsterts)
   {
@@ -79,7 +73,6 @@ namespace {
       ralab::findmf::fileio::CreateTables(bla,testfile);
     }
     //std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
-
     ralab::findmf::datastruct::Instrument inst;
     inst.analyser = "bla";
     inst.detector = "detect";

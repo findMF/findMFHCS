@@ -6,6 +6,13 @@ PRAGMA user_version = 0.1;
 -- database end
 PRAGMA foreign_keys = ON;
 
+-- code to kill all the tables --
+PRAGMA writable_schema = 1;
+delete from sqlite_master where type = 'table';
+PRAGMA writable_schema = 0;
+VACUUM;
+PRAGMA INTEGRITY_CHECK;
+
 -- basic sample information
 drop table if exists sample;
 CREATE TABLE sample (
