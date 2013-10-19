@@ -1,6 +1,11 @@
+// Copyright : ETH Zurich
+// License   : three-clause BSD license
+// Authors   : Witold Wolski
+// for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
 #include "findmf/utils/parsesql.h"
 #include <functional>
-#include "base/utils/Copy_if.h"
+#include "base/utils/copyif.h"
 #include "base/utils/readwritelines.h"
 #include "base/misc/sqlparse.h"
 

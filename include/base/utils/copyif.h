@@ -6,10 +6,12 @@
 #ifndef COPY_IF_H
 #define COPY_IF_H
 
-
-namespace ralab{
-  namespace base{
-    namespace utils{
+namespace ralab
+{
+  namespace base
+  {
+    namespace utils
+    {
 
       template <class InputIterator,class InputIterator2, class OutputIterator, class Predicate>
       OutputIterator copy_if(

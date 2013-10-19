@@ -94,20 +94,20 @@ namespace {
 
   TEST_F(StatsTest, weightedmoment){
     double res , epsilon(0.0001);
-    res = ralab::stats::meanW(m_data , m_weight);
+    res = ralab::stats::meanW(m_data.begin(),m_data.end() , m_weight.begin());
     ASSERT_NEAR(res,33.0,epsilon);
-    res = ralab::stats::varW(m_data , m_weight , 33.0 );
+    res = ralab::stats::varW(m_data.begin(),m_data.end() , m_weight.begin() , 33.0 );
     ASSERT_NEAR(res,1750.0,epsilon);
-    res = ralab::stats::varW(m_data , m_weight);
+    res = ralab::stats::varW(m_data.begin() , m_data.end(), m_weight.begin());
     ASSERT_NEAR(res,1750.0,epsilon);
 
-    res = ralab::stats::sdW(m_data , m_weight , 33.0 );
+    res = ralab::stats::sdW(m_data.begin(),m_data.end() , m_weight.begin() , 33.0 );
     ASSERT_NEAR(res,41.833,epsilon);
-    res = ralab::stats::sdW(m_data , m_weight);
+    res = ralab::stats::sdW(m_data.begin() , m_data.end(), m_weight.begin() );
     ASSERT_NEAR(res,41.833,epsilon);
-    res = ralab::stats::varWUnbiased(m_data, m_weight);
+    res = ralab::stats::varWUnbiased(m_data.begin(),m_data.end(), m_weight.begin());
     ASSERT_NEAR(res,2205,epsilon);
-    res = ralab::stats::sdWUnbiased(m_data, m_weight);
+    res = ralab::stats::sdWUnbiased(m_data.begin(),m_data.end(), m_weight.begin());
     ASSERT_NEAR(res,46.95743,epsilon);
   }
 
@@ -119,8 +119,8 @@ namespace {
      m_data.assign(data,data+12);
      m_weight.assign(weight, weight+12);
 
-     res = ralab::stats::skewW(m_data, m_weight, 0.0, 1.);
-     res = ralab::stats::skewW(m_data , m_weight);
+     res = ralab::stats::skewW(m_data.begin(),m_data.end(), m_weight.begin(), 0.0, 1.);
+     res = ralab::stats::skewW(m_data.begin() ,m_data.end(), m_weight.begin() );
 
      /*exponential distribution with mean 1 and rate 1.*/
      double dataexp [13] = {0.25, 0.75, 1.25, 1.75, 2.25, 2.75, 3.25, 3.75, 4.25, 4.75, 5.25, 5.75, 6.25 };
@@ -129,16 +129,16 @@ namespace {
      m_data.assign(dataexp,dataexp+12);
      m_weight.assign(weightexp, weightexp+12);
 
-     res = ralab::stats::skewW(m_data, m_weight, 1., 1.);
+     res = ralab::stats::skewW(m_data.begin(), m_data.end(), m_weight.begin(), 1., 1.);
      ASSERT_TRUE( res > 0 );
-     res = ralab::stats::skewW(m_data , m_weight);
+     res = ralab::stats::skewW(m_data.begin(), m_data.end(), m_weight.begin());
      ASSERT_TRUE( res > 0 );
 
 
      std::reverse(m_weight.begin(), m_weight.end());
-     res = ralab::stats::skewW(m_data, m_weight, 5., 1.);
+     res = ralab::stats::skewW(m_data.begin(), m_data.end(), m_weight.begin(), 5., 1.);
      ASSERT_TRUE( res < 0 );
-     res = ralab::stats::skewW(m_data , m_weight);
+     res = ralab::stats::skewW(m_data.begin(), m_data.end(), m_weight.begin());
      ASSERT_TRUE( res < 0 );
    }
 
@@ -150,8 +150,8 @@ namespace {
 
      m_data.assign(data,data+12);
      m_weight.assign(weight, weight+12);
-     res = ralab::stats::kurtW(m_data , m_weight , 0.0 , 1. );
-     res = ralab::stats::kurtW(m_data , m_weight );
+     res = ralab::stats::kurtW(m_data.begin(),m_data.end() , m_weight.begin() , 0.0 , 1. );
+     res = ralab::stats::kurtW(m_data.begin(),m_data.end(), m_weight.begin() );
 
      /*cauchi distribution with mean 0 and rate 1.*/
      double datacauchy[13] = { -125,  -75,  -25,   25,   75,  125,  175,  225,  275,  325,  375,  425, 475 };
@@ -160,9 +160,9 @@ namespace {
      m_data.assign(datacauchy,datacauchy+12);
      m_weight.assign(weightcauchy, weightcauchy+12);
 
-     res = ralab::stats::kurtW(m_data, m_weight, 1.0, 1.);
+     res = ralab::stats::kurtW(m_data.begin(), m_data.end(), m_weight.begin(), 1.0, 1.);
      ASSERT_TRUE( res > 0 ); // spitz zulaufende Verteilung
-     res = ralab::stats::skewW(m_data , m_weight);
+     res = ralab::stats::skewW(m_data.begin(),m_data.end() , m_weight.begin());
      ASSERT_TRUE( res > 0 ); // spitz zulaufende verteilung
    }
 

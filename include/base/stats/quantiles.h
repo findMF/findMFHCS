@@ -15,12 +15,42 @@ namespace ralab
 {
   namespace stats
   {
-
-    template<typename TReal>
-    TReal median(  const std::vector<TReal>  & x )
+    /// median Value
+    template<typename RanIt >
+    typename std::iterator_traits<RanIt>::value_type median
+    (
+        RanIt begin, //!< begin iterator
+        RanIt end //!< end iterator
+        )
     {
-      std::vector<TReal> tmp(x); //create a copys
-      return Median( tmp.begin() , tmp.end() );
+      typedef typename std::iterator_traits<RanIt>::value_type TReal;
+      typedef typename std::iterator_traits<RanIt>::difference_type TSize;
+      TReal median1, median2;
+      TSize count = std::distance(begin, end);
+      // even case
+      if (count % 2 == 0)
+        {
+          if (0 == count)
+            {
+              return 0.0;
+            }
+          std::nth_element(begin,begin +((count-1)/2), end );
+          median1 = *(begin + ( count/2 - 1));
+          std::nth_element(begin,begin +(count/2), end );
+          median2 = *(begin + ( count/2  ));
+          median1 = (median1 + median2) / 2.0;
+        }
+      else
+        {
+          if ( 1 == count )
+            {
+              return *begin;
+            }
+          std::nth_element(begin,begin +((count-1)/2), end );
+          median1 = *(begin + ((count-1)/2));
+          // middle value is median
+        }
+      return median1;
     }
 
     /** Sample Quantiles

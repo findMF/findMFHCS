@@ -16,13 +16,13 @@ namespace ralab
 {
   namespace stats
   {
-    /** variance \f[ mu_2 = 1/N \cdot \sum(x_i - \mu)^2 \f] */
+    /// variance \f[ mu_2 = 1/N \cdot \sum(x_i - \mu)^2 \f]
     template<class TReal, class Iter_T>
     TReal var(Iter_T first, Iter_T last, TReal mean) {
       return utilities::nthMoment<TReal, 2>(first, last, mean);
     }
 
-    /** variance \f[ mu_2 = 1/N \cdot \sum{(x_i - \mu)^2} \f] */
+    /// variance \f[ mu_2 = 1/N \cdot \sum{(x_i - \mu)^2} \f]
     template<class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type  var(Iter_T first, Iter_T last) {
       typedef typename std::iterator_traits<Iter_T>::value_type TReal;
@@ -30,7 +30,7 @@ namespace ralab
       return utilities::nthMoment<TReal, 2>(first, last, mean);
     }
 
-    /** unbiased variance \f[ 1/(n-1) \sum{(x - \mu)^2} \f] */
+    /// unbiased variance \f[ 1/(n-1) \sum{(x - \mu)^2} \f]
     template<class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type varUnbiased(Iter_T first, Iter_T last)
     {
@@ -40,14 +40,14 @@ namespace ralab
       return std::accumulate(first, last, TReal( ), utilities::SumDiffNthPower<TReal, 2>(mean)) / cnt;
     }
 
-    /** standard deviation \f[ \sqrt{\mu_2} \f], with \f$ \mu_2 \f$ - second moment \sa nthMoment.  */
+    /// standard deviation \f[ \sqrt{\mu_2} \f], with \f$ \mu_2 \f$ - second moment \sa nthMoment.
     template<class TReal, class Iter_T>
     TReal sd(Iter_T first, Iter_T last, TReal mean) {
       return sqrt(computeVariance(first, last, mean));
     }
 
 
-    /** standard deviation \f[ \sqrt{\mu_2} \f], with \f$ \mu_2 \f$ - second moment \sa nthMoment. */
+    /// standard deviation \f[ \sqrt{\mu_2} \f], with \f$ \mu_2 \f$ - second moment \sa nthMoment.
     template<class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type sd(Iter_T first, Iter_T last)
     {
@@ -56,7 +56,7 @@ namespace ralab
       return sqrt(var(first, last, meanVal));
     }
 
-    /** unbiased stdv \f[ \sqrt{1/(n-1) \sum(x - \mu)^2} \f] */
+    /// unbiased stdv \f[ \sqrt{1/(n-1) \sum(x - \mu)^2} \f]
     template< class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type sdUnbiased(Iter_T first, Iter_T last)
     {
@@ -64,7 +64,7 @@ namespace ralab
       return sqrt(varUnbiased(first, last));
     }
 
-    /** Skew \f[ \mu_3 / (\mu_2 \cdot \sqrt{\mu_2}) \f], with \f$ \mu_2 \f$ - second moment. */
+    /// Skew \f[ \mu_3 / (\mu_2 \cdot \sqrt{\mu_2}) \f], with \f$ \mu_2 \f$ - second moment.
     template< class TReal , class Iter_T>
     TReal skew(
         Iter_T begin, Iter_T end, TReal mean)
@@ -74,7 +74,7 @@ namespace ralab
       return m3 / (m2 * sqrt(m2));
     }
 
-    /** Skew \f[ \mu_3 / (\mu_2 \cdot \sqrt{(\mu_2)}) \f], with \f$ \mu_2 \f$ - second moment.  */
+    /// Skew \f[ \mu_3 / (\mu_2 \cdot \sqrt{(\mu_2)}) \f], with \f$ \mu_2 \f$ - second moment.
     template<class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type skew(Iter_T begin, Iter_T end){
       typedef typename std::iterator_traits<Iter_T>::value_type TReal;
@@ -82,7 +82,7 @@ namespace ralab
       return (skew(begin,end,meanVal));
     }
 
-    /** Kurtosis \f[ \mu_4 / (\mu_2 \cdot \mu_2) - 3 \f], with \f$ \mu_2 \f$ - second moment.  */
+    /// Kurtosis \f[ \mu_4 / (\mu_2 \cdot \mu_2) - 3 \f], with \f$ \mu_2 \f$ - second moment.
     template<class TReal, class Iter_T>
     TReal kurtosis(Iter_T begin, Iter_T end, TReal mean)
     {
@@ -91,7 +91,7 @@ namespace ralab
       return m4 / (m2 * m2) - 3;
     }
 
-    /** Kurtosis \f[ \mu_4 / (\mu_2 \cdot \mu_2) - 3 \f], with \f$ \mu_2 \f$ - second moment.  */
+    /// Kurtosis \f[ \mu_4 / (\mu_2 \cdot \mu_2) - 3 \f], with \f$ \mu_2 \f$ - second moment.
     template<class Iter_T>
     typename std::iterator_traits<Iter_T>::value_type kurtosis(Iter_T begin, Iter_T end){
       typedef typename std::iterator_traits<Iter_T>::value_type TReal;
@@ -99,7 +99,7 @@ namespace ralab
       return (kurtosis(begin,end,meanVal));
     }
 
-    /** computes sum, mean, var, std_dev, skew, kurt */
+    /// computes sum, mean, var, std_dev, skew, kurt */
     template<class TReal, class Iter_T>
     void computeStats(
         Iter_T first, Iter_T last, TReal& sum, TReal& mean,

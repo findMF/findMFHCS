@@ -106,11 +106,11 @@ namespace ralab
         ps.projectionStart_ = projectionStart;
         std::vector<float> positions_;
         ralab::base::base::seq(projection_.size(),positions_);
-        ps.average_ = ralab::stats::meanW(positions_,projection_);
-        ps.variance_ = ralab::stats::varW(positions_,projection_, ps.average_);
+        ps.average_ = ralab::stats::meanW(positions_.begin(),positions_.end(),projection_.begin());
+        ps.variance_ = ralab::stats::varW(positions_.begin(),positions_.end(),projection_.begin(), ps.average_);
         float sd =sqrt( ps.variance_ );
-        ps.kurtosis_ = ralab::stats::kurtW(positions_,projection_,ps.average_,sd );
-        ps.skewness_ = ralab::stats::skewW(positions_,projection_,ps.average_,sd );
+        ps.kurtosis_ = ralab::stats::kurtW(positions_.begin(),positions_.end(),projection_.begin(),ps.average_,sd );
+        ps.skewness_ = ralab::stats::skewW(positions_.begin(),positions_.end(),projection_.begin(),ps.average_,sd );
         //  ps.peaklockation_ = pick(projection_,ps);
       }
 

@@ -18,48 +18,54 @@ namespace ralab
   namespace stats
   {
 
-    /** Weighted average \f[ \sum(vValues \cdot vWeights) / \sum(vWeights) \f] */
-    template< typename TReal >
-    const TReal
-    meanW
+    /// Weighted average \f[ \sum(vValues \cdot vWeights) / \sum(vWeights) \f]
+
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type meanW
     (
-        const std::vector<TReal> & vValues , //!<[in] values
-        const std::vector<TReal> & vWeights //!<[in] weights
+        ValIter_T valuesbeg, //!<[in] values
+        ValIter_T valuesend, //
+        WeightIter_T weigthsbeg//!<[in] weigths
+        //WeightIter_T weightsend
         )
     {
-      if( vValues.size() <= 1 )
+      typedef typename std::iterator_traits<ValIter_T>::value_type TReal;
+      std::ptrdiff_t x = std::distance(valuesbeg,valuesend);
+      if( x <= 1 )
         {
           TReal res(1.0);
           return(res);
         }
-      TReal dSumOfWeights( std::accumulate( vWeights.begin() , vWeights.end(), TReal() ) );
-      TReal dWeightedSum(std::inner_product(vValues.begin(),vValues.end(),vWeights.begin(),TReal()));
+      TReal dSumOfWeights( std::accumulate( weigthsbeg , weigthsbeg + x, TReal() ) );
+      TReal dWeightedSum(std::inner_product(valuesbeg,valuesend,weigthsbeg,TReal()));
       return(dWeightedSum/dSumOfWeights);
     }
 
     /** Weighted Variance \f[ 1/\sum{w_i} \cdot \sum{ w_i ( x_i - \mu )^2 } \f]
       */
-    template< typename TReal >
-    const TReal
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type
     varW
     (
-        const std::vector<TReal> & vValues , //!<[in] values
-        const std::vector<TReal> & vWeights, //!<[in] weights
-        const TReal dAverageMass //!<[in] precomputed weighted average
+        ValIter_T valuesbeg, //!<[in] values
+        ValIter_T valuesend,
+        WeightIter_T weightsbeg,
+        typename std::iterator_traits<ValIter_T>::value_type dAverageMass //!<[in] precomputed weighted average
         )
     {
-      if (vValues.size() <= 1)
+      typedef typename std::iterator_traits<ValIter_T>::value_type TReal;
+      std::ptrdiff_t nr = std::distance(valuesbeg,valuesend);
+      if (nr <= 1)
         {
           return std::numeric_limits<TReal>::quiet_NaN() ;
         }
       // sum of weights
-      TReal dSumOfWeights( std::accumulate(vWeights.begin(), vWeights.end(), TReal()) );
-
+      TReal dSumOfWeights( std::accumulate(weightsbeg, weightsbeg + nr, TReal()) );
       // computes Sum (w * (x- weightedaverage)^2)
       TReal var( std::inner_product(
-                   vValues.begin(),
-                   vValues.end(),
-                   vWeights.begin(),
+                   valuesbeg,
+                   valuesend,
+                   weightsbeg,
                    TReal(),
                    std::plus<TReal>(),
                    utilities::DiffNthPowerWeight<TReal,2>(dAverageMass)
@@ -72,143 +78,161 @@ namespace ralab
       return var;
     }
 
-    /** Weighted Variance \f[ 1/\sum{w_i} \cdot \sum{ w_i ( x_i - \mu )^2 } \f] */
-    template<typename TReal>
-    const TReal
+    /// Weighted Variance \f[ 1/\sum{w_i} \cdot \sum{ w_i ( x_i - \mu )^2 } \f]
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type
     varW
     (
-        const std::vector<TReal> & vValues , //!<[in] Values
-        const std::vector<TReal> & vWeights //!<[in] Weight
+        ValIter_T valuesbeg , //!<[in] Values
+        ValIter_T valuesend,
+        WeightIter_T weightsbeg //!<[in] Weight
         )
     {
-      TReal mean ( meanW<TReal>( vValues , vWeights ));
+      typedef typename std::iterator_traits<ValIter_T>::value_type TReal;
+      TReal mean ( meanW( valuesbeg ,valuesend, weightsbeg ));
       return(
-            varW<TReal>( vValues , vWeights, mean ));
+            varW( valuesbeg , valuesend, weightsbeg, mean ));
     }
-    /** Weighted standard deviation \f[ \sqrt{var} \f] */
-    template<typename TReal>
-    const TReal
+
+    /// Weighted standard deviation \f[ \sqrt{var} \f]
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type
     sdW
     (
-        const std::vector<TReal> & vValues , //!<[in] Values
-        const std::vector<TReal> & vWeights //!<[in] Weight
+        ValIter_T valuesbeg, //!<[in] Values
+        ValIter_T valuesend, //!<[in] Weight
+        WeightIter_T weightbeg
+        )
+    {
+      return(sqrt(varW(valuesbeg , valuesend, weightbeg )));
+    }
+
+    /// Weighted standard deviation \f[ \sqrt{var} \f]
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type
+    sdW
+    (
+        ValIter_T valuesbeg, //!<[in] values
+        ValIter_T valuesend,
+        WeightIter_T weightsbeg,
+        typename std::iterator_traits<ValIter_T>::value_type dAverageMass //!<[in] precomputed weighted average
         )
     {
       return(
-            sqrt(varW(vValues , vWeights ))
+            sqrt(varW( valuesbeg , valuesend,weightsbeg ,dAverageMass ))
             );
     }
 
-    /** Weighted standard deviation \f[ \sqrt{var} \f] */
-    template<typename TReal>
-    const TReal
-    sdW
+    /// Skew
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type
+    skewW
     (
-        const std::vector<TReal> & vValues , //!<[in] Values
-        const std::vector<TReal> & vWeights , //!<[in] Weight
-        const TReal mean //!<[in]
+        ValIter_T valuesbeg, //!<[in] values
+        ValIter_T valuesend,
+        WeightIter_T weightsbeg,
+        typename std::iterator_traits<ValIter_T>::value_type dAverage, //!<[in] mean
+        typename std::iterator_traits<ValIter_T>::value_type dSD//!<[in] sd
         )
     {
-      return(
-            sqrt(varW( vValues , vWeights ,mean ))
-            );
-    }
+      typedef typename std::iterator_traits<ValIter_T>::value_type TReal;
 
-    /** Skew */
-    template<typename TReal>
-    const TReal skewW
-    (
-        const std::vector<TReal> & vValues , //!<[in] Values
-        const std::vector<TReal> & vWeights , //!<[in] Weight
-        const TReal dAverage, //!<[in] mean
-        const TReal dSD//!<[in] sd
-        )
-    {
-
+      std::ptrdiff_t nr = std::distance(valuesbeg, valuesend);
       TReal wm3( std::inner_product(
-                   vValues.begin(),
-                   vValues.end(),
-                   vWeights.begin(),
+                   valuesbeg,
+                   valuesend,
+                   weightsbeg,
                    TReal(),
                    std::plus<TReal>(),
                    utilities::DiffNthPowerWeight<TReal,3>(dAverage)
                    ));
-      TReal N( std::accumulate(vWeights.begin(),vWeights.end(),TReal() ));
+      TReal N( std::accumulate(weightsbeg,weightsbeg+nr,TReal() ));
       return (  wm3/( N * dSD * dSD * dSD ) );
     }
 
-    /** Skew */
-    template<typename TReal>
-    const TReal skewW
+    /// Skew
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type
+    skewW
     (
-        const std::vector<TReal> & vValues , //!<[in] Values
-        const std::vector<TReal> & vWeights  //!<[in] Weight
+        ValIter_T valuesbeg, //!<[in] values
+        ValIter_T valuesend,
+        WeightIter_T weightsbeg
         )
     {
-      TReal dAverage( meanW<TReal>( vValues , vWeights ) );
-      TReal dSD(sdW(vValues,vWeights,dAverage));
-      return skewW(vValues,vWeights,dAverage, dSD);
+      typedef typename std::iterator_traits<ValIter_T>::value_type TReal;
+      TReal dAverage( meanW( valuesbeg,valuesend , weightsbeg ) );
+      TReal dSD(sdW(valuesbeg,valuesend , weightsbeg,dAverage));
+      return skewW(valuesbeg,valuesend , weightsbeg,dAverage, dSD);
     }
 
-    /** brief Kurtosis   */
-    template<typename TReal>
-    const TReal kurtW
+    /// Kurtosis
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type
+    kurtW
     (
-        const std::vector<TReal> & vValues , //!<[in] Values
-        const std::vector<TReal> & vWeights , //!<[in] Weight
-        const TReal dAverage, //!<[in] mean
-        const TReal dSD//!<[in] sd
+        ValIter_T valuesbeg, //!<[in] values
+        ValIter_T valuesend,
+        WeightIter_T weightsbeg,
+        typename std::iterator_traits<ValIter_T>::value_type dAverage, //!<[in] mean
+        typename std::iterator_traits<ValIter_T>::value_type dSD//!<[in] sd
         )
     {
+      typedef typename std::iterator_traits<ValIter_T>::value_type TReal;
+      std::ptrdiff_t nr = std::distance(valuesbeg,valuesend);
       // computes \Sum(w * (x- weightedaverage)^4)
       TReal wm4( std::inner_product(
-                   vValues.begin(),
-                   vValues.end(),
-                   vWeights.begin(),
+                   valuesbeg,
+                   valuesend,
+                   weightsbeg,
                    TReal(),
                    std::plus<TReal>(),
                    utilities::DiffNthPowerWeight<TReal,4>(dAverage)
                    ));
-      TReal N( std::accumulate( vWeights.begin() , vWeights.end() , TReal() ));
+      TReal N( std::accumulate( weightsbeg , weightsbeg + nr , TReal() ));
       return (  wm4 /( N * dSD * dSD * dSD * dSD ) - 3 );
     }
 
     /*\brief Skewness (Kruemmung/Schiefe) (Sachs "Angewandte Statistic") */
 
-    template<typename TReal>
-    const TReal kurtW
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type
+    kurtW
     (
-        const std::vector<TReal> & vValues , //!<[in] Values
-        const std::vector<TReal> & vWeights  //!<[in] Weight
+        ValIter_T valuesbeg, //!<[in] values
+        ValIter_T valuesend,
+        WeightIter_T weightsbeg
         )
     {
-      TReal dAverage( meanW<TReal>( vValues , vWeights ) );
-      TReal dSD(sdW(vValues,vWeights,dAverage));
-      return kurtW(vValues , vWeights , dAverage , dSD);
+      typedef typename std::iterator_traits<ValIter_T>::value_type TReal;
+      TReal dAverage( meanW( valuesbeg , valuesend , weightsbeg ) );
+      TReal dSD( sdW( valuesbeg, valuesend , weightsbeg ,dAverage));
+      return kurtW( valuesbeg, valuesend , weightsbeg , dAverage , dSD);
     }
 
-    /** Weighted variance unbiased
-     *
-                        \f[ ( sum(wx^2) sum(w) - sum(wx)^2 ) / ( sum(w)^2 - sum(w^2) )  \f]
-                        */
-    template<typename TReal>
-    const TReal
+    /// Weighted variance unbiased
+    /// \f[ ( sum(wx^2) sum(w) - sum(wx)^2 ) / ( sum(w)^2 - sum(w^2) )  \f]
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type
     varWUnbiased
     (
-        const std::vector<TReal> & vValues , //!<[in] Values
-        const std::vector<TReal> & vWeights  //!<[in] Weight
+        ValIter_T valuesbeg, //!<[in] values
+        ValIter_T valuesend,
+        WeightIter_T weightsbeg
         )
     {
+      typedef typename std::iterator_traits<ValIter_T>::value_type TReal;
+      std::ptrdiff_t nr = std::distance(valuesbeg,valuesend);
       //sum(w)
-      TReal sumW( std::accumulate(vWeights.begin() , vWeights.end(), TReal()) );
+      TReal sumW( std::accumulate(weightsbeg , weightsbeg+nr, TReal()) );
       //sum(w^2)
-      TReal sumW2( std::inner_product( vWeights.begin() , vWeights.end(), vWeights.begin(),TReal()
+      TReal sumW2( std::inner_product( weightsbeg , weightsbeg+nr, weightsbeg,TReal()
                                        , std::plus<TReal>(),std::multiplies<TReal>() ) ) ;
       //sum(w*x)
-      TReal sumWX( std::inner_product( vValues.begin() , vValues.end(), vWeights.begin(),TReal()
+      TReal sumWX( std::inner_product( valuesbeg , valuesend, weightsbeg,TReal()
                                        , std::plus<TReal>(),std::multiplies<TReal>() ) ) ;
       //sum(w*x*x)
-      TReal sumXXW( std::inner_product( vValues.begin() , vValues.end(), vWeights.begin(),TReal()
+      TReal sumXXW( std::inner_product(  valuesbeg , valuesend, weightsbeg,TReal()
                                         , std::plus<TReal>() , utilities::XXW<TReal>()  ) );
       TReal var = ( sumXXW * sumW - sumWX*sumWX ) / ( sumW * sumW - sumW2 );
       return ( var );
@@ -218,59 +242,20 @@ namespace ralab
 
                         \f[ \sqrt{VarUnbiasedWeight} \f]
                         */
-    template<typename TReal>
-    const TReal
+    template<class ValIter_T, class WeightIter_T>
+    typename std::iterator_traits<ValIter_T>::value_type
     sdWUnbiased
     (
-        const std::vector<TReal> & values, //!<[in] Values
-        const std::vector<TReal> & weights  //!<[in] Weight
+        ValIter_T valuesbeg, //!<[in] values
+        ValIter_T valuesend,
+        WeightIter_T weightsbeg
         )
     {
-      return(sqrt(varWUnbiased( values , weights )));
+      return(sqrt(varWUnbiased( valuesbeg , valuesend, weightsbeg )));
     }
 
 
 
-    /** Median Value
-
-                        Compute the sample median.
-                        */
-    template<typename RanIt >
-    typename std::iterator_traits<RanIt>::value_type median
-    (
-        RanIt begin, //!< begin iterator
-        RanIt end //!< end iterator
-        )
-    {
-      typedef typename std::iterator_traits<RanIt>::value_type TReal;
-      typedef typename std::iterator_traits<RanIt>::difference_type TSize;
-      TReal median1, median2;
-      TSize count = std::distance(begin, end);
-      // even case
-      if (count % 2 == 0)
-        {
-          if (0 == count)
-            {
-              return 0.0;
-            }
-          std::nth_element(begin,begin +((count-1)/2), end );
-          median1 = *(begin + ( count/2 - 1));
-          std::nth_element(begin,begin +(count/2), end );
-          median2 = *(begin + ( count/2  ));
-          median1 = (median1 + median2) / 2.0;
-        }
-      else
-        {
-          if ( 1 == count )
-            {
-              return *begin;
-            }
-          std::nth_element(begin,begin +((count-1)/2), end );
-          median1 = *(begin + ((count-1)/2));
-          // middle value is median
-        }
-      return median1;
-    }
 
 
   }//namespace algo
