@@ -13,9 +13,8 @@
 #include "base/ms/simplepicker.h"
 #include "base/filter/gaussfilter.h"
 #include "base/base/equispaceinterpolation.h"
-#include "base/utils/readwritebin.h"
 #include "base/resample/determinebinwidth.h"
-#include "base/utils/Copy_if.h"
+#include "base/utils/copyif.h"
 
 
 namespace ralab{
@@ -246,17 +245,6 @@ namespace ralab{
 
         const std::vector<TReal> & getSmoothedIntensity(){
           return smoothedintensity_;
-        }
-
-        //serialize pp state for external validation
-        void write(const std::string & filestem)
-        {
-          std::string tmp = filestem;
-          ralab::base::utils::writeBin(peakmass_, tmp+"peakmass.bin");
-          ralab::base::utils::writeBin(peakarea_, tmp+"peakarea.bin" );
-          ralab::base::utils::writeBin(resampledmz_, tmp+"resampledmz.bin" );
-          ralab::base::utils::writeBin(resampledintensity_, tmp+"resampledint.bin" );
-          ralab::base::utils::writeBin(smoothedintensity_, tmp+"smoothedint.bin" );
         }
 
 

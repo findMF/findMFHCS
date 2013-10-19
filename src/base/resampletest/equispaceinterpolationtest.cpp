@@ -18,25 +18,26 @@ namespace{
 
   TEST_F(EquispaceInterpolationTest,testApproxLinear)
   {
-    std::vector<double> x, y, ys, xout, yout;
-    ralab::base::base::seq(-20.,20.,1., x);
-    y.resize(x.size());
-    //double (*p)(double, double) = pow;
 
-    ralab::base::stats::runif(x.size(), y ,-2.,2. );
-    ralab::base::cumsum(y.begin(),y.end(),ys);
+//    std::vector<double> x, y, ys, xout, yout;
+//    ralab::base::base::seq(-20.,20.,1., x);
+//    y.resize(x.size());
+//    //double (*p)(double, double) = pow;
 
-
-    ralab::base::base::seq(-30.,30.,.1, xout);
-
-    ralab::base::base::interpolate_linear(ys,xout,yout,-20);
-    ralab::base::base::interpolate_cosine(ys,xout,yout,-20);
-
-    ralab::base::base::interpolate_cubic(ys,xout,yout,-20);
+//    ralab::base::stats::runif(x.size(), y ,-2.,2. );
+//    ralab::base::cumsum(y.begin(),y.end(),ys);
 
 
-    ////// constant approximation //////
-    ralab::base::base::interpolate_Hermite(ys , xout,yout,1.,0.,-20);
+//    ralab::base::base::seq(-30.,30.,.1, xout);
+
+//    ralab::base::base::interpolate_linear(ys,xout,yout,-20);
+//    ralab::base::base::interpolate_cosine(ys,xout,yout,-20);
+
+//    ralab::base::base::interpolate_cubic(ys,xout,yout,-20);
+
+
+//    ////// constant approximation //////
+//    ralab::base::base::interpolate_Hermite(ys , xout,yout,1.,0.,-20);
   }
 
 

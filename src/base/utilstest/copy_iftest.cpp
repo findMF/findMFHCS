@@ -4,7 +4,7 @@
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 #include "gtest/gtest.h"
-#include "base/utils/Copy_if.h"
+#include "base/utils/copyif.h"
 
 #include "base/resample/masscomparefunctors.h"
 #include <boost/bind.hpp>
