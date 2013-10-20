@@ -46,19 +46,7 @@ namespace ralab
           ,morphfilter_()
           {}
 
-          /*!\brief clone*/
-          boost::shared_ptr<IScanFilter<TReal > > clone()
-          {
-            return boost::shared_ptr<IScanFilter <TReal > >
-                (
-                  new BackgroundSubtract<TReal>(*this)
-                  );
-          }
 
-          /*!\brief in place filtering
-
-                        \return if == 0 than OK. Error otherwise.
-                        */
           int32_t operator()
           (
               std::vector<TReal> & rt //!< data
@@ -69,10 +57,6 @@ namespace ralab
             return 0;
           }//end operator
 
-          /*!\brief filter rt
-
-                        \return if >= 0 than OK. Error otherwise.
-                        */
           int32_t operator()
           (
               const std::vector<TReal> & rt //!< data

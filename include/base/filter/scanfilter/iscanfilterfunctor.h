@@ -34,8 +34,6 @@ namespace ralab
               ) = 0;
 
           virtual int32_t operator()(std::vector<TReal> & in) = 0;
-
-          virtual boost::shared_ptr<IScanFilter < TReal > > clone() = 0;
           virtual ~IScanFilter(){}
         };
 

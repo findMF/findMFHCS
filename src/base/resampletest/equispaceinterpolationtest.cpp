@@ -6,7 +6,7 @@
 #include "gtest/gtest.h"
 #include "base/stats/uniform.h"
 #include "base/base/base.h"
-#include "base/base/equispaceinterpolation.h"
+#include "base/base/interpolate.h"
 #include "base/base/cumsum.h"
 
 namespace{

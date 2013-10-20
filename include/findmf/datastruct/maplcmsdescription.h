@@ -11,7 +11,7 @@
 
 #include <utility>
 #include <boost/shared_ptr.hpp>
-#include "base/base/equispaceinterpolation.h"
+#include "base/base/interpolate.h"
 
 namespace ralab{
   namespace findmf{

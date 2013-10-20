@@ -12,7 +12,7 @@
 #include "base/filter/filter.h"
 #include "base/ms/simplepicker.h"
 #include "base/filter/gaussfilter.h"
-#include "base/base/equispaceinterpolation.h"
+#include "base/base/interpolate.h"
 #include "base/resample/determinebinwidth.h"
 #include "base/utils/copyif.h"
 

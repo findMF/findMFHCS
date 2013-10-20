@@ -2,8 +2,6 @@
 // License   : three-clause BSD license
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
-
-
 #ifndef MyMap2XXX
 #define MyMap2XXX
 
@@ -17,13 +15,13 @@
 #include <vigra/multi_array.hxx>
 #include <vigra/inspectimage.hxx>
 
-#include "base/base/equispaceinterpolation.h"
+#include "base/base/interpolate.h"
 #include "base/resample/bin1d.h"
 #include "base/resample/breakspec.h"
 #include "base/resample/masscomparefunctors.h"
+#include "base/filter/scanfilter/getfitlertophat.h"
 
 #include "findmf/datastruct/maplcmsdescription.h"
-#include "base/filter/scanfilter/getfitlertophat.h"
 
 
 namespace ralab{

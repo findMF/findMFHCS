@@ -18,21 +18,12 @@ namespace ralab{
         template <typename TReal, template <typename Telem> class Tfunctor>
         class TransformFilter: public IScanFilter<TReal>
         {
-          std::string name_; //!< name of filter
         public:
           TransformFilter
           (
-              ) : name_( "Transformfilter" )
+              )
           {}
 
-          /*!\brief Clone */
-          boost::shared_ptr< IScanFilter<TReal> > clone()
-          {
-            return boost::shared_ptr< IScanFilter<TReal> >(new TransformFilter<TReal, Tfunctor >(*this) );
-          }
-
-
-          /*!\brief Operator */
           int32_t operator()(
               std::vector<TReal> & rt //!< spectrum to filter
               )
@@ -41,8 +32,7 @@ namespace ralab{
             return 0;
           }
 
-          /*!\brief General Filter
-                        */
+        private:
           template< typename InputIterator >
           inline int32_t Filter(
               InputIterator rtBeg, //!< [in] rt
@@ -55,7 +45,7 @@ namespace ralab{
             std::transform(rtBeg,rtEnd,rtfiltered.begin(),Tfunctor<TReal>());
             return 0;
           }
-
+        public:
           /*! \brief General Filter */
           int32_t operator()
           (
