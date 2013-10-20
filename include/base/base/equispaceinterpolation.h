@@ -53,7 +53,7 @@ namespace ralab
       {
         typedef typename std::iterator_traits<OutputIterator>::value_type TReal;
         utilities::LinearInterpolate<TReal> functor(epsilon);
-        utilities::interpolate_LC_worker(begY , endY , begX , endX , out , functor , start_index);
+        utilities::interpolateLinearCosine(begY , endY , begX , endX , out , functor , start_index);
       }// end interpolate cubic
 
 
@@ -76,7 +76,7 @@ namespace ralab
       {
         typedef typename std::iterator_traits<OutputIterator>::value_type TReal;
         utilities::CosineInterpolate<TReal> functor;
-        utilities::interpolate_LC_worker(begY,endY ,begX,endX, out,functor, start_index);
+        utilities::interpolateLinearCosine(begY,endY ,begX,endX, out,functor, start_index);
       }// end interpolate cubic
 
 
@@ -100,7 +100,7 @@ namespace ralab
       {
         typedef typename std::iterator_traits<OutputIterator>::value_type TReal;
         utilities::CubicInterpolate<TReal> functor(epsilon);
-        utilities::interpolate_CH_worker(begY,endY ,begX,endX, out,functor, start_index);
+        utilities::interpolateCubicHermite(begY,endY ,begX,endX, out,functor, start_index);
       }// end interpolate cubic
 
 
@@ -127,7 +127,7 @@ namespace ralab
       {
         typedef typename std::iterator_traits<OutputIterator>::value_type TReal;
         utilities::HermiteInterpolate<TReal> functor(tension, bias, epsilon);
-        utilities::interpolate_CH_worker( begY , endY , begX , endX , out , functor , start_index );
+        utilities::interpolateCubicHermite( begY , endY , begX , endX , out , functor , start_index );
       }// end interpolate cubic
     }//base
   }//namespace base

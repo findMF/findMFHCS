@@ -17,13 +17,11 @@ namespace ralab
       namespace utilities
       {
 
-        /*! \brief LinearInterpolate Functor
-                            */
+        /// LinearInterpolate Functor
         template<typename TReal>
         struct LinearInterpolate
         {
           TReal epsilon_;
-          /*! \brief operator */
           LinearInterpolate(TReal epsilon = std::numeric_limits<TReal>::epsilon() )
             :epsilon_(epsilon){}
 
@@ -43,13 +41,12 @@ namespace ralab
           }
         };//
 
-        /*! \brief CosineInterpolate Functor
+        /// CosineInterpolate Functor
+        /// Linear interpolation results in discontinuities at each point.
+        /// Often a smoother interpolating function is desirable, perhaps the simplest is cosine interpolation.
+        /// A suitable orientated piece of a cosine function serves
+        /// to provide a smooth transition between adjacent segments.
 
-                            Linear interpolation results in discontinuities at each point.
-                            Often a smoother interpolating function is desirable, perhaps the simplest is cosine interpolation.
-                            A suitable orientated piece of a cosine function serves
-                            to provide a smooth transition between adjacent segments.
-                            */
         template<typename TReal>
         struct CosineInterpolate
         {
@@ -67,17 +64,17 @@ namespace ralab
         };
 
 
-        /*! \brief CubicInterpolate Functor
+        /// CubicInterpolate Functor
 
-                            Cubic interpolation is the simplest method that offers true continuity between the segments.
-                            As such it requires more than just the two endpoints of the segment but also the two points on either side of them.
-                            So the function requires 4 points in all labeled y0, y1, y2, and y3, in the code below.
-                            mu still behaves the same way for interpolating between the segment y1 to y2.
-                            This does raise issues for how to interpolate between the first and last segments.
-                            In the examples here I just haven't bothered.
-                            A common solution is the dream up two extra points at the start and end of the sequence,
-                            the new points are created so that they have a slope equal to the slope of the start or end segment.
-                            */
+        /// Cubic interpolation is the simplest method that offers true continuity between the segments.
+        /// As such it requires more than just the two endpoints of the segment but also the two points on either side of them.
+        /// So the function requires 4 points in all labeled y0, y1, y2, and y3, in the code below.
+        /// mu still behaves the same way for interpolating between the segment y1 to y2.
+        /// This doe  s raise issues for how to interpolate between the first and last segments.
+        /// In the examples here I just haven't bothered.
+        /// A common solution is the dream up two extra points at the start and end of the sequence,
+        /// the new points are created so that they have a slope equal to the slope of the start or end segment.
+
         template<typename TReal>
         struct CubicInterpolate
         {
@@ -117,16 +114,14 @@ namespace ralab
           }
         };
 
-        /*! \brief HermiteInterpolation.
+        /// HermiteInterpolation.
+        /// Hermite interpolation like cubic requires 4 points so that it can achieve a higher degree of continuity.
+        /// In addition it has nice tension and biasing controls.
+        /// Tension can be used to tighten up the curvature at the known points.
+        /// The bias is used to twist the curve about the known points.
+        /// The examples shown here have the default tension and bias values of 0,
+        /// it will be left as an exercise for the reader to explore different tension and bias values.
 
-                            Hermite interpolation like cubic requires 4 points so that it can achieve a higher degree of continuity.
-                            In addition it has nice tension and biasing controls.
-                            Tension can be used to tighten up the curvature at the known points.
-                            The bias is used to twist the curve about the known points.
-                            The examples shown here have the default tension and bias values of 0,
-                            it will be left as an exercise for the reader to explore different tension and bias values.
-
-                            */
         template<typename TReal>
         struct HermiteInterpolate
         {
@@ -176,20 +171,19 @@ namespace ralab
         }; // HermiteInterpolation
 
 
-        /*! \brief Cubic or Hermite interpolation worker
-                            */
+        /// Cubic or Hermite interpolation worker
         template<
             typename YInputIterator,
             typename XInputIterator,
             typename OutputIterator,
             typename TFunctor
             >
-        static void interpolate_CH_worker
+        static void interpolateCubicHermite
         (
-            YInputIterator begY, //!<
-            YInputIterator endY, //!<
-            XInputIterator begX, //!<
-            XInputIterator endX, //!<
+            YInputIterator begY,
+            YInputIterator endY,
+            XInputIterator begX,
+            XInputIterator endX,
             OutputIterator out, //!< interpolated values, same length as x.
             TFunctor & functor, //!< either CubicInterpolate or HermiteInterpolate
             int start_index = 0
@@ -261,52 +255,14 @@ namespace ralab
             }//end for
         }//end interpolate_cubic
 
-
-        template <typename TReal, typename TFunctor>
-        static void interpolate_CH_worker(
-            const std::vector<TReal> & y, //!< y values equidistantly spaced. spacing is [0,1,2, .... ,len(y)]
-            const std::vector<TReal> & x, //!< points to interpolate at
-            std::vector<TReal> & out, //!< interpolated values, same length as x.
-            TFunctor & functor, //!< either CubicInterpolate or HermiteInterpolate
-            int start_index = 0
-            )
-        {
-          out.resize(x.size());
-          interpolate_CH_worker(y.begin(),y.end(),x.begin(),x.end(),out.begin(),functor,start_index);
-        }
-
-
-        /*! \brief Linear cubic interpolator worker */
-        template <
-            typename TReal,
-            typename TFunctor
-            >
-        static void interpolate_LC_worker
-        (
-            const std::vector<TReal> & y, //!< y values equidistantly spaced. spacing is [0,1,2, .... ,len(y)]
-            const std::vector<TReal> & x, //!< points to interpolate at
-            std::vector<TReal> & out, //!< interpolated values, same length as x.
-            TFunctor & interpolator, //!< interpolation functor, either: CosineInterpolate, LinearInterpolate.
-            int start_index = 0 //!< if y values are placed on a grid with start_index != 0
-            )
-        {
-          out.resize(x.size());
-          interpolate_LC_worker( y.begin() ,
-                                 y.end() ,
-                                 x.begin() ,
-                                 x.end() ,
-                                 out.begin() ,
-                                 interpolator,start_index );
-        }
-
-        /*! \brief Linear cubic interpolator worker */
+        /// Linear cubic interpolator worker
         template <
             typename YInputIterator,
             typename XInputIterator,
             typename OutputIterator,
             typename TFunctor
             >
-        static void interpolate_LC_worker
+        static void interpolateLinearCosine
         (
             YInputIterator y_p, //!< y values equidistantly spaced. spacing is [0,1,2, .... ,len(y)]
             YInputIterator endY,

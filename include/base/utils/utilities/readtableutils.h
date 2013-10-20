@@ -7,7 +7,6 @@
 #include <assert.h>
 #include <stdexcept>
 #include <string>
-
 #include <boost/lexical_cast.hpp>
 
 namespace ralab
@@ -16,13 +15,9 @@ namespace ralab
   {
     namespace utils
     {
-
       namespace utilities
       {
-        /*! \brief Given a matrix or data.frame x, t returns the transpose of x.
-
-                    converts row-matrix to col-matrix
-                    */
+        /// transpose
         template<typename TReal>
         void transpose(
             const std::vector< std::vector<TReal> > & x, //!< [in] matrix in
