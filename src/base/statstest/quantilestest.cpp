@@ -3,7 +3,6 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-
 #include "gtest/gtest.h"
 #include "base/stats/quantiles.h"
 
@@ -14,10 +13,10 @@
 #include "base/resample/masscomparefunctors.h"
 #include "base/stats/uniform.h"
 
-namespace {
+namespace{
 
   // The fixture for testing class Foo.
-  class QuantilesTest : public ::testing::Test {
+  class QuantilesTest : public ::testing::Test{
   protected:
     //std::vector<double> m_data;
     //std::vector<double> m_weight;
@@ -25,19 +24,6 @@ namespace {
     // You can remove any or all of the following functions if its body
     // is empty.
     QuantilesTest() {
-//      m_data.push_back(2);
-//      m_data.push_back(4);
-//      m_data.push_back(8);
-//      m_data.push_back(10);
-//      m_data.push_back(99);
-//      m_data.push_back(1);
-
-//      m_weight.push_back(2);
-//      m_weight.push_back(3);
-//      m_weight.push_back(4);
-//      m_weight.push_back(5);
-//      m_weight.push_back(6);
-//      m_weight.push_back(1);
       // You can do set-up work for each test here.
     }
     // Objects declared here can be used by all tests in the test case for Foo.
