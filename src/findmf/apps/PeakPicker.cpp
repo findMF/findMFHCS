@@ -83,8 +83,8 @@ inline int defineParameters(
     processing.add_options()
         ("resolution",b_po::value<double>()->default_value(50000.),
          "instrument resolution (default 50000).")
-        ("smoothwidth",b_po::value<double>()->default_value(1.5),"smoothing width")
-        ("intwidth", b_po::value<uint32_t>()->default_value(2),"integration width")
+        ("smoothwidth",b_po::value<double>()->default_value(2.5),"smoothing width")
+        ("intwidth", b_po::value<uint32_t>()->default_value(4),"integration width")
         ("area", b_po::value<bool>()->default_value(true),"(default 1)  otherwise store intensity")
         ("threshold", b_po::value<double>()->default_value(10.),"(default 3) multiplicative factor of smallest intensity in spectrum")
         ;

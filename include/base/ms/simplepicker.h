@@ -89,7 +89,7 @@ namespace ralab
                       *zerocrossings = (i + lag/2 + 1.);
                     }
                 }else{
-                  //just continue, nothing to handle
+                  //just continue, nothing to handle...
                 }
             }
           return crosscount;

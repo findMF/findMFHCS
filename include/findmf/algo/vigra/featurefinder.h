@@ -119,7 +119,7 @@ namespace ralab{
     private:
       void creatProjectionStats(ralab::findmf::datastruct::FeaturesMap & map){
         ralab::findmf::datastruct::FeaturesMap::Features::iterator beg , end ;
-        ralab::findmf::utilities::Pick picker;
+        ralab::findmf::utilities::PickApex picker;
         int count = 0;
         end = map.features().end();
         for( beg = map.features().begin() ; beg != end ; ++beg ){
