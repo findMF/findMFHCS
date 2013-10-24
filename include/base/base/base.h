@@ -17,6 +17,7 @@
 #include <cmath>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_integral.hpp>
+#include "base/base/utilities/base.h"
 
 namespace ralab
 {
@@ -24,44 +25,8 @@ namespace ralab
   {
     namespace base
     {
-      namespace utilities{
-        // class generator:
-        template<typename TReal>
-        struct SeqPlus {
-          TReal m_from;
-          TReal m_by;
 
-          SeqPlus(TReal from)
-            : m_from(from), m_by(1)
-          {}
-          TReal operator()()
-          {
-            TReal current = m_from ;
-            m_from += m_by;
-            return current;
-          }
-        };
-
-        template<typename TReal>
-        struct SeqMinus {
-          TReal m_from;
-          TReal m_by;
-
-          SeqMinus(TReal from)
-            : m_from(from), m_by(1)
-          {}
-          TReal operator()()
-          {
-            TReal current = m_from ;
-            m_from -= m_by;
-            return current;
-          }
-        };
-      }
-
-
-
-      /*! \brief generates the sequence from, from+/-1, ..., to (identical to from:to). */
+      /// generates the sequence from, from+/-1, ..., to (identical to from:to).
       template<typename TReal>
       void seq
       (
@@ -73,24 +38,21 @@ namespace ralab
         result.clear();
         typedef typename std::vector<TReal>::size_type size_type;
         if( from <= to )
-          {
-            size_type length = static_cast<size_type>(to - from) + 1;
-            result.resize(length);
-            std::generate(result.begin() , result.end() , utilities::SeqPlus<TReal>(from));
-          }
+        {
+          size_type length = static_cast<size_type>(to - from) + 1;
+          result.resize(length);
+          std::generate(result.begin() , result.end() , utilities::SeqPlus<TReal>(from));
+        }
         else
-          {
-            size_type length = static_cast<size_type>(from - to) + 1 ;
-            result.resize(length);
-            std::generate(result.begin() , result.end() , utilities::SeqMinus<TReal>(from));
-          }
+        {
+          size_type length = static_cast<size_type>(from - to) + 1 ;
+          result.resize(length);
+          std::generate(result.begin() , result.end() , utilities::SeqMinus<TReal>(from));
+        }
       }
 
-
-      /*! \brief generates sequence: from, from+by, from + 2*by, ..., up to a sequence value less than, or equal than to.
-
-                        Specifying to < from and by of positive sign is an error.
-                        */
+      /// generates sequence: from, from+by, from + 2*by, ..., up to a sequence value less than, or equal than to.
+      /// Specifying to < from and by of positive sign is an error.
       template<typename TReal>
       void seq(
           TReal from,//!<[in] the starting value of the sequence
@@ -105,31 +67,29 @@ namespace ralab
         result.reserve( size );
 
         if(from <= to)
-          {
-            if(!(by > 0)){
-                throw std::logic_error(std::string( "by > 0" ));
-              }
-            for(; from <= to; from += by)
-              {
-                result.push_back(from);
-              }
+        {
+          if(!(by > 0)){
+            throw std::logic_error(std::string( "by > 0" ));
           }
+          for(; from <= to; from += by)
+          {
+            result.push_back(from);
+          }
+        }
         else
-          {
-            if(! (by < 0) ){
-                throw std::logic_error(std::string( "by < 0" ));
-              }
-            for(; from >= to; from += by)
-              {
-                result.push_back(from);
-              }
+        {
+          if(! (by < 0) ){
+            throw std::logic_error(std::string( "by < 0" ));
           }
+          for(; from >= to; from += by)
+          {
+            result.push_back(from);
+          }
+        }
       }
 
-      /*! \brief generates sequence: from, to of length
-
-                        calls seq with \$[ by = ( ( to - from ) / (  length  - 1. ) ) \$]
-                        */
+      /// generates sequence: from, to of length
+      /// calls seq with \$[ by = ( ( to - from ) / (  length  - 1. ) ) \$]
       template<typename TReal>
       void seq_length(
           TReal from,//!<[in] the starting value of the sequence
@@ -144,21 +104,20 @@ namespace ralab
         //this is required because of machine precision...
         // sometimes by does not add's up to precisely _to_ nad
         if(result.size() < length)
-          {
-            result.push_back(result[result.size()-1] + by );
-          }
+        {
+          result.push_back(result[result.size()-1] + by );
+        }
         else
-          {
-            result.resize(length);
-          }
+        {
+          result.resize(length);
+        }
       }
 
-      /*! \brief generates the sequence [1, 2, ..., length(ref)]
+      /// generates the sequence [1, 2, ..., length(ref)]
+      /// (as if argument along.with had been specified),
+      /// unless the argument is numeric of length 1 when it is interpreted as
+      ///  1:from (even for seq(0) for compatibility with S).
 
-                        (as if argument along.with had been specified),
-                        unless the argument is numeric of length 1 when it is interpreted as
-                        1:from (even for seq(0) for compatibility with S).
-                        */
       template< typename T1 , typename T2 >
       void seq
       (
@@ -171,11 +130,10 @@ namespace ralab
         std::partial_sum( res.begin() , res.end() , res.begin() );
       }
 
-      /*! \brief Generates Sequence 1,2,3,....length .
+      /// Generates Sequence 1,2,3,....length .
+      /// Generates 1, 2, ..., length unless length.out = 0, when it generates
+      /// integer(0).
 
-                        Generates 1, 2, ..., length unless length.out = 0, when it generates
-                        integer(0).
-                        */
       template<typename TSize, typename TReal>
       typename boost::enable_if<boost::is_integral<TSize>, void>::type
       seq(
@@ -189,24 +147,21 @@ namespace ralab
       }
 
 
-      /*! MEAN Trimmed arithmetic mean.
+      /// MEAN Trimmed arithmetic mean.
 
-                        ## Default S3 method:
-                        mean(x, trim = 0, na.rm = FALSE, ...)
+      /// ## Default S3 method:
+      /// mean(x, trim = 0, na.rm = FALSE, ...)
 
-                        Arguments
-                        x 	An R object. Currently there are methods for numeric data frames, numeric vectors and dates. A complex vector is allowed for trim = 0, only.
-                        trim 	the fraction (0 to 0.5) of observations to be trimmed from each end of x before the mean is computed. Values outside that range are taken as the nearest endpoint.
-                        na.rm 	a logical value indicating whether NA values should be stripped before the computation proceeds.
-                        ... 	further arguments passed to or from other methods.
+      /// Arguments
+      /// x 	An R object. Currently there are methods for numeric data frames, numeric vectors and dates. A complex vector is allowed for trim = 0, only.
+      /// trim 	the fraction (0 to 0.5) of observations to be trimmed from each end of x before the mean is computed. Values outside that range are taken as the nearest endpoint.
+      /// na.rm 	a logical value indicating whether NA values should be stripped before the computation proceeds.
+      /// ... 	further arguments passed to or from other methods.
 
-                        Value
-                        For a data frame, a named vector with the appropriate method being applied column by column.
-                        If trim is zero (the default), the arithmetic mean of the values in x is computed, as a numeric or complex vector of length one. If x is not logical (coerced to numeric), integer, numeric or complex, NA is returned, with a warning.
-                        If trim is non-zero, a symmetrically trimmed mean is computed with a fraction of trim observations deleted from each end before the mean is computed.
-
-
-                        */
+      /// Value
+      /// For a data frame, a named vector with the appropriate method being applied column by column.
+      /// If trim is zero (the default), the arithmetic mean of the values in x is computed, as a numeric or complex vector of length one. If x is not logical (coerced to numeric), integer, numeric or complex, NA is returned, with a warning.
+      /// If trim is non-zero, a symmetrically trimmed mean is computed with a fraction of trim observations deleted from each end before the mean is computed.
 
 
       template < typename InputIterator >
@@ -223,7 +178,7 @@ namespace ralab
         return(sum/size);
       }
 
-      /*! \brief mean */
+      /// mean
       template <typename TReal>
       inline TReal mean(const std::vector<TReal> & x )
       {
@@ -232,7 +187,7 @@ namespace ralab
         return ( sum / size ) ;
       }
 
-      /*! \brief mean */
+      /// mean
       template <typename TReal>
       TReal mean(
           const std::vector<TReal> & x, //!< [in]
@@ -240,9 +195,9 @@ namespace ralab
           )
       {
         if(trim >= 0.5)
-          {
-            trim = 0.4999999;
-          }
+        {
+          trim = 0.4999999;
+        }
         TReal size = static_cast<TReal>(x.size());
         std::vector<TReal> wc(x); //working copy
         std::sort(wc.begin(),wc.end());
@@ -251,9 +206,8 @@ namespace ralab
         TReal sum = std::accumulate(wc.begin() + nrelemstrim , wc.end() - nrelemstrim, 0. );
         return ( sum / static_cast<TReal>( nrelems ) ); //static_cast will be required with boost::math::round
       }
-      /*! @}*/
 
-      /*! \brief computes the mean */
+      /// computes the mean
       template<class Iter_T>
       typename std::iterator_traits<Iter_T>::value_type geometricMean(Iter_T first, Iter_T last)
       {
@@ -265,9 +219,9 @@ namespace ralab
         typename std::vector<TReal>::iterator inputIt;
 
         for(inputIt = copyOfInput.begin(); inputIt != copyOfInput.end() ; ++inputIt)
-          {
-            *inputIt = std::log(*inputIt);
-          }
+        {
+          *inputIt = std::log(*inputIt);
+        }
 
         // sum(ln(x))
         TReal sum( std::accumulate(copyOfInput.begin(), copyOfInput.end(), TReal() ));
@@ -278,12 +232,8 @@ namespace ralab
       }
 
 
-      /*! \brief Range of Values
-
-                        range returns a std::pair containing minimum and maximum of all the given values.
-
-
-                        */
+      /// Range of Values
+      /// range returns a std::pair containing minimum and maximum of all the given values.
       template<typename TReal>
       void Range(
           const std::vector<TReal> & values, //!< [in] data
@@ -296,8 +246,7 @@ namespace ralab
         range.second = max;
       }
 
-
-      /*!\brief maximum of 3 numbers*/
+      ///  maximum of 3 numbers
       template<typename T>
       inline double max3(T a, T b, T c)
       {
@@ -311,7 +260,7 @@ namespace ralab
         return(max);
       }
 
-      /*!\brief log base 2 */
+      /// log base 2
       template<typename TReal>
       inline TReal log2(TReal test)
       {
@@ -320,7 +269,6 @@ namespace ralab
         else
           return( log10( test ) / log10( static_cast<TReal>(2.) ));
       }
-
 
     }//namespace BASE ends here
   }//namespace base ends here

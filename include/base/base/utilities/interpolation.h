@@ -16,7 +16,6 @@ namespace ralab
 
       namespace utilities
       {
-
         /// LinearInterpolate Functor
         template<typename TReal>
         struct LinearInterpolate
