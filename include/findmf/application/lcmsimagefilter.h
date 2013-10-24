@@ -16,7 +16,7 @@ namespace ralab{
   namespace findmf{
     class LCMSImageFilter{
     private:
-      std::vector<float> signal_;
+      std::vector<float> signal_; //worker variable
 
       static void filter( datastruct::LCMSImage::Map & mp_,float scalemz = 1. , float scalert = 1.){
         //using namespace vigra::functor;
