@@ -21,13 +21,12 @@ namespace ralab{
     //reads swath properties from an mzMLFIle
     struct SwathPropertiesReader{
     private:
-      pwiz::msdata::MSDataPtr msdataptr_;
       datastruct::SwathInfoPtr swathinfo_;
     public:
       SwathPropertiesReader(pwiz::msdata::MSDataPtr msdataptr)
-        :msdataptr_(msdataptr),swathinfo_(new datastruct::SwathInfo())
+        :swathinfo_(new datastruct::SwathInfo())
       {
-        readProperties();
+        readProperties(msdataptr);
       }
 
       void getKeys(std::vector<std::size_t> & keys){
@@ -41,7 +40,7 @@ namespace ralab{
 
     private:
       /* method to create swath file layout */
-      void readProperties()
+      void readProperties(pwiz::msdata::MSDataPtr msdataptr_)
       {
         pwiz::msdata::SpectrumListPtr sl = msdataptr_->run.spectrumListPtr;
         if (sl.get())
@@ -96,6 +95,8 @@ namespace ralab{
                   }
 
               }
+            std::cout << specIndex << std::endl;
+
           }
       }
     };

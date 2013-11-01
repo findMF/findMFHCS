@@ -8,7 +8,7 @@
 Authors   : Witold Eryk Wolski <wewolski@gmail.com> and Christian Panse <cp@fgcz.ethz.ch>
 
 This code belongs to two projects:
-o http://cran.r-project.org/web/packages/protViz/index.html under GPLv3 
+o http://cran.r-project.org/web/packages/protViz/index.html under GPLv3
 o https://github.com/wolski/rl under three-clause BSD license
 
 Copyright : Functional Genomics Center Zurich | UZH | ETHZ and  ETH Zurich 2013
@@ -32,11 +32,23 @@ namespace ralab{
   namespace base{
     namespace ms{
 
-      class Deisotoper {
+      template < class Iterator, class T >
+      Iterator findNearestNeighbor(Iterator first, Iterator last, const T & val) {
+        Iterator it = std::upper_bound(first, last, val);
 
+        if (it != first) {
+          Iterator it_pre = it - 1;
+          if (fabs(val - *it_pre) < fabs(val - *it) || it == last) {
+            return (it_pre);
+          }
+        }
+        return (it);
+      }
+
+
+      class Deisotoper{
         std::vector < int > Z_; // charge states
-        std::vector<std::vector < double > > isotopPatternMap;
-
+        std::vector< std::vector < double > > isotopPatternMap;
         double ppmError_;
         double hydrogenMass_;
         ralab::base::chemistry::IIsotopeEnvelope * ie_;
@@ -44,97 +56,168 @@ namespace ralab{
       public:
 
         typedef std::vector< std::vector< std::vector < int > > > ListOfVectors;
-        struct isotopResult {
+        typedef std::vector< std::vector < double > > ListOfDoubleVectors;
+
+        struct IsotopResult {
           ListOfVectors isotopChains;
+          ListOfDoubleVectors isotopDotProducts;
+
           std::vector < std::vector < int > >isotopPatternIdx;
           std::vector < std::vector < double > >isotopPeakScores;
           std::vector < double >isotopScores;
+
+          std::vector < std::vector < int > >isotopGroups;
 
           const std::vector < int > & getIsotopPatten(int i) {
             if (isotopPatternIdx[i].size() > 0)
               return isotopPatternIdx[i];
           }};
 
-        isotopResult result_;
+        IsotopResult result_;
 
+        const std::vector < std::vector < int > >  & getIsotopGroups() const{
+          return result_.isotopGroups;
+        }
 
-        const ListOfVectors & getResult() {
+        const ListOfVectors & getIsotopChainResults() const{
           return result_.isotopChains;
         }
 
-
-         Deisotoper(double ppm = 10 ):ppmError_(ppm),hydrogenMass_(1.008){
-          ie_=NULL;
+        const ListOfDoubleVectors & getIsotopDotProductsResults() const{
+          return result_.isotopDotProducts;
         }
 
+
+        // constructor
+        Deisotoper(double ppm = 50 ):ppmError_(ppm),hydrogenMass_(1.008){}
+
         template<class TintI>
-        Deisotoper(TintI beginz , TintI endz, double ppm = 10):
+        Deisotoper(TintI beginz , TintI endz, double ppm = 50):
           Z_( beginz , endz ),
           ppmError_(ppm),hydrogenMass_(1.008)
         {}
 
+        /// set isotope envelope access (inject dependency)
         void setIsotopPatternMap(ralab::base::chemistry::IIsotopeEnvelope * isotopeEnvlope){
           ie_ = isotopeEnvlope;
         }
 
+
         template < typename TmassI, typename TinteI >
-        void
-        computeIsotopChains(TmassI beginMass, TmassI endMass, TinteI beginIntensity)
+        void computeIsotopChains(TmassI beginMass, TmassI endMass)//, TinteI beginIntensity)
         {
 
+          std::vector < int > isoptopGroupsIdx;
+
+          std::vector <std::vector < int > >isoptopGroupsIdxChargeBegin(Z_.size());
+          std::vector <std::vector < int > >isoptopGroupsIdxChargeEnd(Z_.size());
+
+          std::vector<std::vector< int > > results ;
           for (unsigned int zi = 0; zi < Z_.size(); zi++) {
-              std::vector<std::vector< int > > results ;
-              computeDeisotopCandidates(beginMass, endMass, Z_[zi], results);
-              result_.isotopChains.push_back(results);
+
+
+            computeDeisotopCandidates(beginMass, endMass, Z_[zi], results);
+
+            result_.isotopChains.push_back(results);
+
+            // preprocessing for ISOTOP GROUPING
+            // step 0: determine all isotop groups for all charge states
+            for (std::vector<std::vector< int > >::iterator it = results.begin(); it !=  results.end(); ++it){
+              isoptopGroupsIdx.insert(isoptopGroupsIdx.end(), (*it).begin(), ++(*it).begin());
+
+              std::vector< int >::iterator end__ = (*it).end();
+              --end__;
+
+              isoptopGroupsIdxChargeBegin[zi].push_back(*(*it).begin());
+              isoptopGroupsIdxChargeEnd[zi].push_back(*end__);
+
+              (*it).clear();
             }
-        }
+            results.clear();
+          }
+
+          // ISOTOP GROUPING
+          std::sort (isoptopGroupsIdx.begin(), isoptopGroupsIdx.end());
+          std::unique (isoptopGroupsIdx.begin(), isoptopGroupsIdx.end());
+
+          std::vector<int>::iterator it_NN_begin;
+          std::vector<int>::iterator it_NN_end;
+
+          // for all isotop groups
+          for(std::vector< int >::iterator it = isoptopGroupsIdx.begin(); it !=isoptopGroupsIdx.end(); ++it){
+
+            // default -1 mean NA means no isotop for this charge state
+            std::vector< int > group(Z_.size(), -1);
+
+            // for all charge states
+            for (unsigned int zi = 0; zi < Z_.size(); zi++) {
+
+              // if we have a isotop group for charge state zi
+              if (std::distance(isoptopGroupsIdxChargeBegin[zi].begin(), isoptopGroupsIdxChargeBegin[zi].end()) > 0){
+
+                // compute lower and upper bound for a isotop group intersection
+                it_NN_begin = std::lower_bound(isoptopGroupsIdxChargeBegin[zi].begin(), isoptopGroupsIdxChargeBegin[zi].end(), *it);
+                it_NN_end = std::upper_bound(isoptopGroupsIdxChargeEnd[zi].begin(), isoptopGroupsIdxChargeEnd[zi].end(), *it);
+
+                // the end of the list is not the last entry!
+                if (it_NN_begin == isoptopGroupsIdxChargeBegin[zi].end())
+                  --it_NN_begin;
+                if (it_NN_end == isoptopGroupsIdxChargeEnd[zi].end())
+                  --it_NN_end;
+
+
+                // determine if thhere is a isotop group intersection;
+                if ( (*it_NN_begin) <=  (*it) && (*it) <=  (*it_NN_end) )
+                  group[zi] = std::distance(isoptopGroupsIdxChargeBegin[zi].begin(),it_NN_begin);
+
+              }
+            }
+            // save the result
+            result_.isotopGroups.push_back(group);
+          }
+        }//end computeIsotopChains
 
         template < typename TmassI, typename TinteI >
-        void
-        assignIsotopIntensities(TmassI beginMass, TmassI endMass, TinteI beginIntensity){
+        void assignIsotopIntensities(TmassI beginMass, TmassI endMass, TinteI beginIntensity){
 
-          double sumIntensity = 0.0;// *(std::sum_element(beginIntensity, beginIntensity + std::distance(beginMass, endMass)));
-
-          TinteI endIntensity = beginIntensity + std::distance(beginMass, endMass);
-          for(TinteI j=beginIntensity; j != endIntensity; ++j){
-              sumIntensity += *j;
-            }
-
+          //TinteI endIntensity = beginIntensity + std::distance(beginMass, endMass);
 
           for (std::vector< std::vector< std::vector< int > > >::iterator it_z = result_.isotopChains.begin(); it_z !=  result_.isotopChains.end(); ++it_z){
-              for (std::vector< std::vector< int > >::iterator it_c = (*it_z).begin(); it_c !=  (*it_z).end(); ++it_c){
-                  double queryMass = *(beginMass + *(*it_c).begin());
-                  std::cout << "\nqueryMass = " << queryMass;
-                  std::vector<double> LISO;
-                  ie_ -> isotopeEnvelope(queryMass,LISO);
+
+            std::vector < double > Lscore;
+
+            for (std::vector< std::vector< int > >::iterator it_c = (*it_z).begin(); it_c !=  (*it_z).end(); ++it_c){
+
+              double queryMass = *(beginMass + *(*it_c).begin());
+
+              std::vector<double> LIsotopeEnvelope = ie_->isotopeEnvelope(queryMass);
+
+              int count = 0;
+
+              double dIntensityDotProduct = 0.0;
+
+              // compute L2 norm for selected isotop chain
+              double dIntensityL2 = 0.0;
+              for (std::vector< int >::iterator it_idx = (*it_c).begin(); it_idx !=  (*it_c).end(); ++it_idx)
+                dIntensityL2 += ( (*(beginIntensity + (*it_idx))) ) * ( (*(beginIntensity + (*it_idx))) );
+
+              dIntensityL2 = sqrt (dIntensityL2);
 
 
-                  //                    std::cout <<  "\nIsotopPattern:" << std::endl;
-                  //                    for( unsigned int k = 0; k < LISO.size(); k++) {
-                  //                        std::cout <<  LISO[k] << "\t";
-                  //                    }
-                  //                    std::cout << std::endl;
+              // compute dot product between L2 normalized isotop chain intensities and predicted isotop pattern
+              for (std::vector< int >::iterator it_idx = (*it_c).begin(); it_idx !=  (*it_c).end(); ++it_idx){
 
-                  //                    sumIntensity = 0.0;
-                  //                    for (std::vector< int >::iterator it_idx = (*it_c).begin(); it_idx !=  (*it_c).end(); ++it_idx){
-                  //                            sumIntensity += *(beginIntensity + (*it_idx));
-                  //                    }
+                // TODO here we have to find the mono iso peak!!!
+                // than we can operate with a modulo operator
+                dIntensityDotProduct += ((*(beginIntensity + (*it_idx)))  / dIntensityL2) * LIsotopeEnvelope[count];
 
-                  double dProd = 0.0;
-                  double dDotProd = 0.0;
-                  int count=0;
+                count++;
+              }
 
-                  for (std::vector< int >::iterator it_idx = (*it_c).begin(); it_idx !=  (*it_c).end(); ++it_idx){
-                      dProd = ((*(beginIntensity + (*it_idx))) /  sumIntensity) * LISO[count];
-                      dDotProd += dProd;
-
-                      std::cout <<"\n" << *it_idx  << "\t" << *(beginMass + (*it_idx)) << "\t" << (*(beginIntensity + (*it_idx))) << "\t" <<  (*(beginIntensity + (*it_idx))) /  sumIntensity  << "\t" << dProd << "\t\t*" << dDotProd << "*\t" << LISO[count]<< std::endl;
-
-                      count++;
-                    }
-
-                } // for all chains
-            } // for all charge states z
+              Lscore.push_back(dIntensityDotProduct);
+            } // for all chains
+            result_.isotopDotProducts.push_back(Lscore);
+          } // for all charge states z
         }
 
 
@@ -148,34 +231,20 @@ namespace ralab{
           S.push(v);
 
           while (!S.empty()) {
-              v = S.top();
-              S.pop();
-              result.push_back(v);
+            v = S.top();
+            S.pop();
+            result.push_back(v);
 
-              if (!VISITED[v]) {
-                  VISITED[v] = true;
-                  if (G[v] > -1)
-                    S.push(G[v]);
-                }
+            if (!VISITED[v]) {
+              VISITED[v] = true;
+              if (G[v] > -1)
+                S.push(G[v]);
             }
+          }
 
           return 0;
         }
 
-        template < class Iterator, class T > Iterator findNearestNeighbor(Iterator first,
-                                                                          Iterator last,
-                                                                          const T & val) {
-          Iterator it = std::upper_bound(first, last, val);
-
-          if (it != first) {
-              Iterator it_pre = it - 1;
-              if (fabs(val - *it_pre) < fabs(val - *it) || it == last) {
-                  return (it_pre);
-                }
-            }
-
-          return (it);
-        }
 
         /*
        graph G(V,E);
@@ -192,19 +261,21 @@ namespace ralab{
         int generateGraph(std::vector <int >&G,
                           int z,
                           Iterator firstMz,
-                          Iterator lastMz) {
+                          Iterator lastMz)
+        {
           for (Iterator itMz = firstMz; itMz != lastMz; ++itMz)
-            {
+          {
 
-              double dQmZ = (*itMz + (hydrogenMass_ /z));
-              Iterator itNNmZ = findNearestNeighbor(firstMz, lastMz, dQmZ);
+            double dQmZ = (*itMz + (hydrogenMass_ /z));
+            Iterator itNNmZ = findNearestNeighbor(firstMz, lastMz, dQmZ);
 
-              if (fabs(*itNNmZ - dQmZ) < (ppmError_ * *itNNmZ * 1E-6))
-                G[std::distance(firstMz, itMz)] =
-                    std::distance(firstMz, itNNmZ);
-            }
+            if (fabs(*itNNmZ - dQmZ) < (ppmError_ * *itNNmZ * 1E-6))
+              G[std::distance(firstMz, itMz)] =
+                  std::distance(firstMz, itNNmZ);
+          }
           return 0;
         }
+
 
         template < typename TmassI > int computeDeisotopCandidates(TmassI beginMass,
                                                                    TmassI endMass,
@@ -217,14 +288,14 @@ namespace ralab{
           std::vector < bool > VISITED(n, false);
 
           for (unsigned int i = 0; i < G.size(); i++) {
-              if (G[i] > -1) {
-                  std::vector<int> result;
-                  explore(i, G, VISITED,result);
-                  if(result.size() > 1){
-                      candidates.push_back(result);
-                    }
-                }
+            if (G[i] > -1) {
+              std::vector<int> result;
+              explore(i, G, VISITED,result);
+              if(result.size() > 1){
+                candidates.push_back(result);
+              }
             }
+          }
           return 0;
         }
 

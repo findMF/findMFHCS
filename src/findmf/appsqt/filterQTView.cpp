@@ -73,8 +73,8 @@ int main(int argc, char *argv[])
           ralab::MultiArrayVisLog<float> adapt0( mp.getMap() );
 
           tpi.setTopMap(&adapt1);
-          //tpi.setBottomMap(&mavL);
-          tpi.setBottomMap(&adapt0);
+          tpi.setBottomMap(&mavL);
+          //tpi.setBottomMap(&adapt0);
 
           tpi.show();
           res = app.exec();

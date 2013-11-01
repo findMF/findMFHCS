@@ -3,7 +3,6 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-
 #ifndef LCMSIMAGEFILTER_H
 #define LCMSIMAGEFILTER_H
 
@@ -64,10 +63,10 @@ namespace ralab{
                       uint32_t rtpixelwidth, //!< in pixel
                       double mzscale=1., //!< scale
                       double rtscale=1.,
-                      double factor = 2.5 // size of structuring element resolution * factor
+                      double factor = 1. // size of structuring element resolution * factor
           )
       {
-        LOG(INFO) << "mzscale: " << mzscale << " rtscale " << rtscale << " mzw " << mzpixelwidth << "rt" << rtpixelwidth <<  " factor : " << factor << std::endl;
+        LOG(INFO) << "mzscale: " << mzscale << " rtscale: " << rtscale << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth <<  " factor : " << factor << std::endl;
         sqrt(mp_.getMap()); // put it on nicer scale
         filter(mp_.getMap(),mzscale,rtscale);
         mp_.updateMax();

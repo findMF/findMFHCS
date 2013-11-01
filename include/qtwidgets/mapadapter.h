@@ -71,10 +71,27 @@ namespace ralab{
 
     virtual float get(std::size_t px, std::size_t py)override{
       int x = Base::data_[typename Base::difftype(px,py)];
-      if(x % 2 == 0)
-        return x;
+
+      double max = 8.;
+      int maxi = 8;
+      if(x == 0)
+        return 0;
+      else if(x % maxi == 0)
+        return Base::max_ * (0.5/max);
+      else if((x+1)%maxi ==0)
+        return Base::max_ * (2./max);
+      else if((x+2)%maxi ==0)
+        return Base::max_ * (3./max);
+      else if((x+3)%maxi ==0)
+        return Base::max_ * (4./max);
+      else if((x+4)%maxi ==0)
+        return Base::max_ * (5./max);
+      else if((x+5)%maxi ==0)
+        return Base::max_ * (6./max);
+      else if((x+6)%maxi ==0)
+        return Base::max_ * (7./max);
       else
-        return Base::max_ - x;
+        return Base::max_ * (7.5/max);
     }
 
     virtual float getMaxelem()override{

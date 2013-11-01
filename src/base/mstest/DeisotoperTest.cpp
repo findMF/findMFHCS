@@ -32,6 +32,8 @@ namespace {
     // and cleaning up each test, you can define the following methods:
 
     virtual void SetUp() {
+
+
       // Code here will be called immediately after the constructor (right
       // before each test).
 

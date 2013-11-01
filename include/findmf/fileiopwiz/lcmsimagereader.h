@@ -140,10 +140,8 @@ namespace ralab{
               }
           }
       }
+       ///fills the map
 
-      /**
-       * fills the map
-*/
       void fillLCMSImage(pwiz::msdata::MSDataPtr msd,
                          const std::vector<std::size_t> & indices, // spectrum indices
                          datastruct::LCMSImage & map_ // output map.

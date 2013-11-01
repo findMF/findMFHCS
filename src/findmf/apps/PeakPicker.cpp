@@ -43,18 +43,18 @@ struct PPParams
   void prepareOutputFile()
   {
     if( !boost::filesystem::exists(infile_) )
-      {
-        LOG(ERROR) << "could not find specified file :" ;
-        LOG(ERROR) << infile_ << std::endl;
-        return;
-      }
+    {
+      LOG(ERROR) << "could not find specified file :" ;
+      LOG(ERROR) << infile_ << std::endl;
+      return;
+    }
     //filestem_ = boost::filesystem::path(infile).stem().stem().stem().string(); //createOutputs(p1.string() ,"fitered");
     outdir_ = boost::filesystem::path(outfile_).parent_path();
     //create outdir
     try{
       if(!boost::filesystem::exists(outdir_)){
-          boost::filesystem3::create_directory(outdir_);
-        }
+        boost::filesystem3::create_directory(outdir_);
+      }
     }catch(std::exception & e ){
       std::cout << e.what() << std::endl;
     }
@@ -77,67 +77,70 @@ inline int defineParameters(
         ("version,V", "produces version information")
         ("in,I", b_po::value<std::string>(), "input file")
         ("out,O", b_po::value<std::string>(), "output file")
-        ("config-file,I", b_po::value<std::string>(), "configuration file");
+        ("config-file,C", b_po::value<std::string>(), "configuration file");
 
     b_po::options_description processing("Processing Options:");
     processing.add_options()
-        ("resolution",b_po::value<double>()->default_value(50000.),
+        ("resolution",b_po::value<double>()->default_value(20000.),
          "instrument resolution (default 50000).")
-        ("smoothwidth",b_po::value<double>()->default_value(2.5),"smoothing width")
-        ("intwidth", b_po::value<uint32_t>()->default_value(4),"integration width")
         ("area", b_po::value<bool>()->default_value(true),"(default 1)  otherwise store intensity")
         ("threshold", b_po::value<double>()->default_value(10.),"(default 3) multiplicative factor of smallest intensity in spectrum")
         ;
 
+    b_po::options_description advancedprocessing("Advanced Processing Options:");
+    advancedprocessing.add_options()
+        ("smoothwidth",b_po::value<double>()->default_value(1.3),"smoothing width")
+        ("intwidth", b_po::value<uint32_t>()->default_value(2u),"integration width");
+
 
     b_po::options_description cmdloptions;
-    cmdloptions.add(general).add(processing);
+    cmdloptions.add(general).add(processing).add(advancedprocessing);
     b_po::store( b_po::parse_command_line( ac , av , cmdloptions) , vmgeneral);
     b_po::notify(vmgeneral);
     std::string configfile;
     if(vmgeneral.count("config-file"))
-      {
-        configfile = vmgeneral["config-file"].as<std::string>();
-      }
+    {
+      configfile = vmgeneral["config-file"].as<std::string>();
+    }
 
     b_po::options_description config_file_options;
-    config_file_options.add(general).add(processing);
+    config_file_options.add(general).add(processing).add(advancedprocessing);
     if(configfile.size() > 0 && b_fs::exists(configfile))
-      {
-        std::ifstream ifs(configfile.c_str());
-        store(parse_config_file(ifs, config_file_options), vmgeneral);
-        b_po::notify(vmgeneral);
-      }
+    {
+      std::ifstream ifs(configfile.c_str());
+      store(parse_config_file(ifs, config_file_options), vmgeneral);
+      b_po::notify(vmgeneral);
+    }
     else if(configfile.size() == 0){
-      }
+    }
     else
-      {
-        std::cerr << "Could not find config file." << std::endl;
-        return -1;
-      }
+    {
+      std::cerr << "Could not find config file." << std::endl;
+      return -1;
+    }
 
     if(!vmgeneral.count("in"))
-      {
-        std::cerr << "input file is obligatory" << std::endl;
-        std::cerr << cmdloptions << "\n";
-        return -1;
-      }
+    {
+      std::cerr << "input file is obligatory" << std::endl;
+      std::cerr << cmdloptions << "\n";
+      return -1;
+    }
     if(!vmgeneral.count("out"))
-      {
-        std::cerr << "output file is obligatory" << std::endl;
-        std::cerr << cmdloptions << "\n";
-        return -1;
-      }
+    {
+      std::cerr << "output file is obligatory" << std::endl;
+      std::cerr << cmdloptions << "\n";
+      return -1;
+    }
     if(vmgeneral.count("help"))
-      {
-        std::cerr << cmdloptions << "\n";
-        return -1;
-      }
+    {
+      std::cerr << cmdloptions << "\n";
+      return -1;
+    }
     if(vmgeneral.count("version"))
-      {
-        std::cerr << "1.0.0.3" << "\n";
-        return -1;
-      }
+    {
+      std::cerr << "1.0.0.3" << "\n";
+      return -1;
+    }
   }
   catch(std::exception& e)
   {
@@ -153,18 +156,18 @@ inline int defineParameters(
 
 inline void analysisParameters(PPParams & ap,b_po::variables_map & vmgeneral){
   if(vmgeneral.count("in"))
-    {
-      ap.infile_ =  vmgeneral["in"].as<std::string>();
-    }
+  {
+    ap.infile_ =  vmgeneral["in"].as<std::string>();
+  }
 
   if(vmgeneral.count("out"))
-    {
-      ap.outfile_ = vmgeneral["out"].as<std::string>();
-    }
+  {
+    ap.outfile_ = vmgeneral["out"].as<std::string>();
+  }
 
-  ap.resolution_ = vmgeneral["resolution"].as<double>();
-  ap.smoothwidth_ = vmgeneral["smoothwidth"].as<double>();
-  ap.integrationwidth_ = vmgeneral["intwidth"].as<uint32_t>();
+  ap.resolution_ = 2*vmgeneral["resolution"].as<double>();
+  ap.smoothwidth_ = 2*vmgeneral["smoothwidth"].as<double>();
+  ap.integrationwidth_ = 2*vmgeneral["intwidth"].as<uint32_t>();
   ap.area_ = vmgeneral["area"].as<bool>(); //do you want to store areas
   ap.threshold_ = vmgeneral["threshold"].as<double>();
 }
@@ -173,8 +176,8 @@ int main(int argc, char *argv[])
 {
   b_po::variables_map vmgeneral;
   if(defineParameters(argc, argv, vmgeneral) != 0){
-      return 0;
-    }
+    return 0;
+  }
   PPParams aparam;
   analysisParameters(aparam,vmgeneral);
 
@@ -192,11 +195,11 @@ int main(int argc, char *argv[])
   msdataptr_->run.spectrumListPtr = mp;
   pwiz::msdata::MSDataFile::Format format;
   if(std::string("mzML").compare(boost::filesystem3::extension(aparam.outfile_)) ==0 ){
-      format = pwiz::msdata::MSDataFile::Format_mzML;
-    }
+    format = pwiz::msdata::MSDataFile::Format_mzML;
+  }
   else{
-      format =  pwiz::msdata::MSDataFile::Format_mzXML;
-    }
+    format =  pwiz::msdata::MSDataFile::Format_mzXML;
+  }
   pwiz::msdata::MSDataFile::write(*msdataptr_,
                                   aparam.outfile_,
                                   format

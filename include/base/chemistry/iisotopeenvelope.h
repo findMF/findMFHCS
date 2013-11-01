@@ -17,7 +17,7 @@ namespace ralab
       struct IIsotopeEnvelope{
         // given a mass returns the MassAbundance (isotope envelope).
         virtual ~IIsotopeEnvelope(){}
-        virtual void isotopeEnvelope(double mass, MassAbundance & massabundance) const = 0;
+        virtual MassAbundance isotopeEnvelope(double mass) const = 0;
       };
     }//end ms
   }//end base

@@ -9,7 +9,7 @@ t = m^2
 \]
 
 <<echo=FALSE,results=hide,fig=TRUE>>=
-setwd("/home/witold/prog/qttest/mandelbrot/findmfout")
+setwd("/home/witold/prog/qttest/rl/findmfout")
 f<-dir(pattern="*.bin")
 f
 x<-6*0
@@ -20,7 +20,6 @@ bb<-diff(ormz)
 bb2<-bb
 bb2[bb>0.01]<-0
 plot(ormz[-L],bb2^2,pch=".",xlim=c(0,500))
-
 
 orint<-readBin(f[1],what=numeric(),n=100000)
 parea<-readBin(f[3+x],what=numeric(),n=100000)
