@@ -17,24 +17,27 @@ namespace ralab{
     private:
       std::vector<float> signal_; //worker variable
 
-      static void filter( datastruct::LCMSImage::Map & mp_,float scalemz = 1. , float scalert = 1.){
+      ///
+      static void filterGauss( datastruct::LCMSImage::Map & mp_,float scalemz = 1. , float scalert = 1.){
         //using namespace vigra::functor;
         vigra::gaussianSmoothing(vigra::srcImageRange(mp_), vigra::destImage(mp_), scalemz , scalert);
       }
 
-      /** square map intensities*/
+      /// square map intensities
       static void sq(datastruct::LCMSImage::Map & mp_){
         vigra::transformImage(srcImageRange(mp_),
                               destImage(mp_),vigra::functor::sq(vigra::functor::Arg1())
                               );
       }
 
+      /// square root intensitiess
       static void sqrt(datastruct::LCMSImage::Map & mp_){
         vigra::transformImage(srcImageRange(mp_),
                               destImage(mp_), vigra::functor::sqrt(vigra::functor::Arg1())
                               );
       }
 
+      /// filter retention times
       void filterRT(datastruct::LCMSImage::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFloatPtr  f ) override {
         size_t xx = mp_.size(0);
         for( std::size_t i = 0 ; i < xx; ++i )
@@ -46,7 +49,7 @@ namespace ralab{
           }
       }
 
-      //apply filter to all spectra in MZ dimension
+      /// apply filter to all spectra in MZ dimension
       void filterMZ(datastruct::LCMSImage::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFloatPtr  f ) override{
         for(std::ptrdiff_t i = 0 ; i < mp_.size(1); ++i)
           {
@@ -58,6 +61,7 @@ namespace ralab{
       }
 
     public:
+
       void filterMap( datastruct::LCMSImage & mp_, //!<
                       uint32_t mzpixelwidth, //!< in pixel
                       uint32_t rtpixelwidth, //!< in pixel
@@ -68,7 +72,7 @@ namespace ralab{
       {
         LOG(INFO) << "mzscale: " << mzscale << " rtscale: " << rtscale << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth <<  " factor : " << factor << std::endl;
         sqrt(mp_.getMap()); // put it on nicer scale
-        filter(mp_.getMap(),mzscale,rtscale);
+        filterGauss(mp_.getMap(),mzscale,rtscale);
         mp_.updateMax();
         if(rtpixelwidth > 0){
             ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfRT =
@@ -86,13 +90,12 @@ namespace ralab{
                   );
             filterMZ(mp_.getMap(),sfpfMZ);
           }
+
         //in addition filter after background removal
-        filter(mp_.getMap(),mzscale/2., rtscale/2.);
+        filterGauss( mp_.getMap() , mzscale/2. , rtscale/2. );
         sq(mp_.getMap());
         mp_.updateMax();
       }
-
-
     };
   }
 }//end namespace

@@ -92,14 +92,15 @@ namespace ralab{
         size_t nrcols = swathInfo_->getMapForKey(key)->indices_.size();
         nrcols = rt2sum_.getNrCols(nrcols);
 
-        LOG(INFO) << "key : [" << key << "] map properties read : [" << time.elapsed() << "]"<< std::endl;
+        LOG(INFO) << "key : [" << key << "] map properties read : [" << time.elapsed() << "]";
         time.restart();
 
         size_t rows = map_.setBreak(mzRange_, ppm_ );
         map_.resize(rows,nrcols);
+        LOG(INFO) << "rows : [" << rows << "]  nrcols : [" << nrcols << "]";
 
         fillLCMSImage(msdataptr_,swathInfo_->getMapForKey(key)->indices_,map_);
-        LOG(INFO) << "key : [" << key << "]  map created : [" << time.elapsed() << "]"<< std::endl;
+        LOG(INFO) << "key : [" << key << "]  map created : [" << time.elapsed() << "]";
       }
 
       /// Store file on disk

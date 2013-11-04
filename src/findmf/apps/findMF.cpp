@@ -92,10 +92,10 @@ namespace ralab{
 
       boost::timer time;
       time.restart();
-      LOG(INFO) << "> start Image filtering";
+      LOG(INFO) << " start Image filtering";
       ralab::findmf::LCMSImageFilter imgf;
       imgf.filterMap( *mp , mzpixelwidth_ , rtpixelwidth_ , mzscale_, rtscale_);
-      LOG(INFO) << "> Image Filtered in : " << time.elapsed() << " [s]";
+      LOG(INFO) << " Image Filtered in : " << time.elapsed() << " [s]";
       return mp;
     }
   };
@@ -114,7 +114,7 @@ namespace ralab{
 
       boost::timer time;
       time.restart();
-      LOG(INFO) << "> start Feature Find";
+      LOG(INFO) << " start Feature Find";
       ralab::findmf::FeatureFinder ff;
       ralab::findmf::datastruct::FeaturesMap * map = new ralab::findmf::datastruct::FeaturesMap();
       map->setMapDescription(mp->getMapDescription());
@@ -122,7 +122,7 @@ namespace ralab{
       ff.findFeature( mp->getMap(), minitensity_ );
       ff.extractFeatures(*map,mp->getMap());
       delete mp;
-      LOG(INFO) << "> Features Found in " << time.elapsed() << " [s]";
+      LOG(INFO) << " Features Found in " << time.elapsed() << " [s]";
       return map;
     }
   };
@@ -138,9 +138,9 @@ namespace ralab{
       ralab::findmf::datastruct::FeaturesMap * fm = static_cast<ralab::findmf::datastruct::FeaturesMap *>( map );
 
       boost::timer time;
-      LOG(INFO) << "> start writing SQL" ;
+      LOG(INFO) << " start writing SQL" ;
       facade_.writeSQL2(*fm);
-      LOG(INFO) << "> Features Written in " << time.elapsed() << " [s]";
+      LOG(INFO) << " Features Written in " << time.elapsed() << " [s]";
       delete fm;
       return NULL;
     }
@@ -172,7 +172,7 @@ int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::fin
 
   pipeline.run( nthreads );
   tbb::tick_count t1 = tbb::tick_count::now();
-  LOG(INFO) << (t1-t0).seconds();
+  LOG(INFO) << "Pipeline run in : " << (t1-t0).seconds();
   return 1;
 }
 

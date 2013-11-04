@@ -19,7 +19,7 @@ namespace ralab{
         */
         inline IScanFilterFloatPtr getFilterTOPHAT(
             float withRT, //!< with of chromatographic peaks
-            float factor = 2.5 //!< by how much to increase
+            float factor = 1. //!< by how much to increase
             )
         {
           IScanFilterFloatPtr bbss(

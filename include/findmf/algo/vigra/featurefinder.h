@@ -106,13 +106,13 @@ namespace ralab{
       }
 
       void extractFeatures(datastruct::FeaturesMap & features, const Gradient & gradient){
-        LOG(INFO)<< " >>>> go for statistics " ;
+        //LOG(INFO)<< " >>>> go for statistics " ;
         this->createFeaturesFromStatistics( features, mac_);
-        LOG(INFO)<< " >>>> created features statistics " ;
+        //LOG(INFO)<< " >>>> created features statistics " ;
         this->extractFeaturesI( gradient , features );
-        LOG(INFO)<< " >>>> create projection stats " ;
+        //LOG(INFO)<< " >>>> create projection stats " ;
         this->creatProjectionStats(features);
-        LOG(INFO)<< " >>>> done " ;
+        //LOG(INFO)<< " >>>> done " ;
 
       }
 
@@ -132,7 +132,7 @@ namespace ralab{
             x.setProblem(picker.problem_);
             ++count;
           }
-        LOG(INFO) << "picking done";
+        //LOG(INFO) << "picking done";
       }
 
       //method to extract the features
@@ -162,7 +162,7 @@ namespace ralab{
         using namespace vigra::acc;
         int lengthAC = chain.regionCount();
 
-        DLOG(INFO) << " Length of accumulator chain " << lengthAC ;
+        DLOG(INFO) << " Length of accumulator chain : " << lengthAC ;
 
         --lengthAC; //decrease because you are skipping the background...
         features.resize(lengthAC);
@@ -317,9 +317,9 @@ namespace ralab{
         Gradient & gradient_ = data;//you work with the data
         vigra::FindMinMax<Gradient::value_type> minmax;   // functor to find range
         inspectImage(srcImageRange(gradient_), minmax); // find original range
-        LOG(INFO)<< " >>> attempt reshape of labels <<< ";
+        //LOG(INFO)<< " >>> attempt reshape of labels <<< ";
         labels_.reshape(gradient_.shape());
-        LOG(INFO) << " >>> have labels  ";
+        //LOG(INFO) << " >>> have labels  ";
 
         if(0){
             transformImage( srcImageRange(gradient_) , destImage(gradient_),
@@ -367,7 +367,7 @@ namespace ralab{
         transformImage( srcImageRange(gradient_) , destImage(gradient_),
                         ImageTransformatorFlipBack<float>(  minmax.max , threshold )
                         );
-        LOG(INFO) << " >>> segments done  ";
+        //LOG(INFO) << " >>> segments done  ";
 
       }
 
