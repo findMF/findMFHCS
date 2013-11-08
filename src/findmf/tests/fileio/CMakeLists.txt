@@ -21,12 +21,7 @@ TARGET_LINK_LIBRARIES(testRtree  ${QT_LIBRARIES} ${Boost_LIBRARIES})
 ADD_EXECUTABLE(SQLFacadeTest SQLFacadeTest.cpp )
 TARGET_LINK_LIBRARIES(SQLFacadeTest  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog)
 
-
-ADD_EXECUTABLE(sqlsocitest sqlsocitest.cpp )
-TARGET_LINK_LIBRARIES(sqlsocitest  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog gtest soci_core soci_sqlite3 utilslib)
-
 ENABLE_TESTING()
-
 
 add_test(NAME sqlfeaturestoragetest
 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -47,10 +42,5 @@ add_test(NAME SQLFacadeTest
 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 COMMAND ${BinOut}/SQLFacadeTest )
 set_tests_properties(SQLFacadeTest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
-
-add_test(NAME sqlsocitest
-WORKING_DIRECTORY ${BinOut}
-COMMAND ${BinOut}/sqlsocitest )
-set_tests_properties(sqlsocitest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
 
 
