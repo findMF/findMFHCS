@@ -27,14 +27,10 @@
 #include "pwiz/utility/misc/Std.hpp"
 #include <cstring>
 
-
 using namespace pwiz::util;
 using namespace pwiz::chemistry;
 
-
 ostream* os_ = 0;
-
-
 
 
 void test()
@@ -48,8 +44,8 @@ void test()
 
     IsotopeEnvelopeEstimator estimator(config);
 
-    std::vector<double> tmp;
-    std::vector<std::vector< double > > bb;
+    //std::vector<double> tmp;
+    //std::vector<std::vector< double > > bb;
     if (os_)
         for (int mass=100; mass<=8000; mass+=10)
           {

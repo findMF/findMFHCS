@@ -35,9 +35,7 @@ else()
 endif()
 SET(inc ${inc} ${VIGRA_INCLUDE_DIR})
 
-
 message(STATUS ${SOCI_LIBS})
-
 
 FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtSql REQUIRED)
 INCLUDE(${QT_USE_FILE})

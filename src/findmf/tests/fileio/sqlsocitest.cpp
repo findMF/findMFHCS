@@ -1,4 +1,3 @@
-//#include "findmf/fileio/sqlsoci/sqlfindmfstorage.h"
 // Copyright : ETH Zurich
 // License   : three-clause BSD license
 // Authors   : Witold Wolski
@@ -7,7 +6,11 @@
 
 // Raplace ClassName with the name of the class to test...
 // Test one class per unit.
-//#include <iostream>
+
+
+#include "findmf/fileio/sql/createtables.h"
+#include "findmf/fileio/sql/writesampleparams.h"
+
 #include <vector>
 #include <algorithm>
 #include <gtest/gtest.h>
@@ -16,10 +19,8 @@
 #include <soci/soci.h>
 #include <soci/soci-sqlite3.h>
 #include "base/utils/readwritelines.h"
-//#include "base/utils/Copy_if.h"
 #include "base/utils/split.h"
 #include "findmf/utils/parsesql.h"
-#include "findmf/fileio/sql/createtables.h"
 
 namespace {
 
@@ -31,41 +32,7 @@ namespace {
     }
   };
 
-
-//  TEST_F(SQLSociTest,testDBcreation)
-//  {
-//    std::string testfile("../sql/dbschema.sql");
-//    std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
-//    std::string bla = "heresql.sqlite";
-//    soci::session sql_( soci::sqlite3 , bla );
-
-//    for(size_t i = 0 ; i < lines.size() ; ++i)
-//      {
-//        try{
-//          sql_.once << lines[i];
-//        }catch( std::exception const &e ){
-//          LOG(INFO) << e.what() << std::endl;
-//        }
-//      }
-//    sql_.close();
-//    ASSERT_TRUE(1);
-//  }
-
-//  TEST_F(SQLSociTest,testDBcreation2)
-//  {
-//    std::string testfile("../sql/dbschema.sql");
-
-//    std::string bla = "heresql2.sqlite";
-//    soci::session sql_( soci::sqlite3 , bla );
-//    try{
-//      ralab::findmf::fileio::CreateTables(bla,testfile);
-//    }catch(std::exception const& e){
-//      std::cout << e.what() << std::endl;
-//    }
-//    ASSERT_TRUE(1);
-//  }
-
-  TEST_F(SQLSociTest, testSampleInsterts)
+  TEST_F(SQLSociTest, testCreateDB)
   {
     std::string testfile("../sql/dbschema.sql");
     std::string bla = "heresql3.sqlite";
@@ -73,27 +40,44 @@ namespace {
       ralab::findmf::fileio::CreateTables(bla,testfile);
     }
     //std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
+  }
+
+  TEST_F(SQLSociTest, testSampleInsterts)
+  {
+    std::string testfile("../sql/dbschema.sql");
+    std::string bla = "heresqlSI.sqlite";
+    {
+      ralab::findmf::fileio::CreateTables(bla,testfile);
+    }
+
+    //std::vector<std::string> lines = ralab::findmf::utils::sqlparse(testfile);
     ralab::findmf::datastruct::Instrument inst;
     inst.analyser = "bla";
     inst.detector = "detect";
     inst.ionisation = "ionize";
     inst.manufacturer = "flying horse";
     inst.model = "newest bit of shit";
+    ralab::findmf::datastruct::SampleDescript samp;
+    samp.description = "very complex and important sample";
+    samp.file = "/some/filelocation";
+    samp.name = "test";
 
-    ralab::findmf::fileio::WriteSampleParams wsp("heresql3.sqlite");
     ralab::findmf::apps::Params params;
     params.maxmass = 1000;
     params.minintensity = 100;
     params.minmass = 10;
     params.filestem_ = "blaxbla";
 
+
     try{
-    for(int i = 0 ; i < 10 ; ++i){
-        uint32_t tmp = wsp.insertSample("test","greatest sample ever","test.mzML");
-        std::cout << tmp << std::endl;
-        wsp.insertInstrumentInfo(tmp, inst);
-        wsp.insertProcessParameters(tmp, params);
+      ralab::findmf::fileio::WriteSampleParams wsp("heresqlSI.sqlite");
+
+      for(int i = 0 ; i < 1000 ; ++i){
+        params.minmass +=1;
+        uint32_t tmp = wsp.write(samp,inst,params);
+        //std::cout << tmp << std::endl;
       }
+      wsp.commit();
     }catch(std::exception & e)
     {
       std::cout << e.what() << std::endl;

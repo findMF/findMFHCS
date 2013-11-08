@@ -9,6 +9,7 @@
 #include <string>
 #include <stdint.h>
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 #include "glog/logging.h"
 
 namespace ralab

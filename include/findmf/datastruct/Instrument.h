@@ -8,6 +8,12 @@ namespace ralab{
     namespace datastruct{
       //dto to tansfer instrument information.
 
+      struct SampleDescript{
+        std::string  name;
+        std::string description;
+        std::string file;
+      };
+
       struct Instrument{
         std::string manufacturer;
         std::string model;

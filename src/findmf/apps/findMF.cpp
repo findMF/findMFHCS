@@ -197,10 +197,6 @@ int main(int argc, char *argv[])
   ralab::findmf::SwathPropertiesReader swathPropReader(msdataptr);
 
   LOG(INFO)  << "time required to scan through file :" << time.elapsed() << std::endl;
-
-
-
-  LOG(INFO) << "ppm = " << pars.ppm ;
   pars.prepareOutputFile(false);
   ralab::findmf::FeaturesMapSQLWriterFacade facade(pars.outdir,pars.filestem_);
   facade.createDatabase();

@@ -178,6 +178,7 @@ namespace ralab{
         void operator()(Tmass begmz, Tmass endmz, Tintensity begint )
         {
           typename std::iterator_traits<Tintensity>::value_type minint = *std::upper_bound(begint,begint+std::distance(begmz,endmz),0.1);
+          //typename std::iterator_traits<Tintensity>::value_type minint =*std::min_element(begint,begint+std::distance(begmz,endmz));
           TReal threshold = static_cast<TReal>(minint) * intensitythreshold_;
 
           //determine sampling with
@@ -214,7 +215,6 @@ namespace ralab{
               filter(threshold);
             }
         }
-
 
         //clean the masses using the threshold
         void filter(TReal threshold){

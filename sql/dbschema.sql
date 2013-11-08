@@ -82,15 +82,17 @@ FOREIGN KEY(id) REFERENCES mapinfo(id)
 -- mapping can be achieved using the file above
 
 -- drop table if exists isofeatureboundingbox;
--- CREATE VIRTUAL TABLE feature_index USING rtree(
+-- CREATE VIRTUAL TABLE isotopefeaturesbox USING rtree(
 -- id,
--- minMZsw, maxMZsw,
+-- minMZsw,
+-- maxMZsw,
 -- minRT, maxRT,
 -- minMZ, maxMZ
 -- );
--- not used
 
--- CREATE TABLE isofeatureboundingbox(
+-- not used
+-- drop table if exists isofeatureboundingbox;
+-- CREATE TABLE isofeatureboundingbox USING rtree(
 -- id integer primary key,
 -- minmzext real,  --  id in the current map
 -- maxmzext real,
@@ -100,10 +102,23 @@ FOREIGN KEY(id) REFERENCES mapinfo(id)
 -- maxmz real
 -- );
 
+drop table if exists isofeatureboundingbox;
+CREATE VIRTUAL TABLE isofeatureboundingbox USING rtree(
+id,
+minmzext,  --  id in the current map
+maxmzext,
+minrt, -- id
+maxrt,
+minmz,
+maxmz
+);
+
+
+-- feature statistics table
 drop table if exists isotopefeatures;
 CREATE TABLE isotopefeatures (
 id integer primary key,  -- id in table
-idmap int not null,  --  id in the current map
+idmap int not null,  --  id in the current map # todo check if needed
 idmapinfo int not null, --  id of the map - links to map info
 mzcom real,  -- com - center of mass
 rtcom real,
@@ -111,15 +126,23 @@ mz real,  --  picked mass
 rt real ,
 mzmaxloc real,  --  mz max location
 rtmaxloc real,
-mzsd real,  --  sd of peak
+mzsd real, --  sd of peak
 rtsd real,
-mzskew real,  --  skewness
+mzskew real, --  skewness
 rtskew real,
-mzkurt real,  -- mz
+mzkurt real, -- mz
 rtkurt real,
-maxint real,  --  maximum value
-count integer,  -- number of pixels
+maxint real, --  maximum value
+count integer, -- number of pixels
 volume real,  -- volume of feature
+FOREIGN KEY(id) REFERENCES isotopefeaturesbox(id),
+FOREIGN KEY(idmapinfo) REFERENCES mapinfo(id)
+);
+
+-- projection data blobs
+drop table if exists isotopefeaturesprojection;
+CREATE TABLE isotopefeaturesprojection (
+id integer primary key,  -- id in table
 -- bounding box information
 mzstart int,  --  mz start pixel
 mzextend int,  --  pixel extend
@@ -127,7 +150,7 @@ rtstart int,
 rtextend int,
 mzproj blob,  --  mz projection
 rtproj blob,
-FOREIGN KEY(idmapinfo) REFERENCES mapinfo(id)
+FOREIGN KEY(id) REFERENCES isotopefeaturesbox(id)
 );
 
 -- stores deisotoping information

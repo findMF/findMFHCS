@@ -12,9 +12,6 @@ TARGET_LINK_LIBRARIES(simplepickertest  ${Boost_LIBRARIES} gtest)
 ADD_EXECUTABLE(peakpickertest peakpickertest.cpp )
 TARGET_LINK_LIBRARIES(peakpickertest  ${Boost_LIBRARIES} gtest)
 
-ADD_EXECUTABLE(deisotopertest DeisotoperTest.cpp )
-TARGET_LINK_LIBRARIES(deisotopertest  ${Boost_LIBRARIES} gtest)
-
 ADD_EXECUTABLE(parabolafittest parabolafittest.cpp )
 TARGET_LINK_LIBRARIES(parabolafittest  ${Boost_LIBRARIES} gtest)
 
@@ -39,7 +36,3 @@ COMMAND ${BinOut}/peakpickertest )
 set_tests_properties(peakpickertest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
 
 
-add_test(NAME deisotopertest
-WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-COMMAND ${BinOut}/deisotopertest )
-set_tests_properties(deisotopertest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
