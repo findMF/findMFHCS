@@ -25,7 +25,7 @@ namespace {
     bool t = pft(3,5,3);
     ASSERT_DOUBLE_EQ(5.,pft.heigth_);
     ASSERT_DOUBLE_EQ(0.,pft.position_);
-    ASSERT_DOUBLE_EQ(0.,pft.width_);
+    ASSERT_DOUBLE_EQ(1.1775 ,pft.width_);
 
     bool x = pft(3,10,3);
     ASSERT_DOUBLE_EQ(10.,pft.heigth_);

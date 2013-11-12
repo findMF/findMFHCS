@@ -38,7 +38,7 @@ namespace ralab{
       }
 
       /// filter retention times
-      void filterRT(datastruct::LCMSImage::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFloatPtr  f ) override {
+      void filterRT(datastruct::LCMSImage::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFloatPtr  f )  {
         size_t xx = mp_.size(0);
         for( std::size_t i = 0 ; i < xx; ++i )
           {
@@ -50,7 +50,7 @@ namespace ralab{
       }
 
       /// apply filter to all spectra in MZ dimension
-      void filterMZ(datastruct::LCMSImage::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFloatPtr  f ) override{
+      void filterMZ(datastruct::LCMSImage::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFloatPtr  f ) {
         for(std::ptrdiff_t i = 0 ; i < mp_.size(1); ++i)
           {
             signal_.assign( mp_.bindOuter(i).begin(), mp_.bindOuter(i).end() );

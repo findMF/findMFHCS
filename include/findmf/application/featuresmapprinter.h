@@ -93,7 +93,7 @@ namespace ralab{
 
   public:
 
-    void visit(ralab::IFeatureAllAccess & feature, std::iostream & stream_) override {
+    void visit(ralab::IFeatureAllAccess & feature, std::iostream & stream_)  {
       stream_ << feature.getCenterOfMassMZ() << sep_;
       stream_ << feature.getCenterOfMassRT() << sep_;
 

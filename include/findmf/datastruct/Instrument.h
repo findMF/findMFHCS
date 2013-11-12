@@ -22,8 +22,6 @@ namespace ralab{
         std::string detector;
       };
 
-      
-
     }
   }
 

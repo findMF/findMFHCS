@@ -96,7 +96,7 @@ namespace ralab{
 
 
         //get the transformation vectors
-        char * getRTAxis(std::size_t & size) override {
+        char * getRTAxis(std::size_t & size)  {
           //char * res = boost::lexical_cast<char *>(feature_.getProjectionRT());
           char * res = reinterpret_cast<char *>( &(retentiontime_[0]) );
           size = retentiontime_.size() * (sizeof(axesT::value_type)/sizeof(char));
@@ -104,7 +104,7 @@ namespace ralab{
         }
 
         //get the transformation vectors
-        char * getMZAxis(std::size_t & size) override {
+        char * getMZAxis(std::size_t & size)  {
           //char * res = boost::lexical_cast<char *>(feature_.getProjectionMZ());
           char * res = reinterpret_cast<char *>( &(mass_[0]) );
           size = mass_.size() * (sizeof(axesT::value_type)/sizeof(char));
