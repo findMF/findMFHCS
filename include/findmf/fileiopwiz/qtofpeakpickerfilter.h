@@ -20,7 +20,7 @@ namespace ralab{
   struct QTOFPeakPickerFilter : pwiz::msdata::SpectrumListWrapper{
     double resolution_;
     double smoothwidth_;
-    uint32_t integrationWidth_;
+    double integrationWidth_;
     double intensityThreshold_;
     bool area_; // should area or intensities be determined
 
@@ -28,7 +28,7 @@ namespace ralab{
         const pwiz::msdata::SpectrumListPtr & inner, //!< spectrum list
         double resolution, //!< instrument resolution
         double smoothwidth = 2., //!< smoothwidth
-        uint32_t integrationWidth = 4, //! integration width
+        double integrationWidth = 4, //! integration width
         double intensityThreshold = 10.,
         bool area = true //!< do you want to store are or intensity
         ):SpectrumListWrapper(inner),

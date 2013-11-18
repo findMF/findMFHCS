@@ -13,7 +13,6 @@
 namespace b_po = boost::program_options;
 namespace b_fs = boost::filesystem3;
 
-
 struct PPParams
 {
   std::string infile_;
@@ -21,7 +20,7 @@ struct PPParams
   //uint32_t nrthreads;
   double resolution_; // with of mz bins in ppms
   double smoothwidth_;
-  uint32_t integrationwidth_;
+  double integrationwidth_;
   bool area_;
   double threshold_;
 
@@ -32,14 +31,14 @@ struct PPParams
     outfile_() ,
     resolution_(0.) ,
     smoothwidth_(1.),
-    integrationwidth_(4) ,
+    integrationwidth_(4.) ,
     area_(false),
     threshold_(10.),
     filestem_(),
     outdir_(){
   }
 
-  //stern...
+  ///
   void prepareOutputFile()
   {
     if( !boost::filesystem::exists(infile_) )
@@ -83,15 +82,13 @@ inline int defineParameters(
     processing.add_options()
         ("resolution",b_po::value<double>()->default_value(20000.),
          "instrument resolution (default 50000).")
-        ("area", b_po::value<bool>()->default_value(true),"(default 1)  otherwise store intensity")
-        ("threshold", b_po::value<double>()->default_value(10.),"(default 3) multiplicative factor of smallest intensity in spectrum")
-        ;
+        ("area", b_po::value<bool>()->default_value(true),"otherwise store intensity")
+        ("threshold", b_po::value<double>()->default_value(3.),"multiplicative factor of smallest intensity in spectrum");
 
     b_po::options_description advancedprocessing("Advanced Processing Options:");
     advancedprocessing.add_options()
-        ("smoothwidth",b_po::value<double>()->default_value(1.3),"smoothing width")
-        ("intwidth", b_po::value<uint32_t>()->default_value(2u),"integration width");
-
+        ("smoothwidth",b_po::value<double>()->default_value(1),"smoothing width")
+        ("intwidth", b_po::value<double>()->default_value(2.5),"integration width");
 
     b_po::options_description cmdloptions;
     cmdloptions.add(general).add(processing).add(advancedprocessing);
@@ -167,7 +164,7 @@ inline void analysisParameters(PPParams & ap,b_po::variables_map & vmgeneral){
 
   ap.resolution_ = 2*vmgeneral["resolution"].as<double>();
   ap.smoothwidth_ = 2*vmgeneral["smoothwidth"].as<double>();
-  ap.integrationwidth_ = 2*vmgeneral["intwidth"].as<uint32_t>();
+  ap.integrationwidth_ = 2*vmgeneral["intwidth"].as<double>();
   ap.area_ = vmgeneral["area"].as<bool>(); //do you want to store areas
   ap.threshold_ = vmgeneral["threshold"].as<double>();
 }
