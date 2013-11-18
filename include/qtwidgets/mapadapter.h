@@ -14,8 +14,6 @@
 #include "findmf/datastruct/lcmsimage.h"
 
 namespace ralab{
-
-
   /**/
   struct MapVis{
     virtual ~MapVis(){}

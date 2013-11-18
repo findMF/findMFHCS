@@ -44,7 +44,7 @@ ELSE(MSVC)
     ENDIF(ENABLE_COVERAGE)
 ENDIF(MSVC)
 
-#add_definitions("-Doverride=")
+add_definitions("-Doverride=")
 
 
 
