@@ -4,7 +4,7 @@
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 include_directories(${inc})
-link_directories(${Glog_LIBRARY} ${Gtest_LIBRARY}  ${Soci_LIBRARY})
+link_directories(${Glog_LIBRARY} ${Gtest_LIBRARY}  ${Soci_LIBRARY} ${Tbb_LIBRARY})
 
 message(STATUS ">>>>>>> ${Boost_LIBRARIES} >>>>")
 message(STATUS ">>>>>>> >>>>")
