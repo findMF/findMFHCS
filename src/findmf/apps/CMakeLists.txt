@@ -3,15 +3,6 @@
 # Authors   : Witold Wolski
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-FIND_PACKAGE(Tbb)
-if(Tbb_FOUND)
-  message(STATUS "Tbb found" ${Tbb_INCLUDE_DIR})
-  message(STATUS "Tbb found" ${Tbb_LIBRARY})
-  SET(inc ${inc} ${Tbb_INCLUDE_DIR})
-else()
-  message(STATUS " !!!!!!!!!!!!!!!! Tbb not found !!!!!!!!!!!!!!!! ")
-  return()
-endif()
 
 include_directories(${inc})
 link_directories( ${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Tbb_LIBRARY} ${Glog_LIBRARY})

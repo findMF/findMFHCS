@@ -14,6 +14,16 @@ else()
   return()
 endif()
 
+FIND_PACKAGE(Tbb)
+if(Tbb_FOUND)
+  message(STATUS "Tbb found" ${Tbb_INCLUDE_DIR})
+  message(STATUS "Tbb found" ${Tbb_LIBRARY})
+  SET(inc ${inc} ${Tbb_INCLUDE_DIR})
+else()
+  message(STATUS " !!!!!!!!!!!!!!!! Tbb not found !!!!!!!!!!!!!!!! ")
+  return()
+endif()
+
 
 FIND_PACKAGE(Glog)
 if(Glog_FOUND)
