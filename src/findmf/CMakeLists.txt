@@ -35,15 +35,16 @@ else()
   return()
 endif()
 
-FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtSql REQUIRED)
-INCLUDE(${QT_USE_FILE})
-message( STATUS "<<<<<<<<<<<<<<QTQTsrc  ${QT_LIBRARIES} QTQT>>>>>>>>>>>>")
 
 
 ADD_SUBDIRECTORY(application)
 ADD_SUBDIRECTORY(apps)
 
 IF(WITH_QT)
+FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtSql REQUIRED)
+INCLUDE(${QT_USE_FILE})
+message( STATUS "<<<<<<<<<<<<<<QTQTsrc  ${QT_LIBRARIES} QTQT>>>>>>>>>>>>")
+
 ADD_SUBDIRECTORY(appsqt)
 ADD_SUBDIRECTORY(qtwidgets)
 ENDIF()

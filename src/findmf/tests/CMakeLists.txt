@@ -18,7 +18,7 @@ link_directories(${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Gtest_LIBRARY} ${Glog_LIBRAR
 SET(transition_SOURCES preliminarytests.cpp)
 
 ADD_EXECUTABLE(premtest ${transition_SOURCES})
-TARGET_LINK_LIBRARIES(premtest ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}  datastructlib glog)
+TARGET_LINK_LIBRARIES(premtest ${Boost_LIBRARIES} pwiz ${vigralibs}  datastructlib glog)
 
 ENABLE_TESTING()
 add_test(NAME premtest
