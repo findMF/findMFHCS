@@ -4,7 +4,6 @@
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 include_directories(${inc})
-message(message ">>>>>> >>>>>> >>>>> ${Gtest_LIBRARY}")
 link_directories(${VIGRA_LIBRARY} ${Glog_LIBRARY} ${Gtest_LIBRARY})
 
 set(src map2test.cpp)
