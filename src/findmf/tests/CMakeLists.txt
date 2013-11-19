@@ -14,7 +14,7 @@
 #endif()
 
 include_directories(${inc})
-link_directories(${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Glog_LIBRARY} )
+link_directories(${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Glog_LIBRARY} ${Tbb_LIBRARY})
 
 SET(transition_SOURCES preliminarytests.cpp)
 
