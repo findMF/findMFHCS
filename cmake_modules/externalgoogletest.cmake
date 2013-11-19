@@ -10,8 +10,8 @@ ExternalProject_Add(
     # Force separate output paths for debug and release builds to allow easy
     # identification of correct lib in subsequent TARGET_LINK_LIBRARIES commands
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-               -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG:PATH=DebugLibs
-               -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE:PATH=ReleaseLibs
+               #-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG:PATH=DebugLibs
+               #-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE:PATH=ReleaseLibs
                -Dgtest_force_shared_crt=ON
     # Disable install step
     INSTALL_COMMAND ""
@@ -27,8 +27,8 @@ set(Gtest_SourceDir ${source_dir}/include)
 
 ExternalProject_Get_Property(googletest binary_dir)
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(Gtest_LIBRARY ${binary_dir}/DebugLibs)
+    set(Gtest_LIBRARY ${binary_dir})
 ELSE(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(Gtest_LIBRARY ${binary_dir}/ReleaseLibs)
+    set(Gtest_LIBRARY ${binary_dir})
 ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 

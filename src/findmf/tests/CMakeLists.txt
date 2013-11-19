@@ -13,8 +13,16 @@
 #  return()
 #endif()
 
+
+include(externalgoogletest)
+set(inc ${inc} ${Gtest_SourceDir})
+message(STATUS ">>>>>>>>>>>>>>>>>>> Gtest_LIBRARY ${Gtest_LIBRARY} <<<<<<<<<<<<<<< ")
+message(STATUS "inc ${inc}")
+
+
 include_directories(${inc})
-link_directories(${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Glog_LIBRARY} ${Tbb_LIBRARY})
+link_directories(${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Gtest_LIBRARY} ${Glog_LIBRARY})
+
 
 SET(transition_SOURCES preliminarytests.cpp)
 
