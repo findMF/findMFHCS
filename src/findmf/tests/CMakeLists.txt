@@ -3,15 +3,6 @@
 # Authors   : Witold Wolski
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-#FIND_PACKAGE(Gtest)
-#if(Gtest_FOUND)
-#  message(STATUS "Gtest found" ${Gtest_INCLUDE_DIR})
-#  message(STATUS "Gtest found" ${Gtest_LIBRARY})
-#  SET(inc ${inc} ${Gtest_INCLUDE_DIR})
-#else()
-#  message(STATUS " !!!!!!!!!!!!!!!! Gtest not found !!!!!!!!!!!!!!!! ")
-#  return()
-#endif()
 
 
 include(externalgoogletest)
@@ -27,7 +18,7 @@ link_directories(${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Gtest_LIBRARY} ${Glog_LIBRAR
 SET(transition_SOURCES preliminarytests.cpp)
 
 ADD_EXECUTABLE(premtest ${transition_SOURCES})
-TARGET_LINK_LIBRARIES(premtest ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}  datastructlib widgets glog)
+TARGET_LINK_LIBRARIES(premtest ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}  datastructlib glog)
 
 ENABLE_TESTING()
 add_test(NAME premtest

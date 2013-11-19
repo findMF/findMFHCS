@@ -42,8 +42,11 @@ message( STATUS "<<<<<<<<<<<<<<QTQTsrc  ${QT_LIBRARIES} QTQT>>>>>>>>>>>>")
 
 ADD_SUBDIRECTORY(application)
 ADD_SUBDIRECTORY(apps)
+
+IF(WITH_QT)
 ADD_SUBDIRECTORY(appsqt)
 ADD_SUBDIRECTORY(qtwidgets)
+ENDIF()
 
 
 IF(WITH_TEST)
