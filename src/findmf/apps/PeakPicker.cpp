@@ -5,7 +5,6 @@
 
 #include <fstream>
 #include <pwiz/data/msdata/MSDataFile.hpp>
-#include <glog/logging.h>
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include "findmf/fileiopwiz/qtofpeakpickerfilter.h"
@@ -43,8 +42,8 @@ struct PPParams
   {
     if( !boost::filesystem::exists(infile_) )
     {
-      LOG(ERROR) << "could not find specified file :" ;
-      LOG(ERROR) << infile_ << std::endl;
+      std::cerr << "could not find specified file :" << std::endl;
+      std::cerr << infile_ << std::endl;
       return;
     }
     //filestem_ = boost::filesystem::path(infile).stem().stem().stem().string(); //createOutputs(p1.string() ,"fitered");

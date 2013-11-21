@@ -7,7 +7,7 @@
 #ifndef SPECTRASTREADER_H
 #define SPECTRASTREADER_H
 
-#include <glog/logging.h>
+#include "base/base/cpplog.h"
 
 #include "findmf/datastruct/transition.h"
 #include "swathwindowrange.h"
@@ -59,7 +59,7 @@ namespace ralab{
           SwathWindowRange::MCont::iterator end2 =range.swathBoundaries_.end();
           for(;beg2 != end2 ; ++beg2){
               if(beg2->second.first < mass && mass < beg2->second.second ){
-                  LOG(INFO) << beg2->second.first << " " << mass << " " << beg2->second.second << std::endl;
+                  //LOG_INFO << beg2->second.first << " " << mass << " " << beg2->second.second ;
                   Swathmap::iterator it =  swathsTransitionGroups_.find(beg2->first);
                   if(it != swathsTransitionGroups_.end()){
                       it->second.push_back( begTransG->first);

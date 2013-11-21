@@ -10,7 +10,6 @@
 #include <vigra/multi_array.hxx>
 #include <vigra/multi_localminmax.hxx>
 #include <vigra/seededregiongrowing.hxx>
-#include <glog/logging.h>
 
 
 #include "vigratypedefs.h"
@@ -162,7 +161,7 @@ namespace ralab{
         using namespace vigra::acc;
         int lengthAC = chain.regionCount();
 
-        DLOG(INFO) << " Length of accumulator chain : " << lengthAC ;
+        //DLOG(INFO) << " Length of accumulator chain : " << lengthAC ;
 
         --lengthAC; //decrease because you are skipping the background...
         features.resize(lengthAC);

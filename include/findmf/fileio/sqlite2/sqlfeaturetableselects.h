@@ -10,7 +10,7 @@
 #include <boost/lexical_cast.hpp>
 #include "findmf/interfaces/ifeaturewrite.h"
 
-#include <glog/logging.h>
+#include "base/base/cpplog.h"
 
 namespace ralab{
 
@@ -39,11 +39,11 @@ namespace ralab{
       query.bindValue(":ids",qlist);
       if(!query.exec("SELECT * from features WHERE id IN (1,2,3)")){
           QSqlError err = query.lastError();
-          LOG(INFO) <<  err.text().toStdString() << std::endl;
+          std::cerr <<  err.text().toStdString() << std::endl;
         }
       while(query.next()){
-          LOG(INFO) << "print : " ;
-          LOG(INFO) << query.value(0).toUInt() << std::endl;
+          std::cerr << "print : " ;
+          std::cerr << query.value(0).toUInt() << std::endl;
         }
     }
 
@@ -57,10 +57,10 @@ namespace ralab{
           x += ",";
         }
       x+= boost::lexical_cast<std::string>(ids.back());
-      LOG(INFO) << x << std::endl;
+      //LOG_INFO << x << std::endl;
 
       QString b(x.c_str());
-      LOG(INFO) << b.toStdString() << std::endl;
+      //LOG_INFO << b.toStdString() << std::endl;
 
       QSqlQuery query(db_);
 
@@ -69,11 +69,11 @@ namespace ralab{
       query.bindValue(":ids",b);
       if(!query.exec()){
           QSqlError err = query.lastError();
-          LOG(INFO) <<  "ERROR: " << err.text().toStdString() << std::endl;
+          std::cerr <<  "ERROR: " << err.text().toStdString() << std::endl;
         }
       while(query.next()){
-          LOG(INFO) << "print : " ;
-          LOG(INFO) << query.value(0).toUInt() << std::endl;
+          std::cerr << "print : " ;
+          std::cerr << query.value(0).toUInt() << std::endl;
         }
     }
 
@@ -90,7 +90,7 @@ namespace ralab{
       query.bindValue(":id",id);
       if(!query.exec()){
           QSqlError err = query.lastError();
-          LOG(ERROR) <<  "ERROR: " << err.text().toStdString() << std::endl;
+          std::cerr <<  "ERROR: " << err.text().toStdString() << std::endl;
         }
       while(query.next()){
 

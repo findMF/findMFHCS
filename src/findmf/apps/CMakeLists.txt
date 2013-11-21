@@ -5,13 +5,13 @@
 
 
 include_directories(${inc})
-link_directories( ${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Tbb_LIBRARY} ${Glog_LIBRARY})
+link_directories( ${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Tbb_LIBRARY} )
 
 ADD_EXECUTABLE(testThreading testThreading.cpp)
-TARGET_LINK_LIBRARIES(testThreading ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs} datastructlib tbb glog)
+TARGET_LINK_LIBRARIES(testThreading ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs} datastructlib tbb )
 
 ADD_EXECUTABLE(findMF findMF.cpp)
-TARGET_LINK_LIBRARIES(findMF ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}  datastructlib tbb glog)
+TARGET_LINK_LIBRARIES(findMF ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}  datastructlib tbb )
 
 ADD_EXECUTABLE(PeakPicker PeakPicker.cpp)
-TARGET_LINK_LIBRARIES(PeakPicker ${Boost_LIBRARIES} pwiz datastructlib glog)
+TARGET_LINK_LIBRARIES(PeakPicker ${Boost_LIBRARIES} pwiz datastructlib )

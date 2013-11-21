@@ -3,22 +3,19 @@
 # Authors   : Witold Wolski
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-
-
-include(externalgoogletest)
-set(inc ${inc} ${Gtest_SourceDir})
-message(STATUS ">>>>>>>>>>>>>>>>>>> Gtest_LIBRARY ${Gtest_LIBRARY} <<<<<<<<<<<<<<< ")
-message(STATUS "inc ${inc}")
+#include(externalgoogletest)
+#set(inc ${inc} ${Gtest_SourceDir})
+#message(STATUS ">>>>>>>>>>>>>>>>>>> Gtest_LIBRARY ${Gtest_LIBRARY} <<<<<<<<<<<<<<< ")
+#message(STATUS "inc ${inc}")
 
 
 include_directories(${inc})
-link_directories(${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Gtest_LIBRARY} ${Glog_LIBRARY})
-
+link_directories(${Pwiz_LIBRARY} ${VIGRA_LIBRARY})
 
 SET(transition_SOURCES preliminarytests.cpp)
 
 ADD_EXECUTABLE(premtest ${transition_SOURCES})
-TARGET_LINK_LIBRARIES(premtest ${Boost_LIBRARIES} pwiz ${vigralibs}  datastructlib glog)
+TARGET_LINK_LIBRARIES(premtest ${Boost_LIBRARIES} pwiz ${vigralibs}  datastructlib )
 
 ENABLE_TESTING()
 add_test(NAME premtest

@@ -4,22 +4,22 @@
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 include_directories(${inc})
-link_directories(${Glog_LIBRARY} ${Gtest_LIBRARY}  ${Soci_LIBRARY} )
+link_directories(  ${Soci_LIBRARY} )
 
 message(STATUS ">>>>>>> ${Boost_LIBRARIES} >>>>")
 message(STATUS ">>>>>>> >>>>")
 
 ADD_EXECUTABLE(sqlfeaturestoragetest SQLFeatureStorageTest.cpp )
-TARGET_LINK_LIBRARIES(sqlfeaturestoragetest  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog)
+TARGET_LINK_LIBRARIES(sqlfeaturestoragetest  ${QT_LIBRARIES} ${Boost_LIBRARIES} )
 
 ADD_EXECUTABLE(featureTable featureTable.cpp )
-TARGET_LINK_LIBRARIES(featureTable  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog)
+TARGET_LINK_LIBRARIES(featureTable  ${QT_LIBRARIES} ${Boost_LIBRARIES} )
 
 ADD_EXECUTABLE( testRtree testRtree.cpp )
 TARGET_LINK_LIBRARIES(testRtree  ${QT_LIBRARIES} ${Boost_LIBRARIES})
 
 ADD_EXECUTABLE(SQLFacadeTest SQLFacadeTest.cpp )
-TARGET_LINK_LIBRARIES(SQLFacadeTest  ${QT_LIBRARIES} ${Boost_LIBRARIES} glog)
+TARGET_LINK_LIBRARIES(SQLFacadeTest  ${QT_LIBRARIES} ${Boost_LIBRARIES} )
 
 ENABLE_TESTING()
 

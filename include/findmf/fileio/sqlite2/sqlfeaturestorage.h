@@ -10,8 +10,7 @@
 #include <string>
 #include <QtSql>
 #include <boost/filesystem.hpp>
-#include <glog/logging.h>
-
+#include "base/base/cpplog.h"
 namespace ralab{
 
   struct SQLFeatureStorage{
@@ -45,7 +44,6 @@ namespace ralab{
 
     //close resources RAII
     ~SQLFeatureStorage(){
-      LOG(INFO) << "db closing !" ;
       db_.close();
     }
 
@@ -83,7 +81,6 @@ namespace ralab{
 
 
     void commit(){
-      LOG(INFO) << "db committed";
       db_.commit();
     }
 

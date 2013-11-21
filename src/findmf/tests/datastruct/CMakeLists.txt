@@ -4,19 +4,19 @@
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
 include_directories(${inc})
-link_directories(${VIGRA_LIBRARY} ${Glog_LIBRARY} ${Gtest_LIBRARY})
+link_directories(${VIGRA_LIBRARY})
 
 set(src map2test.cpp)
 ADD_EXECUTABLE(map2test ${src})
-TARGET_LINK_LIBRARIES(map2test ${Boost_LIBRARIES} ${vigralibs} datastructlib glog)
+TARGET_LINK_LIBRARIES(map2test ${Boost_LIBRARIES} ${vigralibs} datastructlib )
 
 set(src featuresmaptest.cpp)
 ADD_EXECUTABLE(featuresmaptest ${src})
-TARGET_LINK_LIBRARIES(featuresmaptest ${Boost_LIBRARIES} ${vigralibs} glog gtest)
+TARGET_LINK_LIBRARIES(featuresmaptest ${Boost_LIBRARIES} ${vigralibs}  )
 
 set(src featuresmaptest.cpp)
 ADD_EXECUTABLE(maplcmsdescriptiontest ${src})
-TARGET_LINK_LIBRARIES(maplcmsdescriptiontest ${Boost_LIBRARIES} ${vigralibs} glog gtest)
+TARGET_LINK_LIBRARIES(maplcmsdescriptiontest ${Boost_LIBRARIES} ${vigralibs}  )
 
 
 ENABLE_TESTING()

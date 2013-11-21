@@ -1,38 +1,24 @@
+// Copyright : ETH Zurich
+// License   : three-clause BSD license
+// Authors   : Witold Wolski
+// for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
+
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE Hello
+#include <boost/test/unit_test.hpp>
+
 #include "findmf/algo/projectionstats.h"
 
 #ifndef FEATURESMAPTEST_H
 #define FEATURESMAPTEST_H
 
-#include "gtest/gtest.h"
 #include "findmf/algo/projectionstats.h"
 
 // The fixture for testing class Foo.
-class ProjectionStatsTest : public ::testing::Test {
-protected:
-  // You can remove any or all of the following functions if its body
-  // is empty.
-  ProjectionStatsTest() {
-    // You can do set-up work for each test here.
-  }
-  virtual ~ProjectionStatsTest() {
-    // You can do clean-up work that doesn't throw exceptions here.
-  }
-  // If the constructor and destructor are not enough for setting up
-  // and cleaning up each test, you can define the following methods:
 
-  virtual void SetUp() {
-    // Code here will be called immediately after the constructor (right
-    // before each test).
-  }
+BOOST_AUTO_TEST_SUITE(ProjectionStatsTest)
 
-  virtual void TearDown() {
-    // Code here will be called immediately after each test (right
-    // before the destructor).
-  }
-  // Objects declared here can be used by all tests in the test case for Foo.
-};
-
-TEST_F(ProjectionStatsTest, testconst){
+BOOST_AUTO_TEST_CASE( testconst ){
   std::vector<float> rtproj;
   std::vector<float> mzproj;
   float rt[] = {100,120,190,220,1000,200,100};
@@ -43,21 +29,16 @@ TEST_F(ProjectionStatsTest, testconst){
   ralab::findmf::projstats rtp , mzp;
 
   for(int i = 0 ; i < 10; ++i){
-      ralab::findmf::utilities::computeStats(rtproj,100,rtp);
-      ralab::findmf::utilities::Pick p;
-      float peakrt =  p.pick( rtproj , rtp );
-      ASSERT_NEAR(peakrt,103.975906,1e-6);
-      ralab::findmf::utilities::computeStats(mzproj,100,mzp);
-      float peakmz =  p.pick( mzproj , mzp );
-      ASSERT_NEAR(peakmz, 103.835617, 1e-6 );
+    ralab::findmf::utilities::computeStats(rtproj,100,rtp);
+    ralab::findmf::utilities::Pick p;
+    float peakrt =  p.pick( rtproj , rtp );
+    BOOST_CHECK_CLOSE(peakrt,103.975906,1e-4);
+    ralab::findmf::utilities::computeStats(mzproj,100,mzp);
+    float peakmz =  p.pick( mzproj , mzp );
+    BOOST_CHECK_CLOSE(peakmz, 103.835617, 1e-4 );
 
-    }
+  }
 }
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
-
+BOOST_AUTO_TEST_SUITE_END()
 
 #endif // FEATURESMAPTEST_H
