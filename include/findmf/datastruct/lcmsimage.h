@@ -112,12 +112,14 @@ namespace ralab{
           return x;
         }
 
+        /// determine the pixel coordinate of a mass
         std::size_t getBin(double mass) const {
           return bin_(mass);
         }
 
+        ///
         void getBin(double mass1, double mass2, std::vector<int> & idx, std::vector<double> & weight) const {
-          return bin_(mass1, mass2, idx, weight);
+          bin_(mass1, mass2, idx, weight);
         }
 
         bool inRange(double mass) const {
@@ -141,26 +143,25 @@ namespace ralab{
           return getNrCols();
         }
 
-        //TODO limit image dimensions.
+        /// write image into png
         void write_image(
             const std::string & filename,
             bool logb = true,
             const std::string & extension = "png"
             );
 
-        //TODO limit image dimensions.
+
+        /// write image into tiff file
         void write(const std::string & filename,
                    const std::string & extension = "tiff");
 
+        /// write the transformators (mapping of RT and mz to pixel coordinates into file)
         void writeTransformation(const std::string & filename);
 
-
-        //you are only allowed to read vx files.
+        /// read image and transformators
         void read(const std::string & filename) ;
-        //apply filter to all spectra in RT dimension
 
 
-        ///
         /// computes split points of an map.
         size_t setBreak(std::pair<double, double> & mzrange, double ppm ){
           std::vector<double> breaksV;

@@ -49,7 +49,7 @@ namespace ralab{
         return getNrRows();
       }
 
-      //TODO limit image dimensions.
+      //TODO limit image size.
       void LCMSImage::write_image(
           const std::string & filename,
           bool logb,
@@ -84,7 +84,7 @@ namespace ralab{
         vigra::ImageExportInfo iei(p1.string().c_str());
         iei.setFileType("TIFF");
         //iei.setCompression("LZW");
-        iei.setPixelType( "FLOAT" );
+        iei.setPixelType( "FLOAT" ); // INT32
         vigra::exportImage(vigra::srcImageRange(mp_),iei);
         this->writeTransformation(filename);
       }

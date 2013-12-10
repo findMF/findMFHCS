@@ -355,6 +355,7 @@ namespace ralab{
         // as the feature (first input) image contains the gradient magnitude,
         // this calculates the catchment basin of each minimum
         // TODO look into seeded region growing how to fix issue of not split features.
+        // TODO test with
         seededRegionGrowing(srcImageRange(gradient_), srcImage(labels_),
                             destImage(labels_),
                             gradstat,

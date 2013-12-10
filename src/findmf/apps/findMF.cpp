@@ -143,6 +143,8 @@ namespace ralab{
   };
 }//end namespace ralab
 
+
+///
 int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::findmf::datastruct::SwathInfoPtr sip )
 {
   // Create the pipeline
@@ -162,12 +164,12 @@ int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::fin
   pipeline.add_filter( writeFeatures );
 
   // Run the pipeline
-  tbb::tick_count t0 = tbb::tick_count::now();
+  //tbb::tick_count t0 = tbb::tick_count::now();
   // Need more than one token in flight per thread to keep all threads
   // busy; 2-4 works
 
   pipeline.run( nthreads );
-  tbb::tick_count t1 = tbb::tick_count::now();
+  //tbb::tick_count t1 = tbb::tick_count::now();
   //LOG(INFO) << "Pipeline run in : " << (t1-t0).seconds();
   return 1;
 }
