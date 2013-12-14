@@ -189,6 +189,7 @@ int main(int argc, char *argv[])
   try{
     msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(pars.infile));
   } catch(std::exception & e){
+    std::cerr << "infile : " << pars.infile << std::endl;
     std::cerr  << "can't open file: " << e.what() << std::endl;
     return 0;
   }
