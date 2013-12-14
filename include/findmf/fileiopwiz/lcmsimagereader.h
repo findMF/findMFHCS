@@ -25,11 +25,9 @@
 namespace ralab{
   namespace findmf{
 
-    /**
-   \brief reads map from MSData
 
-   default initialization is performed with an file name.
-  */
+   /// \brief reads map from MSData
+   /// default initialization is performed with an file name.
     struct LCMSImageReader{
     private:
       pwiz::msdata::MSDataPtr msdataptr_;

@@ -11,7 +11,7 @@
 #include <tbb/parallel_for_each.h>
 #include <tbb/task_scheduler_init.h>
 
-#include "findmf/application/lcmsimagefilter.h"
+#include "findmf/algo/vigra/lcmsimagefilter.h"
 #include "findmf/fileiopwiz/lcmsimagereader.h"
 
 #include "findmf/application/featuresmapprinter.h"

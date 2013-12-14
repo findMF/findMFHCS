@@ -13,6 +13,11 @@
 
 namespace ralab{
   namespace findmf{
+
+    /// filter LCMSImage
+    /// TODO move to algo
+    /// feature finder based on gaussian smoothing,
+    /// tophat morphological filter background subraction
     class LCMSImageFilter{
     private:
       std::vector<float> signal_; //worker variable

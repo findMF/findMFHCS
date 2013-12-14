@@ -28,9 +28,8 @@ namespace ralab{
   namespace findmf{
     namespace datastruct{
 
-      /**
-   *Vigra multiarray with convenience methods for writing
-  */
+   /// Vigra multiarray with convenience methods for writing
+
       class LCMSImage {
       public:
         typedef vigra::MultiArray<2,float> Map; // the image

@@ -19,12 +19,11 @@
 #include "parseargExtract.h"
 
 #include "findmf/fileio/sqlite2/featuresmapsqlwriterfacade.h"
-#include "findmf/application/lcmsimagefilter.h"
+#include "findmf/algo/vigra/lcmsimagefilter.h"
 
 #include "findmf/apps/toolparameters.h"
 
 namespace ralab{
-
 
   //process single swath or ms map
   struct LCMSImageReaderFilter : tbb::filter{
