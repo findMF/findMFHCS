@@ -3,7 +3,6 @@ CMakeLists.txt.user.*
 CMakeLists.txt.autosave
 moc_*
 *~
-findmfout/
 CTestTestfile.cmake
 Makefile
 cmake_install.cmake
@@ -14,5 +13,6 @@ doc
 memthr
 core
 *.pdf
-data/
 findMFHCSout/
+
+
