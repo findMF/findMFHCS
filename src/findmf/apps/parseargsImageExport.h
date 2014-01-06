@@ -3,12 +3,63 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-#ifndef PARSEARGEXTRACT_H
-#define PARSEARGEXTRACT_H
+#ifndef PARSEARGSIMAGEEXPORT_H
+#define PARSEARGSIMAGEEXPORT_H
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include "findmf/apps/toolparameters.h"
+
+
+#include <string>
+#include <stdint.h>
+#include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
+
+namespace ralab{
+  struct Params
+  {
+    std::string infile;
+    std::string outdir;
+    uint32_t nrthreads;
+    double ppm; // with of mz bins in ppms
+    double mzscale;
+    double rtscale;
+    uint32_t rtpixelwidth; // in pixel
+    uint32_t mzpixelwidth; // in pixel
+    double minmass; // minimal mass to consider
+    double maxmass;
+    double maxmassprepareOutputFile; // maximum mass to consider
+    uint32_t i_; //?
+    uint32_t rt2sum_; //how many spectra to sum (downsampling)
+
+    std::string filestem_;
+    boost::filesystem::path outdir_;
+
+    Params():infile(),outdir(),ppm(0.),mzscale(0.),
+      rtscale(1.), rtpixelwidth(), mzpixelwidth(), minmass(), maxmass(),
+      i_(), rt2sum_(), filestem_(), outdir_(){}
+
+    //
+    void prepareOutputFile(bool create_dir=false)
+    {
+      if( !boost::filesystem::exists(infile) )
+      {
+        std::cerr << "could not find specified file :" ;
+        std::cerr << infile << std::endl;
+        return;
+      }
+      filestem_ = boost::filesystem::path(infile).stem().stem().stem().string(); //createOutputs(p1.string() ,"fitered");
+      outdir_ = boost::filesystem::path(outdir);
+      outdir_ /= filestem_;
+      if(create_dir){
+        boost::filesystem3::create_directory(outdir_);
+      }
+      filestem_ += "_";
+      filestem_ += boost::lexical_cast<std::string>(i_);
+    }
+  };//end struct param
+}
 
 namespace b_po = boost::program_options;
 namespace b_fs = boost::filesystem;
@@ -35,12 +86,8 @@ inline void analysisParameters(ralab::findmf::apps::Params & ap,b_po::variables_
     ap.outdir = p.parent_path().string();
   }
   ap.nrthreads = vmgeneral["nrthreads"].as< uint32_t >();
-
-
   ap.ppm=1/vmgeneral["resolution"].as<double>()* 1.e6;
-  ap.minintensity=vmgeneral["minintensity"].as<double>();
 
-  //
   ap.mzpixelwidth = vmgeneral["width-MZ"].as<unsigned int>();
   if(vmgeneral.count("width-RT")){
     ap.rtpixelwidth = vmgeneral["width-RT"].as<unsigned int>();
@@ -64,7 +111,6 @@ inline void analysisParameters(ralab::findmf::apps::Params & ap,b_po::variables_
     ap.rtscale = ap.mzscale;
   }
   ap.rt2sum_ = vmgeneral["rt2sum"].as<uint32_t>();
-  ap.writeprojections_ = vmgeneral["writeprojections"].as<bool>();
 }
 
 
@@ -90,17 +136,15 @@ inline int parsecommandlineExtract(
     processing.add_options()
         ("resolution",b_po::value<double>()->default_value(50000.),
          "instrument resolution (default 50000).")
-        ("mzscale",b_po::value<double>()->default_value(1.5),"scale parameter for gausian smoothing in mz (default 1.5)")
+        ("mzscale",b_po::value<double>()->default_value(0.),"scale parameter for gausian smoothing in mz (default 1.5)")
         ("rtscale",b_po::value<double>(),"scale parameter for gausian smoothing in rt (default same as mzscale)")
-        ("width-MZ", b_po::value<unsigned int>()->default_value(9),
-         "width of MZ peak in pixel - used by background subtraction (default = 9)")
+        ("width-MZ", b_po::value<unsigned int>()->default_value(0),
+         "width of MZ peak in pixel - used by background subtraction ")
         ("width-RT", b_po::value<unsigned int>(),
          "width of RT peak in pixel - used by background subtraction (default = width-RT)")
-        ("minintensity",b_po::value<double>()->default_value(5.),"minimum intensity")
         ("minMass",b_po::value<double>()->default_value(400.), "minimum mass to consider (default 400)")
         ("maxMass",b_po::value<double>(),"maximum mass to consider")
-        ("rt2sum",b_po::value<uint32_t>()->default_value(1u),"downsampling - number spectra to average (not supported yet)")
-        ("writeprojections",b_po::value<bool>()->default_value(true),"should feature projections be stored in database");
+        ("rt2sum",b_po::value<uint32_t>()->default_value(1u),"downsampling - number spectra to average (not supported yet)");
 
     b_po::options_description cmdloptions;
     cmdloptions.add(general).add(processing);
@@ -158,4 +202,4 @@ inline int parsecommandlineExtract(
   return 1;
 }//end parse command line
 
-#endif // PARSEARGEXTRACT_H
+#endif // PARSEARGSIMAGEEXPORT_H

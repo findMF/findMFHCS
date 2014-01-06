@@ -30,10 +30,10 @@ namespace ralab{
         fw.createTables();
       }
 
-      void writeSQL2(datastruct::FeaturesMap & featuresMap){
+      void writeSQL2(datastruct::FeaturesMap & featuresMap, bool writeprojections = true){
         FreeListMutexType::scoped_lock lock(freeListMutex_);
         FeaturesMapSQLWriter fw(db_location_,db_name_);
-        fw.write(featuresMap);
+        fw.write(featuresMap, writeprojections);
       }
 
     };

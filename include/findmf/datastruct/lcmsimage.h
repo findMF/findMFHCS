@@ -81,12 +81,12 @@ namespace ralab{
           bin_.setBreaks(mz);
         }
 
-        /** return mass axis */
+        /// return mass axis
         void getMZ(std::vector<double> & mz) const {
           bin_.getBreaks(mz);
         }
 
-        /** */
+        /// return rt axis
         std::vector<double> & getRT(){
           return descript_->getRT();
         }
@@ -131,8 +131,9 @@ namespace ralab{
                          std::vector<double> & intensities ,
                          double threshold = 10) ;
 
-        //get maximum element in map
+        /// get maximum element in map
         float getMaxelem() const ;
+
         //TODO rename to mz or RT...
         std::size_t getNrRows() const ;
         std::size_t getRTsize() const ;
@@ -154,9 +155,11 @@ namespace ralab{
         void write(const std::string & filename,
                    const std::string & extension = "tiff");
 
+      private:
         /// write the transformators (mapping of RT and mz to pixel coordinates into file)
         void writeTransformation(const std::string & filename);
 
+      public:
         /// read image and transformators
         void read(const std::string & filename) ;
 

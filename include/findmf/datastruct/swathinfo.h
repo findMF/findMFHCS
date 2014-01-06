@@ -27,6 +27,7 @@ namespace ralab{
         SwathIndic swathindices_;
 
       public:
+        ///vector containing id's (starting mass of window as int) of the lcms maps.
         void getKeys(std::vector<std::size_t> & keys){
           SwathInfo::SwathIndic::iterator it,end;
           it = swathindices_.begin();

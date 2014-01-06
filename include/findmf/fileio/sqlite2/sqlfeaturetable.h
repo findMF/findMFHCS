@@ -31,11 +31,11 @@ namespace ralab{
     void createTable(){
       QSqlQuery query(db_);
       if( !query.exec("drop table if exists features") )
-        {
-          QSqlError err = query.lastError();
-          QString x = err.text();
-          std::cerr << " features table create :  " << __FILE__ << __LINE__ << x.toStdString() << std::endl;
-        }
+      {
+        QSqlError err = query.lastError();
+        QString x = err.text();
+        std::cerr << " features table create :  " << __FILE__ << __LINE__ << x.toStdString() << std::endl;
+      }
       if(!query.exec("CREATE TABLE features ( "
                      "id integer primary key, "
                      "idmap int, " // id in the current map
@@ -62,9 +62,9 @@ namespace ralab{
                      "mzProjection blob , "
                      "rtProjection blob"
                      ")")){
-          QSqlError err = query.lastError();
-          std::cerr << err.text().toStdString() ;
-        }
+        QSqlError err = query.lastError();
+        std::cerr << err.text().toStdString() ;
+      }
     }
 
     void prepareInsert(){
@@ -82,11 +82,12 @@ namespace ralab{
       insertFeatureQuery_.prepare(queryString);
     }
 
-
+    ///insert features into database
     void insertFeature(ralab::IFeatureAccess & feature,//!
                        uint32_t id ,//!< optional id which you get from the rtree!
-                       uint32_t mapid_
-                       )
+                       uint32_t mapid_, //!< lcms map id
+                       bool writeprojection = true
+        )
     {
       insertFeatureQuery_.bindValue(":id",id); // running id in the rtree table.
       insertFeatureQuery_.bindValue(":idmap",feature.getID()); // id within map.
@@ -122,21 +123,22 @@ namespace ralab{
 
 
       //projections
-      char * x;
-      std::size_t size;
-      x = feature.getMZProjectionData(size);
+      if(writeprojection){
+        char * x;
+        std::size_t size;
+        x = feature.getMZProjectionData(size);
 
-      QByteArray baa(x, size);
-      insertFeatureQuery_.bindValue(":mzproj", baa );
+        QByteArray baa(x, size);
+        insertFeatureQuery_.bindValue(":mzproj", baa );
 
-      x = feature.getRTProjectionData(size);
-      QByteArray bab(x, size);
-      insertFeatureQuery_.bindValue(":rtproj", bab );
-
+        x = feature.getRTProjectionData(size);
+        QByteArray bab(x, size);
+        insertFeatureQuery_.bindValue(":rtproj", bab );
+      }
       if(!insertFeatureQuery_.exec()){
-          QSqlError err = insertFeatureQuery_.lastError();
-          std::cerr<< " insert Feature: " << err.text().toStdString() <<std::endl;
-        }
+        QSqlError err = insertFeatureQuery_.lastError();
+        std::cerr<< " insert Feature: " << err.text().toStdString() <<std::endl;
+      }
     }
   };//end of class
   //   SELECT * FROM stuff WHERE id IN (SELECT id FROM feature_index WHERE value < :value)

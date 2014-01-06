@@ -32,7 +32,7 @@ namespace ralab
         double minintensity;
         uint32_t i_; //?
         uint32_t rt2sum_; //how many spectra to sum (downsampling)
-
+        bool writeprojections_;
         std::string filestem_;
         boost::filesystem::path outdir_;
 
@@ -43,17 +43,17 @@ namespace ralab
         void prepareOutputFile(bool create_dir=false)
         {
           if( !boost::filesystem::exists(infile) )
-            {
-              std::cerr << "could not find specified file :" ;
-              std::cerr << infile << std::endl;
-              return;
-            }
+          {
+            std::cerr << "could not find specified file :" ;
+            std::cerr << infile << std::endl;
+            return;
+          }
           filestem_ = boost::filesystem::path(infile).stem().stem().stem().string(); //createOutputs(p1.string() ,"fitered");
           outdir_ = boost::filesystem::path(outdir);
           outdir_ /= filestem_;
           if(create_dir){
-              boost::filesystem3::create_directory(outdir_);
-            }
+            boost::filesystem3::create_directory(outdir_);
+          }
           filestem_ += "_";
           filestem_ += boost::lexical_cast<std::string>(i_);
         }

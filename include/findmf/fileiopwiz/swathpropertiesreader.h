@@ -32,19 +32,19 @@ namespace ralab{
         swathinfo_->getKeys(keys);
       }
 
-      //return
+      ///
       datastruct::SwathInfoPtr getSwathInfo(){
         return swathinfo_;
       }
 
     private:
-      /* method to create swath file layout */
+      /// method to create swath file layout
       void readProperties(pwiz::msdata::MSDataPtr msdataptr_)
       {
         pwiz::msdata::SpectrumListPtr sl = msdataptr_->run.spectrumListPtr;
         if (sl.get())
           {
-            std::cerr << "# of spectra: " << sl->size() ;
+            std::cerr << "# of spectra: " << sl->size() << std::cout ;
             pwiz::msdata::SpectrumIterator::Config c;
             c.getBinaryData = false;
             pwiz::msdata::SpectrumIterator it(*sl,c);

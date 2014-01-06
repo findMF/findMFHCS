@@ -27,8 +27,8 @@ namespace ralab{
         (mp_)(row,col) += val;
 
         if((mp_)(row,col) > maxelem_){
-            maxelem_ = (mp_)(row,col);
-          }
+          maxelem_ = (mp_)(row,col);
+        }
       }
 
       float LCMSImage::getMaxelem() const{
@@ -59,16 +59,15 @@ namespace ralab{
         boost::filesystem::path p1 = addextension( filename , extension );
         vigra::MultiArray<2,float> fimage(vigra::Shape2(mp_.size(0),mp_.size(1)));
         if(logb){
-            std::transform(mp_.begin(), mp_.end(), fimage.begin() , boost::bind(::log,boost::bind(std::plus<float>(),1,_1)));
-          }else{
-            std::transform(mp_.begin(), mp_.end(), fimage.begin() , boost::bind(::sqrt,_1));
-          }
+          std::transform(mp_.begin(), mp_.end(), fimage.begin() , boost::bind(::log,boost::bind(std::plus<float>(),1,_1)));
+        }else{
+          std::transform(mp_.begin(), mp_.end(), fimage.begin() , boost::bind(::sqrt,_1));
+        }
         vigra::ImageExportInfo iei(p1.string().c_str());
         vigra::exportImage(vigra::srcImageRange(fimage),iei);
       }
 
-
-      /** Write transformation (calibrator data) data **/
+      /// Write transformation (calibrator data) data
       void LCMSImage::writeTransformation(const std::string & filename){
         boost::filesystem::path p2 = addextension( filename , "mass");
         ralab::base::utils::writeBin( this->bin_.getBreaks(),  p2.string());
@@ -76,14 +75,14 @@ namespace ralab{
         ralab::base::utils::writeBin( descript_->getRT(),  p2.string());
       }
 
-      /** writes image into tiff file + transformation */
+      /// writes image into tiff file + transformation
       void LCMSImage::write(const std::string & filename,
                             const std::string & extension)
       {
         boost::filesystem::path p1 = addextension( filename , extension );
         vigra::ImageExportInfo iei(p1.string().c_str());
         iei.setFileType("TIFF");
-        //iei.setCompression("LZW");
+        iei.setCompression("LZW");
         iei.setPixelType( "FLOAT" ); // INT32
         vigra::exportImage(vigra::srcImageRange(mp_),iei);
         this->writeTransformation(filename);
@@ -99,13 +98,13 @@ namespace ralab{
       void LCMSImage::read(const std::string & filename){
         boost::filesystem::path p1(filename);
         if(boost::filesystem::exists(p1)){
-            vigra::ImageImportInfo info(p1.string().c_str());
-            if(info.isGrayscale())
-              {
-                mp_.reshape(difference_type(info.width(), info.height()));
-                vigra::importImage(info, destImage(mp_));
-              }
+          vigra::ImageImportInfo info(p1.string().c_str());
+          if(info.isGrayscale())
+          {
+            mp_.reshape(difference_type(info.width(), info.height()));
+            vigra::importImage(info, destImage(mp_));
           }
+        }
 
         std::vector<double> mass;
         std::string str =  p1.stem().string() ;
@@ -142,15 +141,15 @@ namespace ralab{
         std::size_t countLarger = 0;
         std::size_t countAll = 0;
         for(; begfiltered != endfiltered; ++begfiltered, ++mass, ++countAll){
-            if(*begfiltered > threshold)//skip values zero
-              {
-                ++countLarger;
-                *begIntensOut = *begfiltered;
-                *begMassOut = *mass;
-                ++begMassOut;
-                ++begIntensOut;
-              }
+          if(*begfiltered > threshold)//skip values zero
+          {
+            ++countLarger;
+            *begIntensOut = *begfiltered;
+            *begMassOut = *mass;
+            ++begMassOut;
+            ++begIntensOut;
           }
+        }
         mz.resize(countLarger);
         intensities.resize(countLarger);
       }

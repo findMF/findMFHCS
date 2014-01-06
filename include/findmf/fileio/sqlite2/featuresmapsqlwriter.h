@@ -99,10 +99,10 @@ namespace ralab
 
     public:
       ///
-      ///\todo think to make it simpler.
+      /// TODO think to make it simpler.
       /// This method was required to protect write acces into sql lite databse
       ///
-      void write( datastruct::FeaturesMap & featuresMap )
+      void write( datastruct::FeaturesMap & featuresMap, bool writeprojection = true )
       {
         boost::timer time;
         this->prepareInserts();
@@ -115,7 +115,7 @@ namespace ralab
         for(int i = 0;beg != end; ++beg, ++i){
             datastruct::FeatureReadAdapterFM x(*beg, featuresMap.getMapDescription());
             uint32_t runningid_ = sftreetable_.insertFeature(x);
-            sftable_.insertFeature(x,runningid_,mapid_);
+            sftable_.insertFeature(x,runningid_,mapid_,writeprojection);
           }
         sfstorage_.commit();
       }

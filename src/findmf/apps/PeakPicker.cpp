@@ -8,6 +8,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 #include "findmf/fileiopwiz/qtofpeakpickerfilter.h"
+#include "pwiz/data/vendor_readers/ExtendedReaderList.hpp"
 
 namespace b_po = boost::program_options;
 namespace b_fs = boost::filesystem3;
@@ -176,8 +177,8 @@ int main(int argc, char *argv[])
   }
   PPParams aparam;
   analysisParameters(aparam,vmgeneral);
-
-  pwiz::msdata::MSDataPtr msdataptr_ = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(aparam.infile_));
+  pwiz::msdata::ExtendedReaderList readers;
+  pwiz::msdata::MSDataPtr msdataptr_ = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(aparam.infile_,&readers));
   pwiz::msdata::SpectrumListPtr sl = msdataptr_->run.spectrumListPtr;
   pwiz::msdata::SpectrumListPtr mp(
         new ralab::QTOFPeakPickerFilter(sl,

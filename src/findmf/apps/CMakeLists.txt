@@ -15,3 +15,6 @@ TARGET_LINK_LIBRARIES(findMF ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs
 
 ADD_EXECUTABLE(PeakPicker PeakPicker.cpp)
 TARGET_LINK_LIBRARIES(PeakPicker ${Boost_LIBRARIES} pwiz datastructlib )
+
+#ADD_EXECUTABLE(conv2Image conv2Image.cpp)
+#TARGET_LINK_LIBRARIES(conv2Image  ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz datastructlib ${vigralibs} tbb)

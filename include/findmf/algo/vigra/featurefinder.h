@@ -324,7 +324,6 @@ namespace ralab{
                               -1., // scaling this flips the image
                               -( minmax.max ) ) //
                             );
-
             //flip image
           }else{
             transformImage( srcImageRange(gradient_) , destImage(gradient_),

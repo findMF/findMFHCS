@@ -64,7 +64,7 @@ namespace ralab{
       {
         return NULL;
       }
-      
+
     }
   };
   //end LCMSImageReader
@@ -97,49 +97,20 @@ namespace ralab{
   };
 
 
-  struct FeatureFind : tbb::filter{
-
-    double minitensity_;
-
-    FeatureFind(double minitensity):tbb::filter(parallel),minitensity_(minitensity)
+  //second stage ...
+  struct WriteImage : tbb::filter{
+    std::string outfile_ ;
+    FeatureFind(const std::string  & data ) : tbb::filter(serial_in_order),
+      minitensity_(minitensity)
     {}
 
     void * operator()(void * image)
     {
       ralab::findmf::datastruct::LCMSImage * mp = static_cast<ralab::findmf::datastruct::LCMSImage *>(image);
+      mp->write(outfile_);
 
-      boost::timer time;
-      time.restart();
-      ralab::findmf::FeatureFinder ff;
-      ralab::findmf::datastruct::FeaturesMap * map = new ralab::findmf::datastruct::FeaturesMap();
-      map->setMapDescription(mp->getMapDescription());
-
-      ff.findFeature( mp->getMap(), minitensity_ );
-      ff.extractFeatures(*map,mp->getMap());
       delete mp;
       std::cerr << " Features Found in " << time.elapsed() << " [s]";
-      return map;
-    }
-  };
-
-  struct WriteSQLFeatures : tbb::filter{
-    ralab::findmf::FeaturesMapSQLWriterFacade facade_;
-    bool writeprojections_;
-    WriteSQLFeatures(const std::string & outdir,
-                     const std::string & filestem,
-                     bool writeprojections = true
-        ) : tbb::filter(serial_in_order), facade_( outdir , filestem ),writeprojections_(writeprojections)
-    {}
-
-    void * operator()(void * map)
-    {
-      ralab::findmf::datastruct::FeaturesMap * fm =
-          static_cast<ralab::findmf::datastruct::FeaturesMap *>( map );
-      boost::timer time;
-      //LOG(INFO) << " start writing SQL" ;
-      facade_.writeSQL2(*fm, writeprojections_ );
-      //LOG(INFO) << " Features Written in " << time.elapsed() << " [s]";
-      delete fm;
       return NULL;
     }
   };
