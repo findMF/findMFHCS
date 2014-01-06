@@ -11,7 +11,7 @@
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <QtSql>
-#include <glog/logging.h>
+#include "base/base/cpplog.h"
 
 #include "findmf/interfaces/ifeatureaccess.h"
 
@@ -34,7 +34,7 @@ namespace ralab{
         {
           QSqlError err = query.lastError();
           QString x = err.text();
-          LOG(ERROR) << " features table create :  " << __FILE__ << __LINE__ << x.toStdString() << std::endl;
+          std::cerr << " features table create :  " << __FILE__ << __LINE__ << x.toStdString() << std::endl;
         }
       if(!query.exec("CREATE TABLE features ( "
                      "id integer primary key, "
@@ -63,7 +63,7 @@ namespace ralab{
                      "rtProjection blob"
                      ")")){
           QSqlError err = query.lastError();
-          LOG(ERROR) << err.text().toStdString() ;
+          std::cerr << err.text().toStdString() ;
         }
     }
 
@@ -135,7 +135,7 @@ namespace ralab{
 
       if(!insertFeatureQuery_.exec()){
           QSqlError err = insertFeatureQuery_.lastError();
-          LOG(ERROR) << " insert Feature: " << err.text().toStdString() ;
+          std::cerr<< " insert Feature: " << err.text().toStdString() <<std::endl;
         }
     }
   };//end of class

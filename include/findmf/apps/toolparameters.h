@@ -10,7 +10,6 @@
 #include <stdint.h>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
-#include "glog/logging.h"
 
 namespace ralab
 {
@@ -45,8 +44,8 @@ namespace ralab
         {
           if( !boost::filesystem::exists(infile) )
             {
-              LOG(ERROR) << "could not find specified file :" ;
-              LOG(ERROR) << infile << std::endl;
+              std::cerr << "could not find specified file :" ;
+              std::cerr << infile << std::endl;
               return;
             }
           filestem_ = boost::filesystem::path(infile).stem().stem().stem().string(); //createOutputs(p1.string() ,"fitered");

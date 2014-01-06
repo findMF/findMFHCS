@@ -10,7 +10,6 @@
 #include <vigra/multi_array.hxx>
 #include <vigra/multi_localminmax.hxx>
 #include <vigra/seededregiongrowing.hxx>
-#include <glog/logging.h>
 
 
 #include "vigratypedefs.h"
@@ -77,9 +76,7 @@ namespace ralab{
     };
 
 
-    //
-    //feature finder
-    //
+    /// and seeded region growing
     class FeatureFinder
     {
     public:
@@ -95,11 +92,12 @@ namespace ralab{
 
     public:
 
+      /// access to label image
       Labels & getLabels(){
         return labels_;
       }
 
-      /* executes findFeature, createFeatures and extractFeatrues */
+      /// executes findFeature, createFeatures and extractFeatrues
       void findFeature(Gradient & gradient, double threshold){
         this->findFeat(gradient, threshold);
         this->extractFeatureChain(gradient,mac_);
@@ -162,7 +160,7 @@ namespace ralab{
         using namespace vigra::acc;
         int lengthAC = chain.regionCount();
 
-        DLOG(INFO) << " Length of accumulator chain : " << lengthAC ;
+        //DLOG(INFO) << " Length of accumulator chain : " << lengthAC ;
 
         --lengthAC; //decrease because you are skipping the background...
         features.resize(lengthAC);
@@ -221,7 +219,6 @@ namespace ralab{
           }
       }
 
-    private:
       std::ostream &  printFAcc(
           std::ostream & stream ,
           ralab::featurefind::MyAccumulatorChain & acummulatorChain
@@ -311,7 +308,7 @@ namespace ralab{
       //method to find features
       void findFeat(Gradient & data, //[inout]
                     float threshold,
-                    float tolerance = .1//minima tolerance
+                    float tolerance = .1//minimal tolerance
           ){
         using namespace vigra;
         Gradient & gradient_ = data;//you work with the data
@@ -334,21 +331,11 @@ namespace ralab{
                             ImageTransformatorFlip<float>( threshold , minmax.max )
                             );
           }
-        //vigra::LocalMinmaxOptions lmx;
-        //lmx.markWith(1).allowPlateaus().thresh(10.);
 
-        /*extendedLocalMinima(srcImageRange(gradient_),
-                            destImage(labels_),
-                            1,
-                            FourNeighborCode(),
-                            //EightNeighborCode(),
-                            EqualWithToleranceFunctor<float>(tolerance)
-                            );*/
-        //likely faster
         vigra::localMinima(srcImageRange(gradient_), destImage(labels_),
                            vigra::LocalMinmaxOptions().neighborhood(4).allowAtBorder());
-
         int max_region_label = labelImageWithBackground(srcImageRange(labels_), destImage(labels_), false, 0);
+
         // create a statistics functor for region growing
         vigra::ArrayOfRegionStatistics< vigra::SeedRgDirectValueFunctor<float> > gradstat( max_region_label ) ;
 
@@ -356,6 +343,7 @@ namespace ralab{
         // as the feature (first input) image contains the gradient magnitude,
         // this calculates the catchment basin of each minimum
         // TODO look into seeded region growing how to fix issue of not split features.
+        // TODO test with
         seededRegionGrowing(srcImageRange(gradient_), srcImage(labels_),
                             destImage(labels_),
                             gradstat,
@@ -364,19 +352,18 @@ namespace ralab{
                             FourNeighborCode(),
                             static_cast<double>(minmax.max - (threshold + 0.001))
                             );
+
         transformImage( srcImageRange(gradient_) , destImage(gradient_),
                         ImageTransformatorFlipBack<float>(  minmax.max , threshold )
                         );
-        //LOG(INFO) << " >>> segments done  ";
-
       }
 
       //Write the acc chain into csv
       void writeFeatures(const std::string & output_directory,
-                         const std::string & outfileprefix){
+                         const std::string & outfileprefix)
+      {
         std::fstream featureAcc;
         boost::filesystem::path p(output_directory);
-
         // write
         {
           std::string outfile1 = outfileprefix;
@@ -391,7 +378,6 @@ namespace ralab{
           featureAcc.close();
         }
       }
-
 
     };
   }

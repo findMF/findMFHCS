@@ -8,7 +8,7 @@
 #define SQLFEATURERTREESELECT_H
 
 #include <QtSql>
-#include <glog/logging.h>
+#include "base/base/cpplog.h"
 
 namespace ralab{
 
@@ -24,7 +24,7 @@ namespace ralab{
       QSqlQuery query(db_);
       if(!query.exec(queryString3)){
           QSqlError err = query.lastError();
-          LOG(ERROR) <<  "Cant select from feature_index : " << err.text().toStdString();
+          std::cerr <<  "Cant select from feature_index : " << err.text().toStdString() <<std::endl;
         }
       while(query.next()){
           prem.push_back(query.value(0).toFloat());
@@ -43,7 +43,7 @@ namespace ralab{
 
       if(!query.exec()){
           QSqlError err = query.lastError();
-          LOG(ERROR) << "Cant select from feature_index : " << err.text().toStdString();
+          std::cerr << "Cant select from feature_index : " << err.text().toStdString();
         }
       while(query.next()){
           prem.push_back(query.value(0).toUInt());
@@ -67,7 +67,7 @@ namespace ralab{
 
       if(!query.exec()){
           QSqlError err = query.lastError();
-          LOG(ERROR) <<  "Cant select from feature_index : " << err.text().toStdString();
+          std::cerr <<  "Cant select from feature_index : " << err.text().toStdString();
         }
       while(query.next()){
           prem.push_back(query.value(0).toUInt());
@@ -85,7 +85,7 @@ namespace ralab{
 
       if(!query.exec()){
           QSqlError err = query.lastError();
-          LOG(ERROR) <<  "Cant select from feature_index : " << err.text().toStdString();
+          std::cerr <<  "Cant select from feature_index : " << err.text().toStdString();
         }
       while(query.next()){
           prem.push_back(query.value(0).toUInt());

@@ -14,16 +14,17 @@ else()
   return()
 endif()
 
-
-FIND_PACKAGE(Glog)
-if(Glog_FOUND)
-  message(STATUS "Glog found" ${Glog_INCLUDE_DIR})
-  message(STATUS "Glog found" ${Glog_LIBRARY})
-  SET(inc ${inc} ${Glog_INCLUDE_DIR})
+FIND_PACKAGE(Tbb)
+if(Tbb_FOUND)
+  message(STATUS "Tbb found" ${Tbb_INCLUDE_DIR})
+  message(STATUS "Tbb found" ${Tbb_LIBRARY})
+  SET(inc ${inc} ${Tbb_INCLUDE_DIR})
 else()
-  message(SEND_ERROR " !!!!!!!!!!!!!!!! Glog not found !!!!!!!!!!!!!!!! ")
+  message(STATUS " !!!!!!!!!!!!!!!! Tbb not found !!!!!!!!!!!!!!!! ")
   return()
 endif()
+
+
 
 FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtSql REQUIRED)
 INCLUDE(${QT_USE_FILE})
@@ -32,8 +33,12 @@ message( STATUS "<<<<<<<<<<<<<<QTQTsrc  ${QT_LIBRARIES} QTQT>>>>>>>>>>>>")
 
 ADD_SUBDIRECTORY(application)
 ADD_SUBDIRECTORY(apps)
+
+
+IF(WITH_QT)
 ADD_SUBDIRECTORY(appsqt)
 ADD_SUBDIRECTORY(qtwidgets)
+ENDIF()
 
 
 IF(WITH_TEST)

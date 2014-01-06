@@ -9,3 +9,10 @@ ENDIF()
 SET(WITH_TEST ${WITH_TEST}
     CACHE BOOL "Build with test ?"
     FORCE)
+
+IF(NOT DEFINED WITH_QT)
+    SET(WITH_QT "OFF")
+ENDIF()
+SET(WITH_QT ${WITH_QT}
+    CACHE BOOL "Build with qt ?"
+    FORCE)

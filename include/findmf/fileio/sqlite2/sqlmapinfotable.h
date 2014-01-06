@@ -8,9 +8,8 @@
 #define SQLMAPINFOTABLE_H
 
 #include <QtSql>
-#include <glog/logging.h>
 #include "findmf/datastruct/maplcmsdescription.h"
-
+#include "base/base/cpplog.h"
 
 namespace ralab{
   namespace findmf{
@@ -32,7 +31,7 @@ namespace ralab{
           {
             QSqlError err = query.lastError();
             QString x = err.text();
-            LOG(ERROR)  << "SQLMapInfoTable" << x.toStdString() << std::endl;
+            //LOG_INFO  << "SQLMapInfoTable" << x.toStdString() << std::endl;
           }
         if(!query.exec("CREATE TABLE mapinfo ( "
                        "id integer primary key, "
@@ -47,7 +46,7 @@ namespace ralab{
                        "mzs blob"
                        ")")){
             QSqlError err = query.lastError();
-            LOG(ERROR) << err.text().toStdString();
+            std::cerr << err.text().toStdString() << std::endl;
           }
       }
 
@@ -81,7 +80,7 @@ namespace ralab{
         insertMapQuery_.bindValue(":maxRT" , 300.);
         if(!insertMapQuery_.exec()){
             QSqlError err = insertMapQuery_.lastError();
-            LOG(ERROR) << "insert Mapinfo: " << err.text().toStdString() ;
+            //LOG_INFO << "insert Mapinfo: " << err.text().toStdString() ;
           }
       }
 
@@ -91,7 +90,7 @@ namespace ralab{
                           " VALUES ( 1 , 120.,145.,120.,1400.3,10,3600)");
         if(!insertMapQuery_.exec(testQuery)){
             QSqlError err = insertMapQuery_.lastError();
-            LOG(ERROR) << "insert Mapinfo: " << err.text().toStdString() ;
+            //LOG_INFO << "insert Mapinfo: " << err.text().toStdString() ;
           }
       }
 
@@ -124,7 +123,7 @@ namespace ralab{
 
         if(!insertMapQuery_.exec()){
             QSqlError err = insertMapQuery_.lastError();
-            LOG(ERROR) << "insert Mapinfo: " << err.text().toStdString() ;
+            //LOG_INFO << "insert Mapinfo: " << err.text().toStdString() ;
           }
         return insertMapQuery_.lastInsertId().toUInt();
       }

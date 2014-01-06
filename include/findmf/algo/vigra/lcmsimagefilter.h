@@ -13,6 +13,11 @@
 
 namespace ralab{
   namespace findmf{
+
+    /// filter LCMSImage
+    /// TODO move to algo
+    /// feature finder based on gaussian smoothing,
+    /// tophat morphological filter background subraction
     class LCMSImageFilter{
     private:
       std::vector<float> signal_; //worker variable
@@ -70,7 +75,7 @@ namespace ralab{
                       double factor = 1. // size of structuring element resolution * factor
           )
       {
-        LOG(INFO) << "mzscale: " << mzscale << " rtscale: " << rtscale << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth <<  " factor : " << factor << std::endl;
+        std::cerr << "mzscale: " << mzscale << " rtscale: " << rtscale << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth <<  " factor : " << factor << std::endl;
         sqrt(mp_.getMap()); // put it on nicer scale
         filterGauss(mp_.getMap(),mzscale,rtscale);
         mp_.updateMax();

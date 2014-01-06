@@ -11,8 +11,7 @@
 #include <tbb/parallel_for_each.h>
 #include <tbb/task_scheduler_init.h>
 
-#include <glog/logging.h>
-#include "findmf/application/lcmsimagefilter.h"
+#include "findmf/algo/vigra/lcmsimagefilter.h"
 #include "findmf/fileiopwiz/lcmsimagereader.h"
 
 #include "findmf/application/featuresmapprinter.h"
@@ -45,10 +44,10 @@ namespace ralab
       try{
         pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));
         ralab::findmf::LCMSImageReader tmp ( msdataptr , sip_ , anap_.ppm );
-        LOG(INFO) << "processing map : " << anap_.i_ << " with key : " << keys[anap_.i_] ;
+        std::cerr << "processing map : " << anap_.i_ << " with key : " << keys[anap_.i_]<< std::endl ;
         tmp.getMap( keys[ anap_.i_ ] , anap_.minmass,anap_.maxmass, mp );
       }catch(std::exception &e){
-        LOG(ERROR) << "reading failed" << e.what() << std::endl;
+        std::cerr << "reading failed" << e.what() << std::endl;
         return;
       }
 
@@ -61,11 +60,10 @@ namespace ralab
         //TODO add option to switch wring tiff on and off.
         mp.write( x.string());
       }catch(std::exception &e){
-        LOG(ERROR) << "filtering failed " << e.what() << std::endl;
+        std::cerr << "filtering failed " << e.what() << std::endl;
         return;
       }
 
-      LOG(INFO) << "map i : " << anap_.i_ << " read and filtered : " << time.elapsed() ;
       ralab::findmf::datastruct::FeaturesMap map;
       map.setMapDescription( mp.getMapDescription() );
 
@@ -73,30 +71,28 @@ namespace ralab
         time.restart();
         ralab::findmf::FeatureFinder ff;
         ff.findFeature( mp.getMap(), 10. );
-        LOG(INFO) << "swath i : " << anap_.i_ << ">>> computed segments done " << time.elapsed() << std::endl;
         ff.extractFeatures(map,mp.getMap());
-        LOG(INFO) << "swath i : " << anap_.i_ << ">>> feature statistics done " << time.elapsed() << std::endl;
 
         //ff.writeFeatures( anap_.outdir_.string() , anap_.filestem_ );
         //ralab::FeaturesMapPrinter fp;
         //fp.writeFeatures( anap_.outdir_.string() , anap_.filestem_ , map);
 
       }catch(std::exception & e){
-        LOG(ERROR) << "feature finding failed " << e.what() << std::endl;
+        std::cerr << "feature finding failed " << e.what() << std::endl;
         return;
       }
 
       try{
         time.restart();
         sqlwriter_.writeSQL2( map );
-        LOG(INFO) << "written features : " << time.elapsed();
+        //LOG(INFO) << "written features : " << time.elapsed();
       }catch(std::exception &e)
       {
-        LOG(ERROR) << "error wrting sql" << e.what() << std::endl;
+        std::cerr << "error wrting sql" << e.what() << std::endl;
         return;
       }
 
-      LOG(INFO) << "map " << anap_.i_ << " processed." ;
+      //LOG(INFO) << "map " << anap_.i_ << " processed." ;
     }
   };
 }//end namespace ralab
@@ -109,9 +105,6 @@ template <typename T> struct invoker {
 //test
 int main(int argc, char *argv[])
 {
-  FLAGS_log_dir = ".";
-  google::InitGoogleLogging(argv[0]);
-  google::LogToStderr();
 
   // TODO maybe should go in a single class.
   b_po::variables_map vmgeneral;
@@ -119,7 +112,7 @@ int main(int argc, char *argv[])
   ralab::findmf::apps::Params pars;
   analysisParameters(pars,vmgeneral);
 
-  LOG(INFO) << "ppm is:" << pars.ppm << std::endl;
+  std::cerr << "ppm is:" << pars.ppm << std::endl;
   pars.i_ = 0;
 
   ///// prepare single feature storage for all lscms's
@@ -129,15 +122,15 @@ int main(int argc, char *argv[])
 
   //////
   boost::timer time;
-  LOG(INFO) << "start reading properties" << std::endl;
+  //LOG(INFO) << "start reading properties" << std::endl;
   pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(pars.infile));
-  LOG(INFO)  << "time to open file " << time.elapsed() << std::endl;
+  //LOG(INFO)  << "time to open file " << time.elapsed() << std::endl;
 
   ralab::findmf::SwathPropertiesReader swathPropReader(msdataptr);
   std::vector<std::size_t> keys;
   swathPropReader.getSwathInfo()->getKeys(keys);
 
-  LOG(INFO)  << "time required to scan through file :" << time.elapsed() << std::endl;
+  //LOG(INFO)  << "time required to scan through file :" << time.elapsed() << std::endl;
 
   tbb::task_scheduler_init init(pars.nrthreads);
   std::vector<ralab::SwathProcessor> tasks;

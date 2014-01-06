@@ -5,13 +5,15 @@
 
 #include "findmf/datastruct/lcmsimage.h"
 #include <boost/filesystem.hpp>
+//#include <boost/log/trivial.hpp>
 
+#include <iostream>
 #include <vigra/impex.hxx>
 #include <vigra/stdimagefunctions.hxx>
 #include <vigra/convolution.hxx>
 
 #include <vigra/watersheds.hxx>
-#include <glog/logging.h>
+
 
 #include "base/utils/readwritebin.h"
 #include "findmf/fileio/helperfunctions.h"
@@ -47,7 +49,7 @@ namespace ralab{
         return getNrRows();
       }
 
-      //TODO limit image dimensions.
+      //TODO limit image size.
       void LCMSImage::write_image(
           const std::string & filename,
           bool logb,
@@ -55,7 +57,6 @@ namespace ralab{
           )
       {
         boost::filesystem::path p1 = addextension( filename , extension );
-        LOG(INFO) << "writing png file : " << p1 << std::endl;
         vigra::MultiArray<2,float> fimage(vigra::Shape2(mp_.size(0),mp_.size(1)));
         if(logb){
             std::transform(mp_.begin(), mp_.end(), fimage.begin() , boost::bind(::log,boost::bind(std::plus<float>(),1,_1)));
@@ -80,11 +81,10 @@ namespace ralab{
                             const std::string & extension)
       {
         boost::filesystem::path p1 = addextension( filename , extension );
-        LOG(INFO)  << "writing tiff file : " << p1 << std::endl;
         vigra::ImageExportInfo iei(p1.string().c_str());
         iei.setFileType("TIFF");
         //iei.setCompression("LZW");
-        iei.setPixelType( "FLOAT" );
+        iei.setPixelType( "FLOAT" ); // INT32
         vigra::exportImage(vigra::srcImageRange(mp_),iei);
         this->writeTransformation(filename);
       }

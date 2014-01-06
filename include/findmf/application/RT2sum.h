@@ -12,7 +12,9 @@
 
 namespace ralab{
 
-  //rt2sum
+  /// Used when downsampling the RT gradient
+  /// Some datasets are extremely oversampled in RT
+  ///
   class RT2sum{
     uint32_t rt2sum_;
   public:

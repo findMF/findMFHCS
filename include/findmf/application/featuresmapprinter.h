@@ -13,12 +13,13 @@
 
 namespace ralab{
 
-  struct FeaturesMapPrinter {
+  ///TODO remove
+  struct FeaturesMapPrinterX {
     //std::ostream & stream_;
     std::string sep_;
 
 
-    FeaturesMapPrinter( const std::string & sep="\t"): sep_(sep){
+    FeaturesMapPrinterX( const std::string & sep="\t"): sep_(sep){
 
     }
 

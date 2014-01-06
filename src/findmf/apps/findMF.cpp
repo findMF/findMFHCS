@@ -3,7 +3,6 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-#include <QApplication>
 #include <iostream>
 #include <boost/timer.hpp>
 #include <boost/thread.hpp>
@@ -12,7 +11,6 @@
 #include <tbb/pipeline.h>
 #include <tbb/concurrent_queue.h>
 
-#include <glog/logging.h>
 
 #include "findmf/fileiopwiz/lcmsimagereader.h"
 #include "findmf/algo/vigra/featurefinder.h"
@@ -21,12 +19,11 @@
 #include "parseargExtract.h"
 
 #include "findmf/fileio/sqlite2/featuresmapsqlwriterfacade.h"
-#include "findmf/application/lcmsimagefilter.h"
+#include "findmf/algo/vigra/lcmsimagefilter.h"
 
 #include "findmf/apps/toolparameters.h"
 
 namespace ralab{
-
 
   //process single swath or ms map
   struct LCMSImageReaderFilter : tbb::filter{
@@ -45,29 +42,28 @@ namespace ralab{
     //test ...
     void * operator()(void * )
     {
-      LOG(INFO) << "start reading" ;
       boost::timer time;
       time.restart();
       std::vector< std::size_t > keys;
       sip_->getKeys(keys);
       if(count_ < keys.size())
-        {
+      {
 
-          ralab::findmf::datastruct::LCMSImage * mp = new ralab::findmf::datastruct::LCMSImage();
-          {
-            pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));
-            ralab::findmf::LCMSImageReader tmp (msdataptr,sip_ , anap_.ppm , anap_.rt2sum_);
-            LOG(INFO) << "processing map : " << count_ << " with key : " << keys[count_] ;
-            tmp.getMap( keys[count_] ,anap_.minmass , anap_.maxmass, *mp);
-            count_++;
-          }
-          LOG(INFO) << "Reading done : " << time.elapsed() << std::endl;
-          return mp;
-        }
-      else
+        ralab::findmf::datastruct::LCMSImage * mp = new ralab::findmf::datastruct::LCMSImage();
         {
-          return NULL;
+          pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));
+          ralab::findmf::LCMSImageReader tmp (msdataptr,sip_ , anap_.ppm , anap_.rt2sum_);
+          std::cerr << "PROCESSING MAP : " << count_ << " with key : " << keys[count_] <<std::endl;
+          tmp.getMap( keys[count_] ,anap_.minmass , anap_.maxmass, *mp);
+          count_++;
         }
+        //LOG(INFO) << "Reading done : " << time.elapsed() << std::endl;
+        return mp;
+      }
+      else
+      {
+        return NULL;
+      }
       
     }
   };
@@ -92,10 +88,10 @@ namespace ralab{
 
       boost::timer time;
       time.restart();
-      LOG(INFO) << " start Image filtering";
+      //LOG(INFO) << " start Image filtering";
       ralab::findmf::LCMSImageFilter imgf;
       imgf.filterMap( *mp , mzpixelwidth_ , rtpixelwidth_ , mzscale_, rtscale_);
-      LOG(INFO) << " Image Filtered in : " << time.elapsed() << " [s]";
+      //LOG(INFO) << " Image Filtered in : " << time.elapsed() << " [s]";
       return mp;
     }
   };
@@ -114,7 +110,6 @@ namespace ralab{
 
       boost::timer time;
       time.restart();
-      LOG(INFO) << " start Feature Find";
       ralab::findmf::FeatureFinder ff;
       ralab::findmf::datastruct::FeaturesMap * map = new ralab::findmf::datastruct::FeaturesMap();
       map->setMapDescription(mp->getMapDescription());
@@ -122,7 +117,7 @@ namespace ralab{
       ff.findFeature( mp->getMap(), minitensity_ );
       ff.extractFeatures(*map,mp->getMap());
       delete mp;
-      LOG(INFO) << " Features Found in " << time.elapsed() << " [s]";
+      std::cerr << " Features Found in " << time.elapsed() << " [s]";
       return map;
     }
   };
@@ -138,15 +133,17 @@ namespace ralab{
       ralab::findmf::datastruct::FeaturesMap * fm = static_cast<ralab::findmf::datastruct::FeaturesMap *>( map );
 
       boost::timer time;
-      LOG(INFO) << " start writing SQL" ;
+      //LOG(INFO) << " start writing SQL" ;
       facade_.writeSQL2(*fm);
-      LOG(INFO) << " Features Written in " << time.elapsed() << " [s]";
+      //LOG(INFO) << " Features Written in " << time.elapsed() << " [s]";
       delete fm;
       return NULL;
     }
   };
 }//end namespace ralab
 
+
+///
 int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::findmf::datastruct::SwathInfoPtr sip )
 {
   // Create the pipeline
@@ -166,22 +163,19 @@ int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::fin
   pipeline.add_filter( writeFeatures );
 
   // Run the pipeline
-  tbb::tick_count t0 = tbb::tick_count::now();
+  //tbb::tick_count t0 = tbb::tick_count::now();
   // Need more than one token in flight per thread to keep all threads
   // busy; 2-4 works
 
   pipeline.run( nthreads );
-  tbb::tick_count t1 = tbb::tick_count::now();
-  LOG(INFO) << "Pipeline run in : " << (t1-t0).seconds();
+  //tbb::tick_count t1 = tbb::tick_count::now();
+  //LOG(INFO) << "Pipeline run in : " << (t1-t0).seconds();
   return 1;
 }
 
 //
 int main(int argc, char *argv[])
 {
-  FLAGS_log_dir = ".";
-  google::InitGoogleLogging(argv[0]);
-  google::LogToStderr();
 
   // do some testing first.
   b_po::variables_map vmgeneral;
@@ -191,16 +185,23 @@ int main(int argc, char *argv[])
   analysisParameters(pars,vmgeneral);
 
   boost::timer time;
-  LOG(INFO) << "start reading properties" << std::endl;
-  pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(pars.infile));
-  LOG(INFO)  << "time to open file " << time.elapsed() << std::endl;
+  pwiz::msdata::MSDataPtr msdataptr;
+  try{
+    msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(pars.infile));
+  } catch(std::exception & e){
+    std::cerr << "infile : " << pars.infile << std::endl;
+    std::cerr  << "can't open file: " << e.what() << std::endl;
+    return 0;
+  }
+
+  //LOG(INFO)  << "time to open file " << time.elapsed();
   ralab::findmf::SwathPropertiesReader swathPropReader(msdataptr);
 
-  LOG(INFO)  << "time required to scan through file :" << time.elapsed() << std::endl;
+  //LOG(INFO)  << "time required to scan through file :" << time.elapsed() << std::endl;
   pars.prepareOutputFile(false);
   ralab::findmf::FeaturesMapSQLWriterFacade facade(pars.outdir,pars.filestem_);
   facade.createDatabase();
-  LOG(INFO) << "run pipeline with :" << pars.nrthreads ;
+  std::cerr << "run pipeline with :" << pars.nrthreads ;
   run_pipeline(pars.nrthreads,pars,swathPropReader.getSwathInfo() );
   return 0;
 }

@@ -3,7 +3,7 @@ set_directory_properties(PROPERTIES EP_PREFIX ${CMAKE_BINARY_DIR}/ThirdParty)
 # Add findMFBase
 ExternalProject_Add(
     findMFBase
-    GIT_REPOSITORY git@github.com:wolski/findMFBase.git
+    GIT_REPOSITORY https://github.com/wolski/findMFBase.git
     #SVN_REVISION -r 664
     TIMEOUT 10
     # PATCH_COMMAND svn patch ${CMAKE_SOURCE_DIR}/findMFBase.patch ${CMAKE_BINARY_DIR}/ThirdParty/src/findMFBase

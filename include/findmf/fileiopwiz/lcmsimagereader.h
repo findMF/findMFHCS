@@ -13,7 +13,6 @@
 #include <algorithm>
 
 #include <pwiz/data/msdata/MSDataFile.hpp>
-#include <glog/logging.h>
 
 #include "findmf/datastruct/lcmsimage.h"
 #include "findmf/datastruct/swathinfo.h"
@@ -26,11 +25,9 @@
 namespace ralab{
   namespace findmf{
 
-    /**
-   \brief reads map from MSData
 
-   default initialization is performed with an file name.
-  */
+   /// \brief reads map from MSData
+   /// default initialization is performed with an file name.
     struct LCMSImageReader{
     private:
       pwiz::msdata::MSDataPtr msdataptr_;
@@ -92,15 +89,15 @@ namespace ralab{
         size_t nrcols = swathInfo_->getMapForKey(key)->indices_.size();
         nrcols = rt2sum_.getNrCols(nrcols);
 
-        LOG(INFO) << "key : [" << key << "] map properties read : [" << time.elapsed() << "]";
+        //LOG(INFO) << "key : [" << key << "] map properties read : [" << time.elapsed() << "]";
         time.restart();
 
         size_t rows = map_.setBreak(mzRange_, ppm_ );
         map_.resize(rows,nrcols);
-        LOG(INFO) << "rows : [" << rows << "]  nrcols : [" << nrcols << "]";
+        std::cerr << "rows : [" << rows << "]  nrcols : [" << nrcols << "]" << std::endl;
 
         fillLCMSImage(msdataptr_,swathInfo_->getMapForKey(key)->indices_,map_);
-        LOG(INFO) << "key : [" << key << "]  map created : [" << time.elapsed() << "]";
+        //LOG(INFO) << "key : [" << key << "]  map created : [" << time.elapsed() << "]";
       }
 
       /// Store file on disk

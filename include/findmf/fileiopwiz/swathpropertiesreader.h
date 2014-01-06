@@ -11,7 +11,6 @@
 #include <pwiz/data/msdata/SpectrumIterator.hpp>
 #include <pwiz/data/msdata/SpectrumInfo.hpp>
 
-#include <glog/logging.h>
 
 #include "findmf/datastruct/swathinfo.h"
 
@@ -45,7 +44,7 @@ namespace ralab{
         pwiz::msdata::SpectrumListPtr sl = msdataptr_->run.spectrumListPtr;
         if (sl.get())
           {
-            LOG(INFO) << "# of spectra: " << sl->size() ;
+            std::cerr << "# of spectra: " << sl->size() ;
             pwiz::msdata::SpectrumIterator::Config c;
             c.getBinaryData = false;
             pwiz::msdata::SpectrumIterator it(*sl,c);
@@ -91,7 +90,7 @@ namespace ralab{
                   }
                 else
                   {
-                    LOG(INFO) << "unhandled ms level" << std::endl;
+                    std::cerr << "unhandled ms level" << std::endl;
                   }
 
               }

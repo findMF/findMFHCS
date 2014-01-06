@@ -8,7 +8,7 @@
 #define SQLFEATURERTREE_H
 
 #include <QtSql>
-#include <glog/logging.h>
+#include "base/base/cpplog.h"
 
 #include "findmf/interfaces/ifeaturerangeaccess.h"
 
@@ -32,7 +32,7 @@ namespace ralab{
         {
           QSqlError err = query.lastError();
           QString x = err.text();
-          LOG(ERROR) << "Can' drop table feature_index : " << x.toStdString();
+          std::cerr << "Can' drop table feature_index : " << x.toStdString() << std::endl;
         }
 
       if(!query.exec("CREATE VIRTUAL TABLE feature_index USING rtree("
@@ -43,7 +43,7 @@ namespace ralab{
                      ");"
                      )){
           QSqlError err = query.lastError();
-          LOG(ERROR) << "can't create table feature_index ON rtree : " << err.text().toStdString();
+          std::cerr << "can't create table feature_index ON rtree : " << err.text().toStdString() << std::endl;
 
           if (!query.exec("CREATE TABLE feature_index("
                           "id integer primary key, "
@@ -57,7 +57,7 @@ namespace ralab{
                           )){
 
               QSqlError err = query.lastError();
-              LOG(ERROR) << "can't create table feature_index NO rtree : " << err.text().toStdString();
+              std::cerr << "can't create table feature_index NO rtree : " << err.text().toStdString();
             }//second attempt
         }//first attempt
     }
@@ -105,7 +105,7 @@ namespace ralab{
 
       if(!insertRTreeQuery_.exec()){
           QSqlError err = insertRTreeQuery_.lastError();
-          LOG(ERROR) <<  "can't insert into RTREE: " << err.text().toStdString();
+          std::cerr <<  "can't insert into RTREE: " << err.text().toStdString() <<std::endl;
         }
       return insertRTreeQuery_.lastInsertId().toUInt();
 
@@ -141,7 +141,7 @@ namespace ralab{
 
       if(!insertRTreeQuery_.exec()){
           QSqlError err = insertRTreeQuery_.lastError();
-          LOG(ERROR) <<  "can't insert into RTREE with id : " << err.text().toStdString();
+          std::cerr <<  "can't insert into RTREE with id : " << err.text().toStdString() << std::endl;
         }
 
     }
