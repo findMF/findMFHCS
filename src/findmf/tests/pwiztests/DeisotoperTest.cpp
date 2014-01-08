@@ -83,11 +83,11 @@ BOOST_AUTO_TEST_CASE(findnearestNeighbor) {
   std::vector<double> mass3x ;
   mass3x.assign(mass3v.begin(),mass3v.end());
 
-  for(int i = 0 ; i < mass3x.size() ; ++i){
+  for(uint32_t i = 0 ; i < mass3x.size() ; ++i){
     mass3x[i] += 0.001;
   }
 
-  for( int  i= 0 ; i < mass3x.size() ; ++i){
+  for( uint32_t  i= 0 ; i < mass3x.size() ; ++i){
     std::vector<double>::iterator x =  ralab::base::ms::findNearestNeighbor(mass3v.begin(),mass3v.end(),mass3x[i]);
     //std::cout << mass3x[i] << " " << *x << std::endl;
     BOOST_CHECK_CLOSE(mass3x[i]-0.001,*x,1e-6);

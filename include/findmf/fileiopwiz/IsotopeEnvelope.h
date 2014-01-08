@@ -15,13 +15,15 @@ namespace ralab{
 
   //      using namespace pwiz::util;
 
-        const double abundanceCutoff = .01;
-        const double massPrecision = .1;
+        pwiz::chemistry::IsotopeEnvelopeEstimator estimator_;
+        double abundanceCutoff;
+        double massPrecision;
         //pwiz::chemistry::IsotopeCalculator isotopeCalculator_;
 
-        pwiz::chemistry::IsotopeEnvelopeEstimator estimator_;
 
-        IsotopeEnvelope(pwiz::chemistry::IsotopeEnvelopeEstimator::Config & config):estimator_(config)
+
+        IsotopeEnvelope(pwiz::chemistry::IsotopeEnvelopeEstimator::Config & config):estimator_(config),
+          abundanceCutoff(.01),massPrecision(.1)
         {
         }
 
@@ -29,7 +31,7 @@ namespace ralab{
         {
           std::vector<double> envelope;
           pwiz::chemistry::MassDistribution xx = estimator_.isotopeEnvelope(mass);
-          for( int i = 0 ; i < xx.size() ; ++i){
+          for( uint32_t i = 0 ; i < xx.size() ; ++i){
             envelope.push_back(xx[i].abundance);
           }
           return envelope;
