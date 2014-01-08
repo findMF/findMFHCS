@@ -67,18 +67,35 @@ namespace ralab{
       }
     }
 
-    void prepareInsert(){
-      QString queryString ("INSERT INTO features "
-                           "(id, idmap, idswath,  max, count,volume,"
-                           "MZ,RT,centerOfMassMZ,centerOfMassRT,maximumLocationMZ,maximumLocationRT, "
-                           "MZSD, RTSD, MZSKEW, RTSKEW, MZKURT, RTKURT,"
-                           "minMZIndex,mzExtend,minRTIndex,rtExtend,mzProjection, rtProjection )"
+    void prepareInsert(bool writeprojection=true){
+      std::string query1 = "INSERT INTO features "
+          "(id, idmap, idswath,  max, count,volume,"
+          "MZ,RT,centerOfMassMZ,centerOfMassRT,maximumLocationMZ,maximumLocationRT, "
+          "MZSD, RTSD, MZSKEW, RTSKEW, MZKURT, RTKURT,"
+          "minMZIndex,mzExtend,minRTIndex,rtExtend";
 
-                           " VALUES (:id, :idmap, :idswath,  :max, :count,:volume,"
-                           ":mz,:rt,:commz,:commrt,:maxlocmz,:maxlocrt,"
-                           " :mzsd, :rtsd, :mzskew, :rtskew, :mzkurt, :rtkurt,"
-                           " :mzminidx, :extmz, :rtminidx, :extrt, :mzproj, :rtproj "
-                           ")");
+      std::string query2 =
+          " VALUES (:id, :idmap, :idswath,  :max, :count,:volume,"
+          ":mz,:rt,:commz,:commrt,:maxlocmz,:maxlocrt,"
+          " :mzsd, :rtsd, :mzskew, :rtskew, :mzkurt, :rtkurt,"
+          " :mzminidx, :extmz, :rtminidx, :extrt";
+
+      std::string query;
+
+      if(writeprojection)
+      {
+        query1 += ",mzProjection, rtProjection";
+        query1 += ")";
+        query2 += ",:mzproj, :rtproj ";
+        query2 += ")";
+        query = query1 + query2;
+      }else{
+        query1 += ")";
+        query2 += ")";
+        query = query1 + query2;
+      }
+
+      QString queryString(query.c_str());
       insertFeatureQuery_.prepare(queryString);
     }
 
@@ -89,6 +106,7 @@ namespace ralab{
                        bool writeprojection = true
         )
     {
+
       insertFeatureQuery_.bindValue(":id",id); // running id in the rtree table.
       insertFeatureQuery_.bindValue(":idmap",feature.getID()); // id within map.
       insertFeatureQuery_.bindValue(":idswath",mapid_); // id in the map table;
@@ -115,7 +133,6 @@ namespace ralab{
 
 
       //bounding box and bounding box location
-
       insertFeatureQuery_.bindValue(":mzminidx",feature.getMinMZIdx());
       insertFeatureQuery_.bindValue(":extmz",feature.getMZExtend());
       insertFeatureQuery_.bindValue(":rtminidx",feature.getMinRTIdx());

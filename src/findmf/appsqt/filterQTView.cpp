@@ -8,7 +8,7 @@
 #include <boost/filesystem.hpp>
 
 #include "findmf/fileiopwiz/lcmsimagereader.h"
-#include "findmf/application/lcmsimagefilter.h"
+#include "findmf/algo/vigra/lcmsimagefilter.h"
 #include "findmf/application/featuresmapprinter.h"
 
 #include "src/findmf/qtwidgets/TwoPanelImageWidget.h"
@@ -27,17 +27,17 @@ int main(int argc, char *argv[])
 
   int i = 0;
     {
-      LOG(INFO)  << "i::::" << i << std::endl;
+      //LOG(INFO)  << "i::::" << i << std::endl;
       p1 = createOutputs(aparam.infile,"");
       p2 = createOutputs(aparam.infile,"filtered");
 
-      LOG(INFO)  << "ffname 2 :" << p1.string() << std::endl;
-      LOG(INFO)  << "ffname 1 :" << p2.string() << std::endl;
+      //LOG(INFO)  << "ffname 2 :" << p1.string() << std::endl;
+      //LOG(INFO)  << "ffname 1 :" << p2.string() << std::endl;
 
       if( !boost::filesystem::exists(aparam.infile) )
         {
-          LOG(ERROR)  << "could not find specified file :" << std::endl;
-          LOG(ERROR)  << aparam.infile[i] << std::endl;
+          //LOG(ERROR)  << "could not find specified file :" << std::endl;
+          //LOG(ERROR)  << aparam.infile[i] << std::endl;
           return -1;
         }
 
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
       ralab::findmf::LCMSImageReader sm(aparam.infile, ppm, aparam.rt2sum_ );
       ralab::findmf::datastruct::LCMSImage mp;
       sm.getMap( 0 , aparam.minmass, aparam.maxmass, mp);
-      LOG(INFO) << " " << mp.getMZsize() << " " << mp.getRTsize();
+      //LOG(INFO) << " " << mp.getMZsize() << " " << mp.getRTsize();
 
       ralab::findmf::datastruct::LCMSImage mp2( mp );
       {

@@ -14,7 +14,7 @@
 #include "findmf/algo/vigra/lcmsimagefilter.h"
 #include "findmf/fileiopwiz/lcmsimagereader.h"
 
-#include "findmf/application/featuresmapprinter.h"
+//#include "findmf/application/featuresmapprinter.h"
 #include "parseargExtract.h"
 #include "findmf/fileio/sqlite2/featuresmapsqlwriterfacade.h"
 #include "findmf/algo/vigra/featurefinder.h"

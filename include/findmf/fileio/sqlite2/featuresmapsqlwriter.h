@@ -80,10 +80,10 @@ namespace ralab
 
       //prepare the insert
 
-      void prepareInserts(){
+      void prepareInserts(bool writeprojection = true){
         sftreetable_.prepareInsertAuto();
         smapinfotable_.prepareInsert();
-        sftable_.prepareInsert();
+        sftable_.prepareInsert(writeprojection);
       }
 
 
@@ -105,7 +105,7 @@ namespace ralab
       void write( datastruct::FeaturesMap & featuresMap, bool writeprojection = true )
       {
         boost::timer time;
-        this->prepareInserts();
+        this->prepareInserts(writeprojection);
         this->storeTableInfo(featuresMap.getMapDescription());
         sfstorage_.transaction();
 
