@@ -13,8 +13,7 @@ else()
   return()
 endif()
 
-
-
+link_directories( ${VIGRA_LIBRARY} ${Tbb_LIBRARY} )
 
 ADD_EXECUTABLE(testtbb testtbb.cpp )
 TARGET_LINK_LIBRARIES(testtbb  tbb )
