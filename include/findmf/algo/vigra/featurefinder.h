@@ -34,6 +34,9 @@ namespace ralab{
       T t;
     };
 
+
+    /// because the seeded region growing assumes local minima and we have local maxima we flip the image
+    /// at the same time we do thresholding (setting values less than threshold to 0).
     template <class T>
     struct ImageTransformatorFlip
     {
@@ -54,9 +57,10 @@ namespace ralab{
 
       T thresh_;
       T max_;
-
     };
 
+    /// after computing the segment boundaries we flip the image back so that we can use it further
+    /// to compute feature statistics
     template <class T>
     struct ImageTransformatorFlipBack
     {
@@ -76,7 +80,9 @@ namespace ralab{
     };
 
 
-    /// and seeded region growing
+    /// seeded region growing
+    /// TODO split class into the feature detection part
+    /// and into the part where feature statistics are computed
     class FeatureFinder
     {
     public:
@@ -103,33 +109,34 @@ namespace ralab{
         this->extractFeatureChain(gradient,mac_);
       }
 
-      void extractFeatures(datastruct::FeaturesMap & features, const Gradient & gradient){
-        //LOG(INFO)<< " >>>> go for statistics " ;
-        this->createFeaturesFromStatistics( features, mac_);
-        //LOG(INFO)<< " >>>> created features statistics " ;
-        this->extractFeaturesI( gradient , features );
-        //LOG(INFO)<< " >>>> create projection stats " ;
-        this->creatProjectionStats(features);
-        //LOG(INFO)<< " >>>> done " ;
 
+      /// creates feature statistics
+      void extractFeatures(datastruct::FeaturesMap & features, const Gradient & gradient){
+        // generate features from statistics " ;
+        this->createFeaturesFromStatistics( features, mac_);
+        // create intensity projections ;
+        this->createIntensityProjections( gradient , features );
+        // create projection stats ;
+        this->creatProjectionStats(features);
       }
 
     private:
+
       void creatProjectionStats(ralab::findmf::datastruct::FeaturesMap & map){
         ralab::findmf::datastruct::FeaturesMap::Features::iterator beg , end ;
         ralab::findmf::utilities::PickApex picker;
         int count = 0;
         end = map.features().end();
         for( beg = map.features().begin() ; beg != end ; ++beg ){
-            ralab::findmf::datastruct::Feature2D &x = *beg;
-            ralab::findmf::utilities::computeStats(x.getProjectionMZ(),x.getMinMZIdx(),x.getMZStats());
-            x.getMZStats().peaklockation_ = picker.pick(x.getProjectionMZ(),x.getMZStats());
-            x.setProblem(picker.problem_);
-            ralab::findmf::utilities::computeStats(x.getProjectionRT(),x.getMinRTIdx(),x.getRTStats());
-            x.getRTStats().peaklockation_ = picker.pick(x.getProjectionRT(),x.getRTStats());
-            x.setProblem(picker.problem_);
-            ++count;
-          }
+          ralab::findmf::datastruct::Feature2D &x = *beg;
+          ralab::findmf::utilities::computeStats(x.getProjectionMZ(),x.getMinMZIdx(),x.getMZStats());
+          x.getMZStats().peaklockation_ = picker.pick(x.getProjectionMZ(),x.getMZStats());
+          x.setProblem(picker.problem_);
+          ralab::findmf::utilities::computeStats(x.getProjectionRT(),x.getMinRTIdx(),x.getRTStats());
+          x.getRTStats().peaklockation_ = picker.pick(x.getProjectionRT(),x.getRTStats());
+          x.setProblem(picker.problem_);
+          ++count;
+        }
         //LOG(INFO) << "picking done";
       }
 
@@ -165,60 +172,61 @@ namespace ralab{
         --lengthAC; //decrease because you are skipping the background...
         features.resize(lengthAC);
         for(int i=0; i < lengthAC; ++i)
-          {
-            int j = i + 1; // ignore background
-            TinyVector<int, 2> blaImax = get< Coord< Maximum> >(chain, j);
-            TinyVector<int, 2> blaImin = get< Coord< Minimum > >(chain, j);
-            int xsize = blaImax[0] - blaImin[0] + 1;
-            int ysize = blaImax[1] - blaImin[1] + 1;
-            features.features()[i] = findmf::datastruct::Feature2D(
-                  blaImin[0],
-                xsize,
-                blaImin[1],
-                ysize
-                );
-            float val = vigac::get< Sum >(chain, j);
-            features.at(i).setVolume(val);
-            val =vigac::get< Maximum >(chain, j);
-            features.at(i).setMaximum(val);
-            int count =vigac::get< Count >(chain, j);
-            features.at(i).setCount(count);
-            //get Center Of Mass
-            TinyVector<float, 2> tvFloat = vigac::get<CenterOfMass>(chain, j);
-            double mz =tvFloat[0];
-            double rt =tvFloat[1];
+        {
+          int j = i + 1; // ignore background
+          TinyVector<int, 2> blaImax = get< Coord< Maximum> >(chain, j);
+          TinyVector<int, 2> blaImin = get< Coord< Minimum > >(chain, j);
+          int xsize = blaImax[0] - blaImin[0] + 1;
+          int ysize = blaImax[1] - blaImin[1] + 1;
+          features.features()[i] = findmf::datastruct::Feature2D(
+                blaImin[0],
+              xsize,
+              blaImin[1],
+              ysize
+              );
+          float val = vigac::get< Sum >(chain, j);
+          features.at(i).setVolume(val);
+          val =vigac::get< Maximum >(chain, j);
+          features.at(i).setMaximum(val);
+          int count =vigac::get< Count >(chain, j);
+          features.at(i).setCount(count);
+          //get Center Of Mass
+          TinyVector<float, 2> tvFloat = vigac::get<CenterOfMass>(chain, j);
+          double mz =tvFloat[0];
+          double rt =tvFloat[1];
 
-            features.at(i).setCenterOfMassMZ(mz);
-            features.at(i).setCenterOfMassRT(rt);
-            tvFloat = vigac::get< Coord< ArgMaxWeight > >(chain, j);
+          features.at(i).setCenterOfMassMZ(mz);
+          features.at(i).setCenterOfMassRT(rt);
+          tvFloat = vigac::get< Coord< ArgMaxWeight > >(chain, j);
 
-            mz =( tvFloat[0] );
-            rt =( tvFloat[1] );
+          mz =( tvFloat[0] );
+          rt =( tvFloat[1] );
 
-            features.at( i ).setMaxLocationMZ(mz);
-            features.at( i ).setMaxLocationRT(rt);
-            features.at( i ).setID(i);
-          }
+          features.at( i ).setMaxLocationMZ(mz);
+          features.at( i ).setMaxLocationRT(rt);
+          features.at( i ).setID(i);
+        }
       }
 
 
       //create intensity projections in RT and MZ
-      void extractFeaturesI( const Gradient & data , datastruct::FeaturesMap & mf )
+      void createIntensityProjections( const Gradient & data , datastruct::FeaturesMap & mf )
       {
         typedef vigra::CoupledIteratorType<2, float, int>::type Iterator;
         Iterator beg = createCoupledIterator(data, labels_);
         Iterator end = beg.getEndIterator();
 
         for (Iterator it = beg; it < end; ++it) {
-            int label = it.get<2>();
-            if(label > 0){ //exlude the background
-                double intensity = it.get<1>();
-                vigra::TinyVector<int, 2> coor = it.get<0>();
-                mf.at(label-1).add(coor[0],coor[1],intensity);
-              }
+          int label = it.get<2>();
+          if(label > 0){ //exlude the background
+            double intensity = it.get<1>();
+            vigra::TinyVector<int, 2> coor = it.get<0>();
+            mf.at(label-1).add(coor[0],coor[1],intensity);
           }
+        }
       }
 
+      /// prints accumulator chain
       std::ostream &  printFAcc(
           std::ostream & stream ,
           ralab::featurefind::MyAccumulatorChain & acummulatorChain
@@ -248,52 +256,52 @@ namespace ralab{
 
         int xxx = acummulatorChain.regionCount();
         for(int i=0; i < xxx; ++i)
-          {
-            stream << i ;
-            stream << "\t" << get< Count >(acummulatorChain, i);
-            stream << "\t" << get< Mean >(acummulatorChain, i);
-            stream << "\t" << get< Variance >(acummulatorChain, i);
-            stream << "\t" << get< Sum >(acummulatorChain,i);
-            stream << "\t" << get< Maximum >(acummulatorChain, i);
+        {
+          stream << i ;
+          stream << "\t" << get< Count >(acummulatorChain, i);
+          stream << "\t" << get< Mean >(acummulatorChain, i);
+          stream << "\t" << get< Variance >(acummulatorChain, i);
+          stream << "\t" << get< Sum >(acummulatorChain,i);
+          stream << "\t" << get< Maximum >(acummulatorChain, i);
 
-            //Region Center
-            vigra::TinyVector<double, 2> bla = get< RegionCenter >(acummulatorChain,i);
-            stream << "\t" << bla[0];
-            stream << "\t" << bla[1];
-            //stream << "\t" << get< RegionCenter >(acummulatorChain, i);
+          //Region Center
+          vigra::TinyVector<double, 2> bla = get< RegionCenter >(acummulatorChain,i);
+          stream << "\t" << bla[0];
+          stream << "\t" << bla[1];
+          //stream << "\t" << get< RegionCenter >(acummulatorChain, i);
 
-            //Center Of mass
-            bla = get< CenterOfMass >(acummulatorChain,i);
-            stream << "\t" << bla[0];
-            stream << "\t" << bla[1];
+          //Center Of mass
+          bla = get< CenterOfMass >(acummulatorChain,i);
+          stream << "\t" << bla[0];
+          stream << "\t" << bla[1];
 
-            //Minimum Coordinate
-            vigra::TinyVector<int, 2> blaI = get< Coord< Minimum> >(acummulatorChain, i);
-            stream << "\t" << blaI[0];
-            stream << "\t" << blaI[1];
-            //stream << "\t" << get< Coord< Minimum > >(acummulatorChain, i);
+          //Minimum Coordinate
+          vigra::TinyVector<int, 2> blaI = get< Coord< Minimum> >(acummulatorChain, i);
+          stream << "\t" << blaI[0];
+          stream << "\t" << blaI[1];
+          //stream << "\t" << get< Coord< Minimum > >(acummulatorChain, i);
 
-            //Maximum Coordinate
-            blaI = get< Coord< Maximum> >(acummulatorChain, i);
-            stream << "\t" << blaI[0];
-            stream << "\t" << blaI[1];
+          //Maximum Coordinate
+          blaI = get< Coord< Maximum> >(acummulatorChain, i);
+          stream << "\t" << blaI[0];
+          stream << "\t" << blaI[1];
 
-            //  stream << "\t" << get<UnbiasedSkewness >( acummulatorChain , i );
-            //  stream << "\t" << get<UnbiasedKurtosis>( acummulatorChain , i );
-            //  stream << "\t" << get<StdDev>( acummulatorChain , i );
-            //  stream << "\t" << get<Weighted<StdDev> >( acummulatorChain , i );
-            //  stream << "\t" << get<Weighted< < StdDev> > >( acummulatorChain , i );
-            //  ralab::featurefind::RegionRadiiReturn rrad = get<RegionRadii>(acummulatorChain, i);
-            //  ralab::featurefind::MomentsOfInertiaReturn moi = get<MomentsOfInertia>(acummulatorChain,i);
-            //   stream << "\t" <<rrad[0];
-            //   stream << "\t" <<rrad[1];
-            //   stream << "\t" << moi[0];
-            //   stream << "\t" << moi[1];
-            //AxesOfInertiaReturn moi = get<AxesOfInertia>(accumulatorChain,i);
-            //stream << "\t" << blaI[0];
-            //stream << "\t" << blaI[1];
-            stream << std::endl;
-          }
+          //  stream << "\t" << get<UnbiasedSkewness >( acummulatorChain , i );
+          //  stream << "\t" << get<UnbiasedKurtosis>( acummulatorChain , i );
+          //  stream << "\t" << get<StdDev>( acummulatorChain , i );
+          //  stream << "\t" << get<Weighted<StdDev> >( acummulatorChain , i );
+          //  stream << "\t" << get<Weighted< < StdDev> > >( acummulatorChain , i );
+          //  ralab::featurefind::RegionRadiiReturn rrad = get<RegionRadii>(acummulatorChain, i);
+          //  ralab::featurefind::MomentsOfInertiaReturn moi = get<MomentsOfInertia>(acummulatorChain,i);
+          //   stream << "\t" <<rrad[0];
+          //   stream << "\t" <<rrad[1];
+          //   stream << "\t" << moi[0];
+          //   stream << "\t" << moi[1];
+          //AxesOfInertiaReturn moi = get<AxesOfInertia>(accumulatorChain,i);
+          //stream << "\t" << blaI[0];
+          //stream << "\t" << blaI[1];
+          stream << std::endl;
+        }
         return stream;
       }
 
@@ -319,17 +327,17 @@ namespace ralab{
         //LOG(INFO) << " >>> have labels  ";
 
         if(0){
-            transformImage( srcImageRange(gradient_) , destImage(gradient_),
-                            vigra::linearIntensityTransform(
-                              -1., // scaling this flips the image
-                              -( minmax.max ) ) //
-                            );
-            //flip image
-          }else{
-            transformImage( srcImageRange(gradient_) , destImage(gradient_),
-                            ImageTransformatorFlip<float>( threshold , minmax.max )
-                            );
-          }
+          transformImage( srcImageRange(gradient_) , destImage(gradient_),
+                          vigra::linearIntensityTransform(
+                            -1., // scaling this flips the image
+                            -( minmax.max ) ) //
+                          );
+          //flip image
+        }else{
+          transformImage( srcImageRange(gradient_) , destImage(gradient_),
+                          ImageTransformatorFlip<float>( threshold , minmax.max )
+                          );
+        }
 
         vigra::localMinima(srcImageRange(gradient_), destImage(labels_),
                            vigra::LocalMinmaxOptions().neighborhood(4).allowAtBorder());
@@ -357,7 +365,7 @@ namespace ralab{
                         );
       }
 
-      //Write the acc chain into csv
+      // Print the accumulator chain
       void writeFeatures(const std::string & output_directory,
                          const std::string & outfileprefix)
       {
