@@ -12,7 +12,7 @@
 #include <pwiz/data/msdata/SpectrumInfo.hpp>
 
 
-#include "findmf/datastruct/swathinfo.h"
+#include "findmf/datastruct/msfileinfo.h"
 
 namespace ralab{
   namespace findmf{
@@ -20,20 +20,35 @@ namespace ralab{
     //reads swath properties from an mzMLFIle
     struct SwathPropertiesReader{
     private:
-      datastruct::SwathInfoPtr swathinfo_;
+      datastruct::MSFileInfoPtr swathinfo_;
+      pwiz::msdata::MSDataPtr msdataptr_;
+
     public:
-      SwathPropertiesReader(pwiz::msdata::MSDataPtr msdataptr)
-        :swathinfo_(new datastruct::SwathInfo())
+      SwathPropertiesReader(std::string filename)
+        :swathinfo_(new datastruct::MSFileInfo(filename))
       {
-        readProperties(msdataptr);
+
+        //try{
+        msdataptr_ = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(filename));
+        //} catch(std::exception & e) {
+          //std::cerr << "infile : " << filename << std::endl;
+          //std::cerr  << "can't open file: " << e.what() << std::endl;
+        //}
+        readProperties(msdataptr_);
       }
 
+      // ms data ptr
+      pwiz::msdata::MSDataPtr getMSData(){
+        return msdataptr_;
+      }
+
+      //
       void getKeys(std::vector<std::size_t> & keys){
         swathinfo_->getKeys(keys);
       }
 
       ///
-      datastruct::SwathInfoPtr getSwathInfo(){
+      datastruct::MSFileInfoPtr getSwathInfo(){
         return swathinfo_;
       }
 
@@ -57,7 +72,7 @@ namespace ralab{
 
                 if(specInf.msLevel == 1){
                     datastruct::MapLCMSDescriptionPtr map = swathinfo_->getMapForKey(0);
-                    map->indices_.push_back(specIndex);
+                    map->getIndices().push_back(specIndex);
                     //map.rt_.push_back(specInf.retentionTime);
                     map->mslevel_ = 1;
                     map->rtRange_.first = std::min(map->rtRange_.first, specInf.retentionTime);
@@ -81,7 +96,7 @@ namespace ralab{
                         map->mslevel_ = 2;
                         map->extractionWindowMZ_.first = specInf.precursors[0].mz - p1;
                         map->extractionWindowMZ_.second = specInf.precursors[0].mz + p2;
-                        map->indices_.push_back(specIndex);
+                        map->getIndices().push_back(specIndex);
                         map->rtRange_.first = std::min(map->rtRange_.first, specInf.retentionTime);
                         map->rtRange_.second = std::max(map->rtRange_.second, specInf.retentionTime);
                         map->mzRange_.first = std::min(map->mzRange_.first, specInf.mzLow);

@@ -17,27 +17,27 @@ namespace ralab
   {
     namespace apps
     {
+      /// tool parameters
       struct Params
       {
-        std::string infile;
-        std::string outdir;
-        uint32_t nrthreads;
-        double ppm; // with of mz bins in ppms
-        double mzscale;
-        double rtscale;
-        uint32_t rtpixelwidth; // in pixel
-        uint32_t mzpixelwidth; // in pixel
-        double minmass; // minimal mass to consider
-        double maxmass; // maximum mass to consider
-        double minintensity;
-        uint32_t i_; //?
-        uint32_t rt2sum_; //how many spectra to sum (downsampling)
-        bool writeprojections_;
-        std::string filestem_;
-        boost::filesystem::path outdir_;
+        std::string infile; //!< input file location
+        std::string outdir; //!< out directory location
+        uint32_t nrthreads; //!< nr of threads to use
+        double ppm; //!< with of mz bins in ppms
+        double mzscale; //!< peak extension in mz
+        double rtscale; //!< peak extension in RT
+        uint32_t rtpixelwidth; //!< peak rt base with in pixel
+        uint32_t mzpixelwidth; //!< peak mz base with in pixel
+        double minmass; //!< minimal mass to consider
+        double maxmass; //!< maximum mass to consider
+        double minintensity; //!< minimal intensity
+        uint32_t rt2sum_; //!< how many spectra to sum (downsampling)
+        bool writeprojections_; //!< should projections be written
+        std::string filestem_; //!< stem of input file
+        boost::filesystem::path outdir_; //!< the out directory prepended with the filestem
 
         Params():infile(),outdir(),ppm(0.),mzscale(1.),
-          rtscale(1.), rtpixelwidth(), mzpixelwidth(), minmass(), maxmass(), minintensity(), i_(), rt2sum_(), filestem_(), outdir_(){}
+          rtscale(1.), rtpixelwidth(), mzpixelwidth(), minmass(), maxmass(), minintensity(),  rt2sum_(), filestem_(), outdir_(){}
 
         //stern...
         void prepareOutputFile(bool create_dir=false)
@@ -54,8 +54,6 @@ namespace ralab
           if(create_dir){
             boost::filesystem3::create_directory(outdir_);
           }
-          filestem_ += "_";
-          filestem_ += boost::lexical_cast<std::string>(i_);
         }
 
 

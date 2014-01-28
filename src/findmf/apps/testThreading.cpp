@@ -18,6 +18,8 @@
 #include "parseargExtract.h"
 #include "findmf/fileio/sqlite2/featuresmapsqlwriterfacade.h"
 #include "findmf/algo/vigra/featurefinder.h"
+#include "findmf/algo/vigra/ComputeFeatureStatistics.h"
+
 #include "findmf/apps/toolparameters.h"
 
 namespace ralab
@@ -25,14 +27,16 @@ namespace ralab
   //process single swath or ms map.
   struct SwathProcessor{
     std::vector< std::size_t > keys;
-    ralab::findmf::datastruct::SwathInfoPtr sip_ ;
+    ralab::findmf::datastruct::MSFileInfoPtr sip_ ;
     ralab::findmf::apps::Params anap_ ;
     ralab::findmf::FeaturesMapSQLWriterFacade sqlwriter_;
+    int mapid_;
 
     SwathProcessor( const ralab::findmf::apps::Params & ap, // the analysis parameter
-                    ralab::findmf::datastruct::SwathInfoPtr sip, // swath info pointer
-                    ralab::findmf::FeaturesMapSQLWriterFacade &sfs
-                    ) :sip_(sip), anap_(ap),sqlwriter_(sfs)
+                    ralab::findmf::datastruct::MSFileInfoPtr sip, // swath info pointer
+                    ralab::findmf::FeaturesMapSQLWriterFacade &sfs,
+                    int mapid
+                    ) :sip_(sip), anap_(ap),sqlwriter_(sfs),mapid_(mapid)
     {
       anap_.prepareOutputFile();
     }
@@ -44,8 +48,8 @@ namespace ralab
       try{
         pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));
         ralab::findmf::LCMSImageReader tmp ( msdataptr , sip_ , anap_.ppm );
-        std::cerr << "processing map : " << anap_.i_ << " with key : " << keys[anap_.i_]<< std::endl ;
-        tmp.getMap( keys[ anap_.i_ ] , anap_.minmass,anap_.maxmass, mp );
+        std::cerr << "processing map : " << mapid_ << " with key : " << keys[mapid_]<< std::endl ;
+        tmp.getMap( keys[ mapid_ ] , anap_.minmass,anap_.maxmass, mp );
       }catch(std::exception &e){
         std::cerr << "reading failed" << e.what() << std::endl;
         return;
@@ -54,11 +58,12 @@ namespace ralab
       boost::timer time;
       try{
         ralab::findmf::LCMSImageFilter imgf;
-        imgf.filterMap(mp, anap_.mzpixelwidth , anap_.rtpixelwidth, anap_.mzscale , anap_.rtscale );
+        imgf.filterMap(mp.getImageMap().getMap(), anap_.mzpixelwidth , anap_.rtpixelwidth, anap_.mzscale , anap_.rtscale );
+        mp.getImageMap().updateImageMax();
         boost::filesystem::path x = anap_.outdir_ / anap_.filestem_ ;
-        mp.write_image( x.string() );
+        mp.getImageMap().write_image( x.string() );
         //TODO add option to switch wring tiff on and off.
-        mp.write( x.string());
+        mp.write();
       }catch(std::exception &e){
         std::cerr << "filtering failed " << e.what() << std::endl;
         return;
@@ -70,12 +75,13 @@ namespace ralab
       try{
         time.restart();
         ralab::findmf::FeatureFinder ff;
-        ff.findFeature( mp.getMap(), 10. );
-        ff.extractFeatures(map,mp.getMap());
+        ralab::findmf::ComputeFeatureStatistics fs;
+        ff.findFeature( mp.getImageMap().getMap(), 10. );
+        fs.extractFeatures(map,mp.getImageMap().getMap(), ff.getLabels());
 
-        //ff.writeFeatures( anap_.outdir_.string() , anap_.filestem_ );
-        //ralab::FeaturesMapPrinter fp;
-        //fp.writeFeatures( anap_.outdir_.string() , anap_.filestem_ , map);
+        ///<< ff.writeFeatures( anap_.outdir_.string() , anap_.filestem_ );
+        ///<< ralab::FeaturesMapPrinter fp;
+        ///<< fp.writeFeatures( anap_.outdir_.string() , anap_.filestem_ , map);
 
       }catch(std::exception & e){
         std::cerr << "feature finding failed " << e.what() << std::endl;
@@ -113,7 +119,7 @@ int main(int argc, char *argv[])
   analysisParameters(pars,vmgeneral);
 
   std::cerr << "ppm is:" << pars.ppm << std::endl;
-  pars.i_ = 0;
+  //pars.i_ = 0;
 
   ///// prepare single feature storage for all lscms's
   pars.prepareOutputFile();
@@ -122,11 +128,8 @@ int main(int argc, char *argv[])
 
   //////
   boost::timer time;
-  //LOG(INFO) << "start reading properties" << std::endl;
-  pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(pars.infile));
-  //LOG(INFO)  << "time to open file " << time.elapsed() << std::endl;
 
-  ralab::findmf::SwathPropertiesReader swathPropReader(msdataptr);
+  ralab::findmf::SwathPropertiesReader swathPropReader(pars.infile);
   std::vector<std::size_t> keys;
   swathPropReader.getSwathInfo()->getKeys(keys);
 
@@ -135,8 +138,7 @@ int main(int argc, char *argv[])
   tbb::task_scheduler_init init(pars.nrthreads);
   std::vector<ralab::SwathProcessor> tasks;
   for(std::size_t i = 0 ; i < keys.size() ; ++i){
-      pars.i_ = i;
-      tasks.push_back(ralab::SwathProcessor( pars , swathPropReader.getSwathInfo(),facade));
+      tasks.push_back(ralab::SwathProcessor( pars , swathPropReader.getSwathInfo(),facade,i));
     }
   tbb::parallel_for_each(tasks.begin(),tasks.end(),invoker<ralab::SwathProcessor>());
   return 0;

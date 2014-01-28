@@ -3,11 +3,14 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE Hello
+#include <boost/test/unit_test.hpp>
+
 
 //#include <boost/test/included/unit_test.hpp>
 #include <boost/timer.hpp>
-//#include <boost/test/unit_test.hpp>
-//using namespace boost::unit_test;
+
 
 #include <iostream>
 #include "findmf/datastruct/maplcmsdescription.h"
@@ -15,8 +18,9 @@
 #include "findmf/fileio/sqlite2/sqlmapinfotable.h"
 
 
+BOOST_AUTO_TEST_SUITE(SQLMapInfoTableTest)
 
-inline void testMapInfoTable(){
+BOOST_AUTO_TEST_CASE( testSQLMapInfo){
   std::cout << "testFeatureTable2" << std::endl;
 
   std::vector<double> rtproj,mzproj;
@@ -37,8 +41,8 @@ inline void testMapInfoTable(){
   x->mslevel_ = 1;
   x->extractionWindowMZ_.first = 100.;
   x->extractionWindowMZ_.second  = 125.;
-  x->mass_ = mzproj;
-  x->retentiontime_ = rtproj;
+  x->setMass( mzproj );
+  x->setRT( rtproj);
   x->rtRange_.first = 1000;
   x->rtRange_.second = 1400;
 
@@ -55,8 +59,4 @@ inline void testMapInfoTable(){
 }
 
 
-int main(int arg, char ** argv)
-{
-  testMapInfoTable();
-  return 0;
-}
+BOOST_AUTO_TEST_SUITE_END()

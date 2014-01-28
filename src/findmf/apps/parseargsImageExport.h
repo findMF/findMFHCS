@@ -181,6 +181,7 @@ inline int parsecommandlineExtract(
 
     if(vmgeneral.count("help"))
     {
+      std::cerr << "Convert all LCMS maps into TIFF images" << std::endl;
       std::cerr << cmdloptions << "\n";
       exit(0);
     }

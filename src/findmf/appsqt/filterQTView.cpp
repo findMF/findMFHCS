@@ -15,6 +15,7 @@
 #include "findmf/fileio/helperfunctions.h"
 #include "../apps/parseargExtract.h"
 #include "findmf/algo/vigra/featurefinder.h"
+#include "findmf/algo/vigra/ComputeFeatureStatistics.h"
 
 int main(int argc, char *argv[])
 {
@@ -28,8 +29,8 @@ int main(int argc, char *argv[])
   int i = 0;
     {
       //LOG(INFO)  << "i::::" << i << std::endl;
-      p1 = createOutputs(aparam.infile,"");
-      p2 = createOutputs(aparam.infile,"filtered");
+      p1 = ralab::findmf::createOutputs(aparam.infile,"");
+      p2 = ralab::findmf::createOutputs(aparam.infile,"filtered");
 
       //LOG(INFO)  << "ffname 2 :" << p1.string() << std::endl;
       //LOG(INFO)  << "ffname 1 :" << p2.string() << std::endl;
@@ -50,15 +51,17 @@ int main(int argc, char *argv[])
       ralab::findmf::datastruct::LCMSImage mp2( mp );
       {
         ralab::findmf::LCMSImageFilter imgf;
-        imgf.filterMap( mp2 , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
+        imgf.filterMap( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
+        mp2.getImageMap().updateImageMax();
       }
       ralab::findmf::FeatureFinder ff;
-      ff.findFeature( mp2.getMap(), aparam.minintensity );
+      ff.findFeature( mp2.getImageMap().getMap(), aparam.minintensity );
       ralab::findmf::datastruct::FeaturesMap map;
       map.setMapDescription(mp2.getMapDescription());
-      ff.extractFeatures(map,mp2.getMap());
+      ralab::findmf::ComputeFeatureStatistics cfs;
+      cfs.extractFeatures(map,mp2.getImageMap().getMap(),ff.getLabels());
       //this writes the accessor....
-      ff.writeFeatures(aparam.outdir , p1.stem().string() );
+      cfs.writeFeatures(aparam.outdir , p1.stem().string() );
 
       ralab::FeaturesMapPrinter fp;
       fp.writeFeatures(aparam.outdir , p1.stem().string(), map);
@@ -69,8 +72,8 @@ int main(int argc, char *argv[])
       if(1){
           QApplication app(argc, argv);
           ralab::TwoPaneledImageWidget tpi;
-          ralab::MultiArrayVisLog<float> adapt1( mp2.getMap() );
-          ralab::MultiArrayVisLog<float> adapt0( mp.getMap() );
+          ralab::MultiArrayVisLog<float> adapt1( mp2.getImageMap().getMap() );
+          ralab::MultiArrayVisLog<float> adapt0( mp.getImageMap().getMap() );
 
           tpi.setTopMap(&adapt1);
           tpi.setBottomMap(&mavL);

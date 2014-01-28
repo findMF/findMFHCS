@@ -5,16 +5,17 @@
 
 #include(externalgoogletest)
 #set(inc ${inc} ${Gtest_SourceDir})
-#message(STATUS ">>>>>>>>>>>>>>>>>>> Gtest_LIBRARY ${Gtest_LIBRARY} <<<<<<<<<<<<<<< ")
-#message(STATUS "inc ${inc}")
+message(STATUS ">>>>>>>>>>>>>>>>>>> Gtest_LIBRARY ${Gtest_LIBRARY} <<<<<<<<<<<<<<< ")
+message(STATUS ">>>>>>>>>>>>>>>>>>> vigralibs ${vigralibs} <<<<<<<<<<<<<<< ")
 
+#message(STATUS "inc ${inc}")
+set(vigralibs vigraimpex)
 
 include_directories(${inc})
 link_directories(${Pwiz_LIBRARY} ${VIGRA_LIBRARY})
 
-SET(transition_SOURCES preliminarytests.cpp)
 
-ADD_EXECUTABLE(premtest ${transition_SOURCES})
+ADD_EXECUTABLE(premtest preliminarytests.cpp)
 TARGET_LINK_LIBRARIES(premtest ${Boost_LIBRARIES} pwiz ${vigralibs}  datastructlib )
 
 ENABLE_TESTING()

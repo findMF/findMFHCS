@@ -14,14 +14,14 @@ namespace ralab{
   namespace featurefind{
     using namespace vigra::acc;
 
-    typedef vigra::CoupledIteratorType<2, float, int, float>::type Iterator;
+    typedef vigra::CoupledIteratorType<2, float, int>::type Iterator;
     typedef Iterator::value_type Handle;
 
     //typedef DivideByCount<Principal<PowerSum<2> > > PrincipalVariance;
     //typedef DivideByCount<Principal<Sum> > PrincipalMean;
 
     typedef AccumulatorChainArray<Handle,
-    Select< DataArg<1>, LabelArg<2>, WeightArg<3>,       //where to look in the Handle (coordinates are always arg 0)
+    Select< DataArg<1>, LabelArg<2>, //WeightArg<3>,       //where to look in the Handle (coordinates are always arg 0)
     Mean, Variance,                    //per-region statistics over values
     Coord<Mean>,      //per-region statistics over coordinates
     Coord<Minimum>,

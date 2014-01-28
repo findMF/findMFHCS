@@ -1,43 +1,52 @@
-#ifndef MAPLCMSDESCRIPTIONTEST_H
-#define MAPLCMSDESCRIPTIONTEST_H
+// Copyright : ETH Zurich
+// License   : three-clause BSD license
+// Authors   : Witold Wolski
+// for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-#include "gtest/gtest.h"
 #include "findmf/datastruct/maplcmsdescription.h"
 
-// The fixture for testing class Foo.
-class MapLCMSDescriptionTest : public ::testing::Test {
-protected:
-  // You can remove any or all of the following functions if its body
-  // is empty.
-  MapLCMSDescriptionTest() {
-    // You can do set-up work for each test here.
-  }
-  virtual ~MapLCMSDescriptionTest() {
-    // You can do clean-up work that doesn't throw exceptions here.
-  }
-  // If the constructor and destructor are not enough for setting up
-  // and cleaning up each test, you can define the following methods:
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE Hello
+#include <boost/test/unit_test.hpp>
 
-  virtual void SetUp() {
-    // Code here will be called immediately after the constructor (right
-    // before each test).
-  }
 
-  virtual void TearDown() {
-    // Code here will be called immediately after each test (right
-    // before the destructor).
-  }
 
-  // Objects declared here can be used by all tests in the test case for Foo.
-};
+BOOST_AUTO_TEST_SUITE(MapLCMSDescriptionTest)
 
-TEST_F(MapLCMSDescriptionTest, testconst){
+/*! \brief test filter function */
+BOOST_AUTO_TEST_CASE( testMapDescription)
+{
+  //ralab::findmf::datastruct::MapLCMSDescription mlcd;
+  std::cout << "testFeatureTable2" << std::endl;
 
-  ralab::findmf::MapLCMSDescription maplcms = new ralab::findmf::MapLCMSDescription();
-  delete maplcms;
+  std::vector<double> rtproj,mzproj;
+
+  mzproj.push_back(0.);
+  mzproj.push_back(0.);
+  mzproj.push_back(1.);
+  mzproj.push_back(1.);
+  //test
+  rtproj.push_back(1.);
+  rtproj.push_back(2.);
+  rtproj.push_back(3.);
+  rtproj.push_back(4.);
+
+  ralab::findmf::datastruct::MapLCMSDescriptionPtr x =
+      ralab::findmf::datastruct::MapLCMSDescriptionPtr(new ralab::findmf::datastruct::MapLCMSDescription());
+
+  x->mslevel_ = 1;
+  x->extractionWindowMZ_.first = 100.;
+  x->extractionWindowMZ_.second  = 125.;
+  x->setMass( mzproj );
+  x->setRT( rtproj);
+  x->rtRange_.first = 1000;
+  x->rtRange_.second = 1400;
+
+  x->mzRange_.first = 120.03;
+  x->mzRange_.second = 1444.03;
 
 }
 
 
+BOOST_AUTO_TEST_SUITE_END()
 
-#endif // FEATURESMAPTEST_H

@@ -12,8 +12,8 @@ message(STATUS ">>>>>>> >>>>")
 ADD_EXECUTABLE(sqlfeaturestoragetest SQLFeatureStorageTest.cpp )
 TARGET_LINK_LIBRARIES(sqlfeaturestoragetest  ${QT_LIBRARIES} ${Boost_LIBRARIES} )
 
-ADD_EXECUTABLE(featureTable featureTable.cpp )
-TARGET_LINK_LIBRARIES(featureTable  ${QT_LIBRARIES} ${Boost_LIBRARIES} )
+ADD_EXECUTABLE(sqlmapinfotabletest sqlmapinfotabletest.cpp )
+TARGET_LINK_LIBRARIES(sqlmapinfotabletest  ${QT_LIBRARIES} ${Boost_LIBRARIES} )
 
 ADD_EXECUTABLE( testRtree testRtree.cpp )
 TARGET_LINK_LIBRARIES(testRtree  ${QT_LIBRARIES} ${Boost_LIBRARIES})
@@ -28,10 +28,10 @@ WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 COMMAND ${BinOut}/sqlfeaturestoragetest )
 set_tests_properties(sqlfeaturestoragetest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
 
-add_test(NAME featureTable
+add_test(NAME sqlmapinfotabletest
 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-COMMAND ${BinOut}/featureTable )
-set_tests_properties(featureTable PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
+COMMAND ${BinOut}/sqlmapinfotabletest )
+set_tests_properties(sqlmapinfotabletest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
 
 add_test(NAME testRtree
 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

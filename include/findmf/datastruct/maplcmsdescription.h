@@ -16,80 +16,101 @@
 namespace ralab{
   namespace findmf{
     namespace datastruct{
-      ///
+
       /// Description of an lcms map...
-      ///
       struct MapLCMSDescription
       {
-        uint32_t mslevel_;
-        std::pair<double, double> extractionWindowMZ_; //swath window
-        std::vector<std::size_t> indices_; // indices of the spectra in the raw file.
-        std::pair<double, double> mzRange_;
-        std::pair<double, double> rtRange_;
+        uint32_t runnumber_; //!< running number
+        uint32_t mslevel_; //!< ms level of the map (i.e. 1)
+        std::pair<double, double> extractionWindowMZ_; //!< only relevant for mslevel_ > 1 swath window
+        std::pair<double, double> mzRange_; //!< mz range
+        std::pair<double, double> rtRange_; //!< rt range
 
+      private:
+        std::vector<std::size_t> indices_; //!< indices of the spectra in the raw file.
         typedef std::vector<double> axesT;
-        axesT retentiontime_;//retention times in s (index to rt)
-        axesT mass_; //mass vector (is used convert index to mass)
 
-        MapLCMSDescription():mslevel_(0),extractionWindowMZ_(),indices_(),
+        axesT retentiontime_;//!< retention times in s (index to rt)
+        axesT mass_; //!< mass vector (is used convert index to mass)
+
+      public:
+
+        /// const
+        MapLCMSDescription():runnumber_(0),mslevel_(1),extractionWindowMZ_(),
           mzRange_(std::make_pair(std::numeric_limits<double>::max(),std::numeric_limits<double>::min())),
           rtRange_(std::make_pair(std::numeric_limits<double>::max(),std::numeric_limits<double>::min())),
-          retentiontime_(),mass_()
+          indices_(),retentiontime_(),mass_()
         {
         }
 
-        // use for transforming index to RT
+        /// use for transforming index to RT
         double getRTforIndex(double index){
           double res = 0;
           ralab::base::base::interpolate_linear( retentiontime_.begin() , retentiontime_.end() , &index,  &index+1 , &res);
           return res;
         }
 
-        //use for transforming index to mz
+        /// use for transforming index to mz
         double getMZforIndex(double index){
           double res = 0;
           ralab::base::base::interpolate_linear( mass_.begin() , mass_.end() , &index, &index+1, &res );
           return res;
         }
 
-        void setRT(const std::vector<double> & retentiontime){
-          retentiontime_ = retentiontime;
+        std::vector<std::size_t> & getIndices(){
+          return indices_;
         }
 
-        std::vector<double> & getRT(){
+        /// get mass
+        axesT & getMass() {
+          return mass_;
+        }
+
+        /// set Mass
+        void setMass(const std::vector<double> & mass){
+          mass_.assign(mass.begin(),mass.end());
+        }
+
+        /// get retention time
+        axesT & getRT()  {
           return retentiontime_;
         }
 
-        //convinience setters
+        /// set RT
+        void setRT(const std::vector<double> & rt){
+          retentiontime_.assign(rt.begin(),rt.end());
+        }
 
+
+        /// convinience setters
         uint32_t getMSLevel(){
           return mslevel_;
         }
 
-        //extraction window start
+        /// extraction window start
         double getMinMZsw(){
           return extractionWindowMZ_.first;
         }
 
-        //extraction window end
+        /// extraction window end
         double getMaxMZsw(){
           return extractionWindowMZ_.second;
         }
 
-        // min mz
+        /// min mz
         double getMinMZ(){
           return mzRange_.first;
         }
-        // max mz
+        /// max mz
         double getMaxMZ(){
           return mzRange_.second;
         }
-        // min rt
+        /// min rt
         double getMinRT(){
           return rtRange_.first;
         }
 
-        // max rt
+        /// max rt
         double getMaxRT(){
           return rtRange_.second;
         }

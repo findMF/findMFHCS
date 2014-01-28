@@ -37,7 +37,7 @@ namespace ralab
   }
 
   inline ralab::findmf::datastruct::LCMSImagePtr createImageForAllTranstionsInSwath(
-      ralab::SpectrastTSVReader & stsv,
+      ralab::findmf::SpectrastTSVReader & stsv,
       uint32_t swath,
       ralab::findmf::datastruct::LCMSImage & map,
       double acc

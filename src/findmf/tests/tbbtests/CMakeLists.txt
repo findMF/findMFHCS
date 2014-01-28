@@ -25,6 +25,10 @@ ADD_EXECUTABLE(pipeline2 pipeline2.cpp )
 TARGET_LINK_LIBRARIES(pipeline2 tbb rt)
 
 
+ADD_EXECUTABLE(flowcharttest FlowChartTest.cpp )
+TARGET_LINK_LIBRARIES(flowcharttest tbb rt)
+
+
 ENABLE_TESTING()
 add_test(NAME testtbb
 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

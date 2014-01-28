@@ -9,33 +9,37 @@
 #include <string>
 #include <boost/filesystem.hpp>
 
-///add descript to filename stem (remove extension)
-inline boost::filesystem::path createOutputs(const std::string & name ,
-                                             const std::string & descript)
-{
-  boost::filesystem::path p1;
-  boost::filesystem::path p(name);
+namespace ralab{
+  namespace findmf{
+    ///add descript to filename stem (remove extension)
+    inline boost::filesystem::path createOutputs(const std::string & name ,
+                                                 const std::string & descript)
+    {
+      boost::filesystem::path p1;
+      boost::filesystem::path p(name);
 
-  p = boost::filesystem::absolute(p);
-  p1 = p.parent_path();
+      p = boost::filesystem::absolute(p);
+      p1 = p.parent_path();
 
-  std::string x = p.stem().string();
-  x += descript ;
-  p1 /=  x;
-  return p1;
-}
+      std::string x = p.stem().string();
+      x += descript ;
+      p1 /=  x;
+      return p1;
+    }
 
-///remove extension from filename and add a new one
-inline boost::filesystem::path addextension(const std::string & filename,
-                                            const std::string & extension
-                                            )
-{
-  boost::filesystem::path p(filename);
-  std::string fnamex = p.stem().string();
-  fnamex += "." + extension;
-  boost::filesystem::path p1 = p.parent_path();
-  p1 /= fnamex;
-  return p1;
+    ///remove extension from filename and add a new one
+    inline boost::filesystem::path addextension(const std::string & filename,
+                                                const std::string & extension
+                                                )
+    {
+      boost::filesystem::path p(filename);
+      std::string fnamex = p.stem().string();
+      fnamex += "." + extension;
+      boost::filesystem::path p1 = p.parent_path();
+      p1 /= fnamex;
+      return p1;
+    }
+  }
 }
 
 #endif

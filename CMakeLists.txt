@@ -84,7 +84,7 @@ ENDIF(ENABLE_TESTING)
 # build: subdirectories
 #############################################################################
 ADD_SUBDIRECTORY(src)
-RETURN()
+#RETURN()
 
 #############################################################################
 # documentation

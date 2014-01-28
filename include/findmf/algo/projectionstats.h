@@ -16,13 +16,14 @@ namespace ralab
 {
   namespace findmf
   {
+    /// Computes projection statistics
     struct projstats{
-      float projectionStart_; //TODO can likely be removed
-      float average_;
-      float variance_;
-      float kurtosis_;
-      float skewness_;
-      float peaklockation_;
+      float projectionStart_; //!< start of the projection
+      float average_; //!< center of mass
+      float variance_; //!< variance
+      float kurtosis_; //!< kurtosis
+      float skewness_; //!< skewness
+      float peaklockation_; //!< peak lokation
 
       //ctor
       projstats( int projectionStart ):
@@ -59,9 +60,8 @@ namespace ralab
     };
 
 
-    /** computes projection statistics */
     namespace utilities{
-      // TODO provide apex peakfinder.
+      /// Picks apex by fitting a parabola to the peak apex (requires smoothed data)
       struct PickApex{
         ralab::base::ms::utilities::Parabolafit<double> parabolafit;
         bool problem_; // indicates if there was some problem i.e. no peak could be detected, or
@@ -84,11 +84,11 @@ namespace ralab
       };
 
 
-      // TODO provide apex peakfinder.
+      /// Determine peak apex by computing the zero crossing.
       struct Pick{
-        ralab::base::ms::SimplePicker<float> simplePicker_;
-        std::vector<double> zerocross_;
-        bool problem_; // indicates if there was some problem i.e. no peak could be detected, or
+        ralab::base::ms::SimplePicker<float> simplePicker_; //!< simple picker
+        std::vector<double> zerocross_; //!< vector of zerocross
+        bool problem_; //!< indicates if there was some problem i.e. no peak could be detected, or
         //more than one apex found
 
         Pick():zerocross_(5,0.),problem_(false){}
