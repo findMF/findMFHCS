@@ -9,7 +9,6 @@ cmake_install.cmake
 CMakeFiles
 debug
 release
-doc
 memthr
 core
 *.pdf
