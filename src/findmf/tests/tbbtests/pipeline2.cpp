@@ -72,8 +72,6 @@ public:
         tx[x]=std::vector<double>(j,x);
       }
   }
-
-
 };
 
 

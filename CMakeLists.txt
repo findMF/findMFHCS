@@ -47,7 +47,6 @@ ENDIF(MSVC)
 add_definitions("-Doverride=")
 
 
-
 #############################################################################
 ##define output location
 #############################################################################
@@ -65,7 +64,7 @@ SET(inc ${inc} ${findMFHCS_SOURCE_DIR})
 SET(inc ${inc} ${findMFHCS_SOURCE_DIR}/include)
 
 #############################################################################
-# QT tweak so that it sees headers
+# QT - Creator tweak so that it sees headers
 #############################################################################
 file(GLOB Demo_HEADERS "sql/*.sql" "cmake_modules/*cmake" "include/*.h" "include/**/*.h"
  "include/**/**/*.h" "include/**/**/**/*.h" "src/**/*.h" "src/**/**/*.h" ".travis.yml")

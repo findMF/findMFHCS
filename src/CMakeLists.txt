@@ -17,7 +17,6 @@ message( STATUS "inc boost ${inc}" )
 message( STATUS ">>>> ${Boost_LIBRARIES} <<<<" )
 
 
-
 include(ExternalProject)
 
 include(externalvigra)
@@ -25,11 +24,23 @@ set(inc ${inc} ${VIGRA_SourceDir})
 message(STATUS "VIGRA_LIBRARY ${VIGRA_LIBRARY}")
 message(STATUS "inc ${inc}")
 
-include(externalfindmfbase)
-set(inc ${inc} ${findMFBase_SourceDir})
-message(STATUS "findMFBase_LIBRARY ${findMFBase_LIBRARY}")
-message(STATUS "inc ${inc}")
 
+FIND_PACKAGE(FindMFBase)
+if(FindMFBase_FOUND)
+  message(STATUS "FindMF found" ${FindMFBase_INCLUDE_DIR})
+  SET(inc ${inc} ${FindMFBase_INCLUDE_DIR})
+else(FindMFBase_FOUND)
+  message(STATUS " !!!!!!!!!!!!!!!! Tbb not found !!!!!!!!!!!!!!!! ")
+  return()
+endif(FindMFBase_FOUND)
+
+
+#if(0)
+#include(externalfindmfbase)
+#set(inc ${inc} ${findMFBase_SourceDir})
+#message(STATUS "findMFBase_LIBRARY ${findMFBase_LIBRARY}")
+#message(STATUS "inc ${inc}")
+#endif(0)
 
 
 ADD_SUBDIRECTORY(findmf)

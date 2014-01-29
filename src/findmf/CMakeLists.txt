@@ -28,7 +28,8 @@ endif()
 
 FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtSql REQUIRED)
 INCLUDE(${QT_USE_FILE})
-message( STATUS "<<<<<<<<<<<<<<QTQTsrc  ${QT_LIBRARIES} QTQT>>>>>>>>>>>>")
+#message( STATUS "QQQQQQQQQQQQQQQ  ${QT_USE_FILE} QTQT>>>>>>>>>>>>")
+#message( STATUS "<<<<<<<<<<<<<<QTQTsrc  ${QT_LIBRARIES} QTQT>>>>>>>>>>>>")
 
 
 ADD_SUBDIRECTORY(application)

@@ -24,7 +24,7 @@
 
 namespace ralab
 {
-  //process single swath or ms map.
+  /// process single swath or ms map.
   struct SwathProcessor{
     std::vector< std::size_t > keys;
     ralab::findmf::datastruct::MSFileInfoPtr sip_ ;
