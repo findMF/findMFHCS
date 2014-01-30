@@ -36,7 +36,6 @@ inline void analysisParameters(ralab::findmf::apps::Params & ap,b_po::variables_
   }
   ap.nrthreads = vmgeneral["nrthreads"].as< uint32_t >();
 
-
   //image generation options
   ap.ppm=1/vmgeneral["resolution"].as<double>()* 1.e6;
 

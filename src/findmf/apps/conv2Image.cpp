@@ -34,12 +34,11 @@ int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::fin
   pipeline.add_filter( input );
 
   if(params.dofilter){
-  ralab::findmf::MapFilter imagefilter(params.mzpixelwidth,
-                                       params.rtpixelwidth,
-                                       params.mzscale,
-                                       params.rtscale);
-
-  pipeline.add_filter(imagefilter);
+    ralab::findmf::MapFilter imagefilter(params.mzpixelwidth,
+                                         params.rtpixelwidth,
+                                         params.mzscale,
+                                         params.rtscale);
+    pipeline.add_filter(imagefilter);
   }
 
   // Create image writer and addit to the pipeline

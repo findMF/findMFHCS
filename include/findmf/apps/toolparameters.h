@@ -47,10 +47,10 @@ namespace ralab
         std::string filestem_; //!< stem of input file
         boost::filesystem::path outdir_; //!< the out directory prepended with the filestem
 
-        Params():infile(),outdir(),ppm(0.),mzscale(1.),
-          rtscale(1.), rtpixelwidth(), mzpixelwidth(), minmass(), maxmass(), minintensity(),  rt2sum_(), filestem_(), outdir_(){}
+        Params():infile(),outdir(),rt2sum_(),ppm(0.),minmass(), maxmass(), dofilter(true), mzscale(1.),
+          rtscale(1.), rtpixelwidth(), mzpixelwidth(),  minintensity(), writeprojections_(false),  filestem_(), outdir_(){}
 
-        //stern...
+        //stern
         void prepareOutputFile(bool create_dir=false)
         {
           if( !boost::filesystem::exists(infile) )
