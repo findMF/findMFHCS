@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
   ralab::findmf::apps::Params pars;
   analysisParameters(pars,vmgeneral);
-  pars.prepareOutputFile(false);
+  pars.prepareOutputFile(true);
 
 
   // open file.
