@@ -67,7 +67,6 @@ namespace ralab
           }
         }
 
-
       };//end struct param
     }
   }
