@@ -37,16 +37,8 @@ inline void analysisParameters(ralab::findmf::apps::Params & ap,b_po::variables_
   ap.nrthreads = vmgeneral["nrthreads"].as< uint32_t >();
 
 
+  //image generation options
   ap.ppm=1/vmgeneral["resolution"].as<double>()* 1.e6;
-  ap.minintensity=vmgeneral["minintensity"].as<double>();
-
-  //
-  ap.mzpixelwidth = vmgeneral["width-MZ"].as<unsigned int>();
-  if(vmgeneral.count("width-RT")){
-    ap.rtpixelwidth = vmgeneral["width-RT"].as<unsigned int>();
-  }else{
-    ap.rtpixelwidth = ap.mzpixelwidth;
-  }
 
   ap.minmass = vmgeneral["minMass"].as<double>();
   if(vmgeneral.count("maxMass")){
@@ -54,6 +46,15 @@ inline void analysisParameters(ralab::findmf::apps::Params & ap,b_po::variables_
   }
   else{
     ap.maxmass = std::numeric_limits<double>::max();
+  }
+  ap.rt2sum_ = vmgeneral["rt2sum"].as<uint32_t>();
+
+  //  filtering options
+  ap.mzpixelwidth = vmgeneral["width-MZ"].as<unsigned int>();
+  if(vmgeneral.count("width-RT")){
+    ap.rtpixelwidth = vmgeneral["width-RT"].as<unsigned int>();
+  }else{
+    ap.rtpixelwidth = ap.mzpixelwidth;
   }
 
   ap.mzscale = vmgeneral["mzscale"].as< double >();
@@ -63,7 +64,10 @@ inline void analysisParameters(ralab::findmf::apps::Params & ap,b_po::variables_
   else{
     ap.rtscale = ap.mzscale;
   }
-  ap.rt2sum_ = vmgeneral["rt2sum"].as<uint32_t>();
+  ap.dofilter = vmgeneral["filter"].as<bool>();
+
+  // segmentation options
+  ap.minintensity=vmgeneral["minintensity"].as<double>();
   ap.writeprojections_ = vmgeneral["writeprojections"].as<bool>();
 }
 
@@ -86,24 +90,36 @@ inline int parsecommandlineExtract(
         ("config-file,I", b_po::value<std::string>(), "configuration file")
         ("nrthreads", b_po::value<uint32_t>()->default_value(4), "nr threads");
 
-    b_po::options_description processing("Processing Options:");
-    processing.add_options()
+    b_po::options_description generation("Image Generation Options:");
+    generation.add_options()
         ("resolution",b_po::value<double>()->default_value(50000.),
          "instrument resolution (default 50000).")
-        ("mzscale",b_po::value<double>()->default_value(1.5),"scale parameter for gausian smoothing in mz (default 1.5)")
-        ("rtscale",b_po::value<double>(),"scale parameter for gausian smoothing in rt (default same as mzscale)")
+        ("minMass",b_po::value<double>()->default_value(400.), "minimum mass to consider (default 400)")
+        ("maxMass",b_po::value<double>(),"maximum mass to consider")
+        ("rt2sum",b_po::value<uint32_t>()->default_value(1u),"downsampling - number spectra to average (not supported yet)");
+
+
+    b_po::options_description filtering("Image Preprocessing Options :");
+    filtering.add_options()
+        ("filter",b_po::value<bool>()->default_value(1),"should filtering be performed?")
+        ("mzscale",b_po::value<double>()->default_value(1.5),
+         "scale parameter for gausian smoothing in mz (default 1.5)")
+        ("rtscale",b_po::value<double>(),
+         "scale parameter for gausian smoothing in rt (default same as mzscale)")
         ("width-MZ", b_po::value<unsigned int>()->default_value(9),
          "width of MZ peak in pixel - used by background subtraction (default = 9)")
         ("width-RT", b_po::value<unsigned int>(),
-         "width of RT peak in pixel - used by background subtraction (default = width-RT)")
+         "width of RT peak in pixel - used by background subtraction (default = width-MZ)");
+
+    b_po::options_description segment("Feature extraction and storage options :");
+    segment.add_options()
         ("minintensity",b_po::value<double>()->default_value(5.),"minimum intensity")
-        ("minMass",b_po::value<double>()->default_value(400.), "minimum mass to consider (default 400)")
-        ("maxMass",b_po::value<double>(),"maximum mass to consider")
-        ("rt2sum",b_po::value<uint32_t>()->default_value(1u),"downsampling - number spectra to average (not supported yet)")
         ("writeprojections",b_po::value<bool>()->default_value(true),"should feature projections be stored in database");
 
+
     b_po::options_description cmdloptions;
-    cmdloptions.add(general).add(processing);
+    cmdloptions.add(general).add(generation).add(filtering).add(segment);
+
     b_po::store(b_po::parse_command_line(ac, av, cmdloptions), vmgeneral);
     b_po::notify(vmgeneral);
     std::string configfile;
@@ -113,7 +129,7 @@ inline int parsecommandlineExtract(
     }
 
     b_po::options_description config_file_options;
-    config_file_options.add(general).add(processing);
+    config_file_options.add(general).add(generation).add(filtering).add(segment);
     if(configfile.size() > 0 && b_fs::exists(configfile))
     {
       std::ifstream ifs(configfile.c_str());

@@ -11,6 +11,7 @@
 
 #include "findmf/tbbfilters/lcmsimagereader.h"
 #include "findmf/tbbfilters/writeImage.h"
+#include "findmf/tbbfilters/mapfilter.h"
 
 #include "findmf/apps/toolparameters.h"
 #include "parseargExtract.h"
@@ -31,6 +32,15 @@ int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::fin
   // Create file-reading writing stage and add it to the pipeline
   ralab::findmf::LCMSImageReaderFilter input( lcmspar, sip);
   pipeline.add_filter( input );
+
+  if(params.dofilter){
+  ralab::findmf::MapFilter imagefilter(params.mzpixelwidth,
+                                       params.rtpixelwidth,
+                                       params.mzscale,
+                                       params.rtscale);
+
+  pipeline.add_filter(imagefilter);
+  }
 
   // Create image writer and addit to the pipeline
   ralab::findmf::WriteImage wi(params.outdir);

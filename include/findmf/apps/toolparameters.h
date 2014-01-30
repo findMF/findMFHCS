@@ -18,21 +18,32 @@ namespace ralab
     namespace apps
     {
       /// tool parameters
+      /// TODO maybee compose of several objects?
       struct Params
       {
+        // general options
         std::string infile; //!< input file location
         std::string outdir; //!< out directory location
         uint32_t nrthreads; //!< nr of threads to use
+        uint32_t rt2sum_; //!< how many spectra to sum (downsampling)
+
+        /// image genration options
         double ppm; //!< with of mz bins in ppms
+        double minmass; //!< minimal mass to consider
+        double maxmass; //!< maximum mass to consider
+
+        /// filtering options
+        bool dofilter;
         double mzscale; //!< peak extension in mz
         double rtscale; //!< peak extension in RT
         uint32_t rtpixelwidth; //!< peak rt base with in pixel
         uint32_t mzpixelwidth; //!< peak mz base with in pixel
-        double minmass; //!< minimal mass to consider
-        double maxmass; //!< maximum mass to consider
+
+
+        /// segementations options
         double minintensity; //!< minimal intensity
-        uint32_t rt2sum_; //!< how many spectra to sum (downsampling)
         bool writeprojections_; //!< should projections be written
+
         std::string filestem_; //!< stem of input file
         boost::filesystem::path outdir_; //!< the out directory prepended with the filestem
 

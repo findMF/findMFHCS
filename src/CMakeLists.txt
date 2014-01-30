@@ -30,7 +30,7 @@ if(FindMFBase_FOUND)
   message(STATUS "FindMF found" ${FindMFBase_INCLUDE_DIR})
   SET(inc ${inc} ${FindMFBase_INCLUDE_DIR})
 else(FindMFBase_FOUND)
-  message(STATUS " !!!!!!!!!!!!!!!! Tbb not found !!!!!!!!!!!!!!!! ")
+  message(STATUS " !!!!!!!!!!!!!!!! FindMFBase !!!!!!!!!!!!!!!! ")
   return()
 endif(FindMFBase_FOUND)
 
