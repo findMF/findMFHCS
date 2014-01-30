@@ -42,7 +42,7 @@ int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::fin
   }
 
   // Create image writer and addit to the pipeline
-  ralab::findmf::WriteImage wi(params.outdir_);
+  ralab::findmf::WriteImage wi(params.outdir_.string());
   pipeline.add_filter(wi);
   pipeline.run( nthreads );
 
