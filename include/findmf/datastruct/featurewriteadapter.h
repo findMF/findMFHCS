@@ -2,14 +2,10 @@
 // License   : three-clause BSD license
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
-
-
-//author Witold Wolski
-
+// author Witold Wolski
 
 #ifndef IFEATUREWRITEADAPTER_H
 #define IFEATUREWRITEADAPTER_H
-
 #include "findmf/interfaces/ifeaturewrite.h"
 
 namespace ralab{
@@ -49,10 +45,9 @@ namespace ralab{
       sdRT_(0.),sdMZ_(0.),kurtMZ_(0.),kurtRT_(0.),skewMZ_(0.),skewRT_(0.),
       minRT_(0.),minMZ_(0.),extRT_(0.),extMZ_(0.)
     {}
-
   };
 
-  //writing into a feature implementation
+  // writing into a feature implementation
   struct FeatureWriteAdapter : IFeatureWrite {
     FeatureDTO & feature_;
 

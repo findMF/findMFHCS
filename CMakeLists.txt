@@ -62,12 +62,15 @@ SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BinOut} )
 
 SET(inc ${inc} ${findMFHCS_SOURCE_DIR})
 SET(inc ${inc} ${findMFHCS_SOURCE_DIR}/include)
+SET(inc ${inc} ${findMFHCS_SOURCE_DIR}/submodule/findMFIncludes/include)
 
 #############################################################################
 # QT - Creator tweak so that it sees headers
 #############################################################################
 file(GLOB Demo_HEADERS "sql/*.sql" "cmake_modules/*cmake" "include/*.h" "include/**/*.h"
- "include/**/**/*.h" "include/**/**/**/*.h" "src/**/*.h" "src/**/**/*.h" ".travis.yml")
+ "include/**/**/*.h" "include/**/**/**/*.h" "src/**/*.h" "src/**/**/*.h" ".travis.yml"
+"submodule/findMFIncludes/include/**/**/*.h")
+
 add_library(headers SHARED ${Demo_HEADERS} Dummy.cpp)
 
 #############################################################################

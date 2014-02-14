@@ -121,19 +121,19 @@ namespace ralab{
     }
 
     //bounding box
-    float getMinRTIdx() override {
+    uint32_t getMinRTIdx() override {
       return feature_.getMinRTIdx();
     }
 
-    float getMinMZIdx() override {
+    uint32_t getMinMZIdx() override {
       return feature_.getMinMZIdx();
     }
 
-    float getMZExtend() override {
+    uint32_t getMZExtend() override {
       return feature_.getMZExtend();
     }
 
-    float getRTExtend() override {
+    uint32_t getRTExtend() override {
       return feature_.getRTExtend();
     }
 
