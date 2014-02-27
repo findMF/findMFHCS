@@ -1,1 +1,1 @@
-conv2Image --in=/home/witold/T2/Yansheng/yanliu_L120831_016_SW.mzML --out /home/witold/testdata/pics --resolution=50000 --nrthreads=3
+/home/witold/prog/qttest/rl/findmfout/findMF --mzscale=1.3 --resolution=65000 --minMass=200 --nrthreads=2 --minintensity=5. --in=napedro_L120224_001_SW.mzXML

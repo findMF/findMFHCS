@@ -210,10 +210,11 @@ namespace ralab{
         }
 
 
+        /// given RT index return spectrum
         void getSpectrum(std::size_t i,
                          std::vector<double> & mz,
                          std::vector<double> & intensities,
-                         double threshold = 10
+                         double threshold = 10 //!< minimal intensity still to retrieve
             )
         {
           auto begfiltered = imageMap_.getMap().bindOuter(i).begin();

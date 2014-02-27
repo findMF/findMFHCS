@@ -6,9 +6,6 @@
 include_directories(${inc})
 link_directories(  ${Soci_LIBRARY} )
 
-message(STATUS ">>>>>>> ${Boost_LIBRARIES} >>>>")
-message(STATUS ">>>>>>> >>>>")
-
 ADD_EXECUTABLE(sqlfeaturestoragetest SQLFeatureStorageTest.cpp )
 TARGET_LINK_LIBRARIES(sqlfeaturestoragetest  ${QT_LIBRARIES} ${Boost_LIBRARIES} )
 

@@ -56,7 +56,9 @@ namespace ralab{
           return p.string();
         }
 
-        void getMapForKey(unsigned int key, MapLCMSDescriptionPtr maplcms ){
+
+        /// get map description for key
+        void getMapDescriptionForKey(unsigned int key, MapLCMSDescriptionPtr maplcms ){
           SwathIndic::iterator it = swathindices_.find(key);
           if(it != swathindices_.end())
             {
@@ -64,17 +66,16 @@ namespace ralab{
             }
         }
 
-        /** use to update */
-        MapLCMSDescriptionPtr getMapForKey(uint32_t key){
+        ///  map descritipion given key
+        MapLCMSDescriptionPtr getMapDescriptionForKey(uint32_t key){
           SwathIndic::iterator it = swathindices_.find(key);
           if(it != swathindices_.end())
             {
               MapLCMSDescriptionPtr map = it->second;
-              map->runnumber_ = key; // TODO
+              map->runnumber_ = key;
               return map;
             }
           else{
-              //
               std::pair<SwathIndic::iterator,bool> it = swathindices_.insert(std::make_pair(key, MapLCMSDescriptionPtr(new MapLCMSDescription())));
               return it.first->second;
             }

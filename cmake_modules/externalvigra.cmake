@@ -4,7 +4,6 @@ set_directory_properties(PROPERTIES EP_PREFIX ${CMAKE_BINARY_DIR}/ThirdParty)
 ExternalProject_Add(
     vigra
     GIT_REPOSITORY https://github.com/ukoethe/vigra.git
-    #SVN_REVISION -r 664
     TIMEOUT 10
     #PATCH_COMMAND svn patch ${CMAKE_SOURCE_DIR}/VIGRA.patch ${CMAKE_BINARY_DIR}/ThirdParty/src/vigra
     # Force separate output paths for debug and release builds to allow easy
@@ -28,11 +27,21 @@ ExternalProject_Add(
 ExternalProject_Get_Property(vigra source_dir)
 set(VIGRA_SourceDir ${source_dir}/include)
 
-
 ExternalProject_Get_Property(vigra binary_dir)
-IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+#IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(VIGRA_LIBRARY ${binary_dir}/src/impex/)
-ELSE(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(VIGRA_LIBRARY ${binary_dir}/src/impex/)
-ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+#ELSE(CMAKE_BUILD_TYPE STREQUAL "Debug")
+#    set(VIGRA_LIBRARY ${binary_dir}/src/impex/)
+#ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+
+#post
+#0848888888
+
+#empfenger konte nicht unter angegebener adresse ermittelt werden
+#6004661
+
+#Sendenummer...
+#996000059785625236
+
 

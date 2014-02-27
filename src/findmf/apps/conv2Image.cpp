@@ -14,15 +14,14 @@
 #include "findmf/tbbfilters/mapfilter.h"
 
 #include "findmf/apps/toolparameters.h"
-#include "parseargExtract.h"
+#include "parseargsImageExport.h"
 
 /// build the pipeline
 int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::findmf::datastruct::MSFileInfoPtr sip )
 {
   // Create the pipeline
   tbb::pipeline pipeline;
-  // Create squaring stage and add it to the pipeline
-  params.prepareOutputFile(false);
+  //params.prepareOutputFile(false);
   ralab::findmf::LCMSImageReaderFilter::Params lcmspar;
   lcmspar.infile_ = params.infile;
   lcmspar.maxmass_ = params.maxmass;
@@ -59,7 +58,6 @@ int main(int argc, char *argv[])
   ralab::findmf::apps::Params pars;
   analysisParameters(pars,vmgeneral);
   pars.prepareOutputFile(true);
-
 
   // open file.
   //pwiz::msdata::MSDataPtr msdataptr;

@@ -7,14 +7,14 @@
 include_directories(${inc})
 link_directories( ${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Tbb_LIBRARY} )
 
-ADD_EXECUTABLE(testThreading testThreading.cpp)
-TARGET_LINK_LIBRARIES(testThreading ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs} datastructlib tbb )
+ADD_EXECUTABLE(filterSingleMap filterSingleMap.cpp)
+TARGET_LINK_LIBRARIES(filterSingleMap ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}  tbb )
 
 ADD_EXECUTABLE(findMF findMF.cpp)
-TARGET_LINK_LIBRARIES(findMF ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}  datastructlib tbb )
+TARGET_LINK_LIBRARIES(findMF ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}   tbb )
 
 ADD_EXECUTABLE(PeakPicker PeakPicker.cpp)
-TARGET_LINK_LIBRARIES(PeakPicker ${Boost_LIBRARIES} pwiz datastructlib )
+TARGET_LINK_LIBRARIES(PeakPicker ${Boost_LIBRARIES} pwiz  )
 
 ADD_EXECUTABLE(conv2Image conv2Image.cpp)
-TARGET_LINK_LIBRARIES(conv2Image  ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz datastructlib ${vigralibs} tbb)
+TARGET_LINK_LIBRARIES(conv2Image  ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz  ${vigralibs} tbb)

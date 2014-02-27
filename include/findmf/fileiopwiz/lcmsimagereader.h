@@ -66,20 +66,19 @@ namespace ralab{
         swathInfo_->getKeys(keys);
       }
 
-      //returns ms1 map
+      /// returns ms1 map
       void getMS1Map( datastruct::LCMSImage & image ){
-        //for ms1 maps we do not limit the mass range.
         getMap( 0 , 0., std::numeric_limits<double>::max(), image);
       }
 
-      /// returns ms2 map for key
+      /// returns ms2 map for key (getKeys)
       void getMap(unsigned int key,double minMass, double maxMass, datastruct::LCMSImage & map_)
       {
-        map_.setMapDescription(swathInfo_->getMapForKey(key));
+        map_.setMapDescription(swathInfo_->getMapDescriptionForKey(key));
         boost::timer time;
         mzRange_ = determineRange(
               msdataptr_,
-              swathInfo_->getMapForKey(key)->getIndices()
+              swathInfo_->getMapDescriptionForKey(key)->getIndices()
               );
         if(mzRange_.first < minMass){
           mzRange_.first = minMass;
@@ -88,7 +87,7 @@ namespace ralab{
           mzRange_.second = maxMass;
         }
         map_.getMapDescription()->mzRange_= mzRange_;
-        size_t nrcols = swathInfo_->getMapForKey(key)->getIndices().size();
+        size_t nrcols = swathInfo_->getMapDescriptionForKey(key)->getIndices().size();
         nrcols = rt2sum_.getNrCols(nrcols);
 
         time.restart();
@@ -97,7 +96,7 @@ namespace ralab{
         map_.getImageMap().resize(rows,nrcols);
         std::cerr << "rows : [" << rows << "]  nrcols : [" << nrcols << "]" << std::endl;
 
-        fillLCMSImage(msdataptr_,swathInfo_->getMapForKey(key)->getIndices(),map_);
+        fillLCMSImage(msdataptr_,swathInfo_->getMapDescriptionForKey(key)->getIndices(),map_);
       }
 
       /// Store file on disk
@@ -141,8 +140,9 @@ namespace ralab{
         }
       }
 
-      /* determines range of dataset by iterating
-       through all spectra in indices */
+      /// determines range of dataset by iterating
+      /// through all spectra in indices
+      ///
       std::pair<double, double> determineRange( pwiz::msdata::MSDataPtr msd,
                                                 const std::vector<std::size_t> & indices )
       {

@@ -71,7 +71,7 @@ namespace ralab{
 
 
                 if(specInf.msLevel == 1){
-                    datastruct::MapLCMSDescriptionPtr map = swathinfo_->getMapForKey(0);
+                    datastruct::MapLCMSDescriptionPtr map = swathinfo_->getMapDescriptionForKey(0);
                     map->getIndices().push_back(specIndex);
                     //map.rt_.push_back(specInf.retentionTime);
                     map->mslevel_ = 1;
@@ -91,12 +91,17 @@ namespace ralab{
                             p2 = boost::lexical_cast<double>(isw.cvParams[1].value);
                           }
 
-                       datastruct::MapLCMSDescriptionPtr map = swathinfo_->getMapForKey(specInf.precursors[0].mz);
+                       datastruct::MapLCMSDescriptionPtr map = swathinfo_->getMapDescriptionForKey(specInf.precursors[0].mz);
 
                         map->mslevel_ = 2;
                         map->extractionWindowMZ_.first = specInf.precursors[0].mz - p1;
                         map->extractionWindowMZ_.second = specInf.precursors[0].mz + p2;
+
                         map->getIndices().push_back(specIndex);
+
+                        // TODO - there is an issue with missing spectra in the AB Sciex API.
+                        // map->getRT().push_back(specInf.retentionTime);
+
                         map->rtRange_.first = std::min(map->rtRange_.first, specInf.retentionTime);
                         map->rtRange_.second = std::max(map->rtRange_.second, specInf.retentionTime);
                         map->mzRange_.first = std::min(map->mzRange_.first, specInf.mzLow);
