@@ -13,6 +13,7 @@
 namespace b_po = boost::program_options;
 namespace b_fs = boost::filesystem3;
 
+///
 struct PPParams
 {
   std::string infile_;
@@ -61,7 +62,7 @@ struct PPParams
 };//end struct param
 
 
-//parameters
+/// parameters
 inline int defineParameters(
     int ac,
     char* av[],
@@ -169,6 +170,7 @@ inline void analysisParameters(PPParams & ap,b_po::variables_map & vmgeneral){
   ap.threshold_ = vmgeneral["threshold"].as<double>();
 }
 
+///
 int main(int argc, char *argv[])
 {
   b_po::variables_map vmgeneral;
@@ -191,7 +193,7 @@ int main(int argc, char *argv[])
         );
   msdataptr_->run.spectrumListPtr = mp;
   pwiz::msdata::MSDataFile::Format format;
-  if(std::string("mzML").compare(boost::filesystem3::extension(aparam.outfile_)) ==0 ){
+  if(std::string("mzML").compare(boost::filesystem::extension(aparam.outfile_)) ==0 ){
     format = pwiz::msdata::MSDataFile::Format_mzML;
   }
   else{
