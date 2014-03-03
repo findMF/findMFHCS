@@ -11,7 +11,7 @@
 #include "pwiz/data/vendor_readers/ExtendedReaderList.hpp"
 
 namespace b_po = boost::program_options;
-namespace b_fs = boost::filesystem3;
+namespace b_fs = boost::filesystem;
 
 ///
 struct PPParams
@@ -53,7 +53,7 @@ struct PPParams
     //create outdir
     try{
       if(!boost::filesystem::exists(outdir_)){
-        boost::filesystem3::create_directory(outdir_);
+        boost::filesystem::create_directory(outdir_);
       }
     }catch(std::exception & e ){
       std::cout << e.what() << std::endl;
