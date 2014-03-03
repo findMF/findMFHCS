@@ -27,22 +27,17 @@ namespace ralab{
       SwathPropertiesReader(std::string filename)
         :swathinfo_(new datastruct::MSFileInfo(filename))
       {
-
-        //try{
         msdataptr_ = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(filename));
-        //} catch(std::exception & e) {
-          //std::cerr << "infile : " << filename << std::endl;
-          //std::cerr  << "can't open file: " << e.what() << std::endl;
-        //}
         readProperties(msdataptr_);
       }
 
-      // ms data ptr
+      /// ms data ptr
       pwiz::msdata::MSDataPtr getMSData(){
         return msdataptr_;
       }
 
-      //
+      /// if file contains many maps return keys of the maps.
+      /// the keys are the minmass of the map extraction window.
       void getKeys(std::vector<std::size_t> & keys){
         swathinfo_->getKeys(keys);
       }

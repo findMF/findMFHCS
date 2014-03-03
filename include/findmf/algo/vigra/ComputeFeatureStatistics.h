@@ -14,7 +14,7 @@ namespace ralab{
 
     private:
 
-      ralab::featurefind::MyAccumulatorChain mac_;
+      ralab::findmf::MyAccumulatorChain mac_;
 
     public:
       /// creates feature statistics
@@ -32,14 +32,14 @@ namespace ralab{
       //method to extract the features
       void extractFeatureChain(const Gradient & data,
                                const Labels & labels,
-                               ralab::featurefind::MyAccumulatorChain & acummulatorChain)
+                               ralab::findmf::MyAccumulatorChain & acummulatorChain)
       {
         //Gradient weights;
         //weights.reshape(Gradient::difference_type(data.size(0),data.size(1)));
         //vigra::copyMultiArray(vigra::srcMultiArrayRange(data),vigra::destMultiArrayRange(weights));
 
-        ralab::featurefind::Iterator start = createCoupledIterator(data, labels);//, data);
-        ralab::featurefind::Iterator end = start.getEndIterator();
+        ralab::findmf::Iterator start = createCoupledIterator(data, labels);//, data);
+        ralab::findmf::Iterator end = start.getEndIterator();
 
         //don't analyse background.
         acummulatorChain.ignoreLabel(0);
@@ -68,7 +68,7 @@ namespace ralab{
 
       //copy statistics generated in accumulator chain into features
       static void createFeaturesFromStatistics( datastruct::FeaturesMap & features ,
-                                                featurefind::MyAccumulatorChain & chain
+                                                findmf::MyAccumulatorChain & chain
                                                 )
       {
         using namespace vigra;
@@ -137,7 +137,7 @@ namespace ralab{
       /// prints accumulator chain
       std::ostream &  printFAcc(
           std::ostream & stream ,
-          ralab::featurefind::MyAccumulatorChain & acummulatorChain
+          ralab::findmf::MyAccumulatorChain & acummulatorChain
           ){
         using namespace vigac;
 

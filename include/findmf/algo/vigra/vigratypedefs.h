@@ -11,7 +11,7 @@
 
 
 namespace ralab{
-  namespace featurefind{
+  namespace findmf{
     using namespace vigra::acc;
 
     typedef vigra::CoupledIteratorType<2, float, int>::type Iterator;

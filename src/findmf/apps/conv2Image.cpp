@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
   pars.prepareOutputFile(true);
 
   // open file.
-  //pwiz::msdata::MSDataPtr msdataptr;
+  // pwiz::msdata::MSDataPtr msdataptr;
   ralab::findmf::datastruct::MSFileInfoPtr sip;
   try{
     ralab::findmf::SwathPropertiesReader swathPropReader(pars.infile);

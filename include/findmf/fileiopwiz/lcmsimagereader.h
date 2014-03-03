@@ -22,6 +22,10 @@
 
 #include "findmf/application/RT2sum.h"
 
+#include "base/resample/determinebinwidth.h"
+#include "base/stats/quantiles.h"
+
+
 namespace ralab{
   namespace findmf{
 
@@ -75,7 +79,7 @@ namespace ralab{
       void getMap(unsigned int key,double minMass, double maxMass, datastruct::LCMSImage & map_)
       {
         map_.setMapDescription(swathInfo_->getMapDescriptionForKey(key));
-        boost::timer time;
+
         mzRange_ = determineRange(
               msdataptr_,
               swathInfo_->getMapDescriptionForKey(key)->getIndices()
@@ -86,26 +90,31 @@ namespace ralab{
         if(mzRange_.second > maxMass){
           mzRange_.second = maxMass;
         }
+        // determine vendor sampling with
+        double am = determineAm(msdataptr_, swathInfo_->getMapDescriptionForKey(key)->getIndices());
+        swathInfo_->getMapDescriptionForKey(key)->setAM(am);
+
         map_.getMapDescription()->mzRange_= mzRange_;
         size_t nrcols = swathInfo_->getMapDescriptionForKey(key)->getIndices().size();
         nrcols = rt2sum_.getNrCols(nrcols);
-
-        time.restart();
 
         size_t rows = map_.defBreak(mzRange_, ppm_ );
         map_.getImageMap().resize(rows,nrcols);
         std::cerr << "rows : [" << rows << "]  nrcols : [" << nrcols << "]" << std::endl;
 
-        fillLCMSImage(msdataptr_,swathInfo_->getMapDescriptionForKey(key)->getIndices(),map_);
+        fillLCMSImage(msdataptr_,swathInfo_->getMapDescriptionForKey(key)->getIndices(), map_, am);
       }
 
       /// Store file on disk
       void write(const std::string & filenameOut, datastruct::LCMSImage & mmap){
         pwiz::msdata::SpectrumListPtr sl = msdataptr_->run.spectrumListPtr;
+
+        //the filtered spectrum list ptr is injected into the msdataptr and will provide
+        //access to the filtered data.
         pwiz::msdata::SpectrumListPtr mp( new FilteredSpectrumList(sl,mmap,rt2sum_) );
         msdataptr_->run.spectrumListPtr = mp;
         std::string fileOut = filenameOut;
-        fileOut += ".mzML";
+        fileOut += "_filtered.mzML";
         pwiz::msdata::MSDataFile::write(*msdataptr_,
                                         fileOut,
                                         pwiz::msdata::MSDataFile::Format_mzML
@@ -115,7 +124,8 @@ namespace ralab{
     private :
       void fillLCMSImage(pwiz::msdata::MSDataPtr msd,
                          const std::vector<std::size_t> & indices, //!< indices of spectra belonging to the map.
-                         datastruct::LCMSImage & map_ //!< output map.
+                         datastruct::LCMSImage & map_, //!< output map
+                         double am //!< vendor sampling parameter
                          ){
         pwiz::msdata::SpectrumListPtr sl = msd->run.spectrumListPtr;
         if (sl.get())
@@ -134,7 +144,7 @@ namespace ralab{
             intensity = sp->getIntensityArray();
             size_t idx = rt2sum_.getCols(i);
             if(!mz->data.empty()){
-              map_.convert2dense(mz->data, intensity->data, idx);
+              map_.convert2dense(mz->data, intensity->data, idx, am);
             }
           }
         }
@@ -142,7 +152,7 @@ namespace ralab{
 
       /// determines range of dataset by iterating
       /// through all spectra in indices
-      ///
+      /// TODO add code to compute the sampling with.
       std::pair<double, double> determineRange( pwiz::msdata::MSDataPtr msd,
                                                 const std::vector<std::size_t> & indices )
       {
@@ -151,11 +161,13 @@ namespace ralab{
         if (sl.get())
         {
           std::size_t nrcols_ = indices.size();
-          for(std::size_t i = 0 ; i < nrcols_ ; ++i)
+          for( std::size_t i = 0 ; i < nrcols_ ; ++i )
           {
             pwiz::msdata::SpectrumPtr sp = sl->spectrum(indices[i],true);
             pwiz::msdata::BinaryDataArrayPtr mz;
             mz = sp->getMZArray();
+
+
             if(!mz->data.empty()){
               if(min_ > mz->data.front()) min_ = mz->data.front();
               if(max_ < mz->data.back()) max_ = mz->data.back();
@@ -165,6 +177,35 @@ namespace ralab{
         }
         return std::pair<double, double>(0.,0.);
       }
+
+      /// determine vendor sampling with
+      double determineAm( pwiz::msdata::MSDataPtr msd,
+                          const std::vector<std::size_t> & indices
+                          )
+      {
+        pwiz::msdata::SpectrumListPtr sl = msd->run.spectrumListPtr;
+        std::vector<double> am;
+        if (sl.get())
+        {
+          base::resample::SamplingWith sw;
+          std::size_t nrcols_ = indices.size();
+          for( std::size_t i = 0 ; i < nrcols_ ; ++i )
+          {
+            pwiz::msdata::SpectrumPtr sp = sl->spectrum(indices[i],true);
+            pwiz::msdata::BinaryDataArrayPtr mz;
+            mz = sp->getMZArray();
+            if(!mz->data.empty())
+            {
+              am.push_back( sw(mz->data.begin(),mz->data.end()) );
+            }
+          }
+        }
+        // determine 2% quantile (many spectra might be empty therefore go for 2% quantile).
+        //std::sort(am.begin(), am.end());
+        double res = *(std::min_element(am.begin(),am.end()));
+        //double res = stats::quantile( am.begin(), am.end(), 0.01);
+        return res;
+      }// end determineAm
 
     };
   }

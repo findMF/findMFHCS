@@ -51,20 +51,14 @@ namespace ralab{
 
           ralab::findmf::datastruct::LCMSImage * lcmsimage = new ralab::findmf::datastruct::LCMSImage(sip_);
           {
-
             pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile_));
-
             //TODO passing sip_ here seems redundant
             ralab::findmf::LCMSImageReader imagereader (msdataptr, sip_, anap_.ppm_, anap_.rt2sum_);
-
-
             std::cerr << "PROCESSING MAP : " << count_ << " with key : " << keys[count_] <<std::endl;
-
             imagereader.getMap( keys[count_] ,anap_.minmass_ , anap_.maxmass_, *lcmsimage);
-
             lcmsimage->getImageMap().updateImageMax();
             double max = lcmsimage->getImageMap().getImageMax();
-            std::cerr << "max : " << max << std::endl;
+            //std::cerr << "max : " << max << std::endl;
             count_++;
 
           }

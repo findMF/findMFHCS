@@ -20,7 +20,7 @@ namespace ralab{
       /// Description of an lcms map...
       struct MapLCMSDescription
       {
-        uint32_t runnumber_; //!< running number
+        uint32_t runnumber_; //!< running number of LCMS map
         uint32_t mslevel_; //!< ms level of the map (i.e. 1)
         std::pair<double, double> extractionWindowMZ_; //!< only relevant for mslevel_ > 1 swath window
         std::pair<double, double> mzRange_; //!< mz range
@@ -32,6 +32,8 @@ namespace ralab{
 
         axesT retentiontime_;//!< retention times in s (index to rt)
         axesT mass_; //!< mass vector (is used convert index to mass)
+        double am_; //!< vendor sampling width parameter
+
 
       public:
 
@@ -59,6 +61,16 @@ namespace ralab{
 
         std::vector<std::size_t> & getIndices(){
           return indices_;
+        }
+
+        /// get vendor sampling with
+        double getAM(){
+          return am_;
+        }
+
+        /// set vendor sampling with
+        void setAM(double am){
+          am_ = am;
         }
 
         /// get mass

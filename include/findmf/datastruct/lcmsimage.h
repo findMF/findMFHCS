@@ -125,10 +125,10 @@ namespace ralab{
         /// Converts a sparse spec to a dense spec
         void convert2dense(std::vector<double> & mz,
                            std::vector<double> & intens,
-                           std::size_t specnr
-                           //datastruct::LCMSImage & map_
+                           std::size_t specnr,
+                           double am
                            ){
-          c2d_.setAm( sw_(mz.begin(),mz.end()));
+          c2d_.setAm( am );
           c2d_.convert2dense(mz.begin(),mz.end(),
                              intens.begin(),
                              imageMap_.getMap().bindOuter(specnr).begin()

@@ -27,8 +27,6 @@ namespace findmf{
     void * operator()(void * queue)
     {
       ralab::findmf::datastruct::LCMSImage * mp = static_cast<ralab::findmf::datastruct::LCMSImage *>(queue);
-      boost::timer time;
-      time.restart();
 
       ralab::findmf::LCMSImageFilter imgf;
       imgf.filterMap( mp->getImageMap().getMap() , mzpixelwidth_ , rtpixelwidth_ , mzscale_, rtscale_);

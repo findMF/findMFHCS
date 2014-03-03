@@ -29,20 +29,18 @@ namespace ralab
     std::vector< std::size_t > keys;
     ralab::findmf::datastruct::MSFileInfoPtr sip_ ;
     ralab::findmf::apps::Params anap_ ;
-    ralab::findmf::FeaturesMapSQLWriterFacade sqlwriter_;
     int mapid_;
 
     SwathProcessor( const ralab::findmf::apps::Params & ap, // the analysis parameter
                     ralab::findmf::datastruct::MSFileInfoPtr sip, // swath info pointer
-                    ralab::findmf::FeaturesMapSQLWriterFacade &sfs,
                     int mapid
-                    ) :sip_(sip), anap_(ap),sqlwriter_(sfs),mapid_(mapid)
+                    ) :sip_(sip), anap_(ap),mapid_(mapid)
     {
-      anap_.prepareOutputFile();
+      anap_.prepareOutputFile(true);
     }
 
-    //test ...
     void operator()(void) {
+
       sip_->getKeys(keys);
       ralab::findmf::datastruct::LCMSImage mp;
       try{
@@ -59,41 +57,21 @@ namespace ralab
         ralab::findmf::LCMSImageFilter imgf;
         imgf.filterMap(mp.getImageMap().getMap(), anap_.mzpixelwidth , anap_.rtpixelwidth, anap_.mzscale , anap_.rtscale );
         mp.getImageMap().updateImageMax();
-        // boost::filesystem::path x = anap_.outdir_ / anap_.filestem_ ;
-        //mp.getImageMap().write_image( x.string() );
-        //TODO add option to switch wring tiff on and off.
-        mp.write();
+        mp.getImageMap().write( anap_.outdir, anap_.filestem_ );
+
+        pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));
+        ralab::findmf::LCMSImageReader tmp ( msdataptr , sip_ , anap_.ppm );
+
+        ///TODO test.
+        boost::filesystem::path x = anap_.outdir_ / anap_.filestem_ ;
+        tmp.write(x.string(),mp);
+
       }catch(std::exception &e){
         std::cerr << "filtering failed " << e.what() << std::endl;
         return;
       }
 
-      /*
-      ralab::findmf::datastruct::FeaturesMap map;
-      map.setMapDescription( mp.getMapDescription() );
 
-      try{
-        time.restart();
-        ralab::findmf::FeatureFinder ff;
-        ralab::findmf::ComputeFeatureStatistics fs;
-        ff.findFeature( mp.getImageMap().getMap(), 10. );
-        fs.extractFeatures(map,mp.getImageMap().getMap(), ff.getLabels());
-
-      }catch(std::exception & e){
-        std::cerr << "feature finding failed " << e.what() << std::endl;
-        return;
-      }
-
-      try{
-        time.restart();
-        sqlwriter_.writeSQL2( map );
-        //LOG(INFO) << "written features : " << time.elapsed();
-      }catch(std::exception &e)
-      {
-        std::cerr << "error wrting sql" << e.what() << std::endl;
-        return;
-      }
-      */
     }
   };
 }//end namespace ralab
@@ -114,10 +92,7 @@ int main(int argc, char *argv[])
   analysisParameters(pars,vmgeneral);
 
   std::cerr << "ppm is:" << pars.ppm << std::endl;
-  //pars.i_ = 0;
 
-  ///// prepare single feature storage for all lscms's
-  pars.prepareOutputFile();
 
   ///ralab::findmf::FeaturesMapSQLWriterFacade facade(pars.outdir,pars.filestem_);
   ///facade.createDatabase();
@@ -134,7 +109,7 @@ int main(int argc, char *argv[])
   tbb::task_scheduler_init init(pars.nrthreads);
   std::vector<ralab::SwathProcessor> tasks;
   for(std::size_t i = 0 ; i < keys.size() ; ++i){
-      tasks.push_back(ralab::SwathProcessor( pars , swathPropReader.getSwathInfo(),facade,i));
+      tasks.push_back(ralab::SwathProcessor( pars , swathPropReader.getSwathInfo(),i));
     }
   tbb::parallel_for_each(tasks.begin(),tasks.end(),invoker<ralab::SwathProcessor>());
   return 0;
