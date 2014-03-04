@@ -24,8 +24,8 @@ TARGET_LINK_LIBRARIES(pipelinetest tbb rt)
 ADD_EXECUTABLE(pipeline2 pipeline2.cpp )
 TARGET_LINK_LIBRARIES(pipeline2 tbb rt)
 
-ADD_EXECUTABLE(flowcharttest FlowChartTest.cpp )
-TARGET_LINK_LIBRARIES(flowcharttest tbb rt)
+#ADD_EXECUTABLE(flowcharttest FlowChartTest.cpp )
+#TARGET_LINK_LIBRARIES(flowcharttest tbb rt)
 
 
 ENABLE_TESTING()
