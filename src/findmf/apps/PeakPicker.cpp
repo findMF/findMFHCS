@@ -152,17 +152,16 @@ inline int defineParameters(
   return 0;
 }//end parse command line
 
+
 inline void analysisParameters(PPParams & ap,b_po::variables_map & vmgeneral){
   if(vmgeneral.count("in"))
   {
     ap.infile_ =  vmgeneral["in"].as<std::string>();
   }
-
   if(vmgeneral.count("out"))
   {
     ap.outfile_ = vmgeneral["out"].as<std::string>();
   }
-
   ap.resolution_ = 2*vmgeneral["resolution"].as<double>();
   ap.smoothwidth_ = 2*vmgeneral["smoothwidth"].as<double>();
   ap.integrationwidth_ = 2*vmgeneral["intwidth"].as<double>();

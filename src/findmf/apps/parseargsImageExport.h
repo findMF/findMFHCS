@@ -53,7 +53,7 @@ namespace ralab{
       outdir_ = boost::filesystem::path(outdir);
       outdir_ /= filestem_;
       if(create_dir){
-        boost::filesystem3::create_directory(outdir_);
+        boost::filesystem::create_directory(outdir_);
       }
       filestem_ += "_";
       filestem_ += boost::lexical_cast<std::string>(i_);
