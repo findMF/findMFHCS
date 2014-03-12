@@ -27,14 +27,16 @@ namespace ralab{
     }
 
     void createTable(){
+
       QSqlQuery query(db_);
       if(!query.exec("drop table if exists feature_index"))
-        {
-          QSqlError err = query.lastError();
-          QString x = err.text();
-          std::cerr << "Can' drop table feature_index : " << x.toStdString() << std::endl;
-        }
+      {
+        QSqlError err = query.lastError();
+        QString x = err.text();
+        std::cerr << "Can' drop table feature_index : " << x.toStdString() << std::endl;
+      }
 
+      /*
       if(!query.exec("CREATE VIRTUAL TABLE feature_index USING rtree("
                      "id, "
                      "minMZsw, maxMZsw, "
@@ -42,24 +44,25 @@ namespace ralab{
                      "minMZ, maxMZ"
                      ");"
                      )){
-          QSqlError err = query.lastError();
-          std::cerr << "can't create table feature_index ON rtree : " << err.text().toStdString() << std::endl;
+        QSqlError err = query.lastError();
+        std::cerr << "can't create table feature_index ON rtree : " << err.text().toStdString() << std::endl;
+      */
 
-          if (!query.exec("CREATE TABLE feature_index("
-                          "id integer primary key, "
-                          "minMZsw real, " // id in the current map
-                          "maxMZsw real,"
-                          "minRT real, "
-                          "maxRT real, "
-                          "minMZ real,"
-                          "maxMZ real"
-                          ");"
-                          )){
+      if (!query.exec("CREATE TABLE feature_index("
+                      "id integer primary key, "
+                      "minMZsw real, " // id in the current map
+                      "maxMZsw real,"
+                      "minRT real, "
+                      "maxRT real, "
+                      "minMZ real,"
+                      "maxMZ real"
+                      ");"
+                      )){
 
-              QSqlError err = query.lastError();
-              std::cerr << "can't create table feature_index NO rtree : " << err.text().toStdString();
-            }//second attempt
-        }//first attempt
+        QSqlError err = query.lastError();
+        std::cerr << "can't create table feature_index NO rtree : " << err.text().toStdString();
+      }//second attempt
+      //}//first attempt
     }
 
     ////
@@ -68,12 +71,12 @@ namespace ralab{
       QSqlQuery query(db_);
       query.exec(queryString);
       if(query.next()){
-          unsigned int id = query.value(0).toInt();
-          return id;
-        }
+        unsigned int id = query.value(0).toInt();
+        return id;
+      }
       else{
-          return -1;
-        }
+        return -1;
+      }
     }
 
     ////
@@ -104,9 +107,9 @@ namespace ralab{
       insertRTreeQuery_.bindValue(":maxMZ", maxmz );
 
       if(!insertRTreeQuery_.exec()){
-          QSqlError err = insertRTreeQuery_.lastError();
-          std::cerr <<  "can't insert into RTREE: " << err.text().toStdString() <<std::endl;
-        }
+        QSqlError err = insertRTreeQuery_.lastError();
+        std::cerr <<  "can't insert into RTREE: " << err.text().toStdString() <<std::endl;
+      }
       return insertRTreeQuery_.lastInsertId().toUInt();
 
     }
@@ -140,9 +143,9 @@ namespace ralab{
       insertRTreeQuery_.bindValue(":maxMZ", maxmz );
 
       if(!insertRTreeQuery_.exec()){
-          QSqlError err = insertRTreeQuery_.lastError();
-          std::cerr <<  "can't insert into RTREE with id : " << err.text().toStdString() << std::endl;
-        }
+        QSqlError err = insertRTreeQuery_.lastError();
+        std::cerr <<  "can't insert into RTREE with id : " << err.text().toStdString() << std::endl;
+      }
 
     }
   };// end of class

@@ -17,7 +17,7 @@ namespace ralab{
   namespace findmf{
     namespace datastruct{
 
-      /// Vigra multiarray wrapped and with convenience methods added
+      /// Vigra multiarray wrapped
       template<typename Tmap>
       struct Map2D{
 
@@ -120,7 +120,6 @@ namespace ralab{
           }
         }
       }; // end class Map2D
-
     }//datastruct
   }//findmf
 }//ralab

@@ -54,7 +54,8 @@ namespace ralab{
         pwiz::msdata::SpectrumListPtr sl = msdataptr_->run.spectrumListPtr;
         if (sl.get())
           {
-            std::cerr << "# of spectra: " << sl->size() << std::cout ;
+            int s = sl->size();
+            //std::cerr << "# of spectra: " << s  << ";" << std::cout ;
             pwiz::msdata::SpectrumIterator::Config c;
             c.getBinaryData = false;
             pwiz::msdata::SpectrumIterator it(*sl,c);

@@ -58,7 +58,7 @@ int run_pipeline( int nthreads, ralab::findmf::apps::Params & params, ralab::fin
    return 1;
 }
 
-//
+
 int main(int argc, char *argv[])
 {
 

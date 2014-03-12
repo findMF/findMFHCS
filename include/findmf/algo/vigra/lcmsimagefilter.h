@@ -47,54 +47,98 @@ namespace ralab{
       void filterRT(datastruct::LCMSImage::FloatMap::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFloatPtr  f )  {
         size_t xx = mp_.size(0);
         for( std::size_t i = 0 ; i < xx; ++i )
-          {
-            signal_.assign( mp_.bindInner(i).begin(), mp_.bindInner(i).end() );
-            (*f)( signal_ );
-            //std::replace_if( signal_.begin() , signal_.end() , std::bind2nd(std::less<float>(),0.),0.);
-            std::copy(signal_.begin(),signal_.end(),mp_.bindInner(i).begin() );
-          }
+        {
+          signal_.assign( mp_.bindInner(i).begin(), mp_.bindInner(i).end() );
+          (*f)( signal_ );
+          //std::replace_if( signal_.begin() , signal_.end() , std::bind2nd(std::less<float>(),0.),0.);
+          std::copy(signal_.begin(),signal_.end(),mp_.bindInner(i).begin() );
+        }
       }
 
       /// apply filter to all spectra in MZ dimension
       void filterMZ(datastruct::LCMSImage::FloatMap::Map & mp_, ralab::base::filter::scanfilter::IScanFilterFloatPtr  f ) {
         for(std::ptrdiff_t i = 0 ; i < mp_.size(1); ++i)
-          {
-            signal_.assign( mp_.bindOuter(i).begin(), mp_.bindOuter(i).end() );
-            (*f)( signal_ );
-            //std::replace_if( signal_.begin() , signal_.end() , std::bind2nd(std::less<float>(),0.),0.);
-            std::copy(signal_.begin(),signal_.end(),mp_.bindOuter(i).begin());
-          }
+        {
+          signal_.assign( mp_.bindOuter(i).begin(), mp_.bindOuter(i).end() );
+          (*f)( signal_ );
+          //std::replace_if( signal_.begin() , signal_.end() , std::bind2nd(std::less<float>(),0.),0.);
+          std::copy(signal_.begin(),signal_.end(),mp_.bindOuter(i).begin());
+        }
       }
 
     public:
 
-      void filterMap( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
-                      uint32_t mzpixelwidth, //!< in pixel
-                      uint32_t rtpixelwidth, //!< in pixel
-                      double mzscale=1., //!< scale
-                      double rtscale=1.,
-                      double factor = 1. // size of structuring element resolution * factor
+      /// applies mexican hat wavelet filtering to Map
+      void filterMapMexHat( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
+                            uint32_t mzpixelwidth, //!< in pixel
+                            uint32_t rtpixelwidth, //!< in pixel
+                            double mzscale=1., //!< scale
+                            double rtscale=1.,
+                            double factor = 1. // size of structuring element resolution * factor
           )
       {
-        std::cerr << "mzscale: " << mzscale << " rtscale: " << rtscale << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth <<  " factor : " << factor << std::endl;
+        std::cout << "mzscale: " << mzscale << " rtscale: " << rtscale
+                  << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth
+                  <<  " factor : " << factor << std::endl;
         sqrt(mp_); // put it on nicer scale
         filterGauss(mp_,mzscale,rtscale);
         if( rtpixelwidth > 0 ){
-            ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfRT =
-                ralab::base::filter::scanfilter::getFilterTOPHAT(
-                  rtpixelwidth
-                  ,factor
-                  );
-            filterRT(mp_,sfpfRT);
-          }
+          ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfRT =
+              ralab::base::filter::scanfilter::getFilterTOPHAT(
+                rtpixelwidth
+                ,factor
+                );
+          filterRT(mp_,sfpfRT);
+        }
         if( mzpixelwidth > 0 ){
-            ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfMZ =
-                ralab::base::filter::scanfilter::getFilterTOPHAT(
-                  mzpixelwidth
-                  ,factor
-                  );
-            filterMZ(mp_,sfpfMZ);
-          }
+          ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfMZ =
+              ralab::base::filter::scanfilter::getFilterTOPHAT(
+                mzpixelwidth
+                ,factor
+                );
+          filterMZ(mp_,sfpfMZ);
+        }
+
+        //in addition filter after background removal
+        filterGauss( mp_ , mzscale/2. , rtscale/2. );
+        sq(mp_);
+        //mp_.updateImageMax();
+      }
+
+
+
+      /// applies gaussian smoothing, background subtraction and gaussian smoothing after
+      /// background subtraction with a kernel mzscale / 2. rtscale /2. to remove
+      /// artefacts due to background subtraction
+      void filterMap( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
+                      uint32_t mzpixelwidth, //!< in pixel
+                      uint32_t rtpixelwidth, //!< in pixel
+                      double mzscale = 1., //!< scale
+                      double rtscale = 1.,
+                      double factor = 1. // size of structuring element resolution * factor
+          )
+      {
+        std::cout << "mzscale: " << mzscale << " rtscale: " << rtscale
+                  << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth
+                  <<  " factor : " << factor << std::endl;
+        sqrt(mp_); // put it on nicer scale
+        filterGauss(mp_,mzscale,rtscale);
+        if( rtpixelwidth > 0 ){
+          ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfRT =
+              ralab::base::filter::scanfilter::getFilterTOPHAT(
+                rtpixelwidth
+                ,factor
+                );
+          filterRT(mp_,sfpfRT);
+        }
+        if( mzpixelwidth > 0 ){
+          ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfMZ =
+              ralab::base::filter::scanfilter::getFilterTOPHAT(
+                mzpixelwidth
+                ,factor
+                );
+          filterMZ(mp_,sfpfMZ);
+        }
 
         //in addition filter after background removal
         filterGauss( mp_ , mzscale/2. , rtscale/2. );
@@ -102,6 +146,8 @@ namespace ralab{
         //mp_.updateImageMax();
       }
     };
+
+
   }
 }//end namespace
 #endif // LCMSIMAGEFILTER_H
