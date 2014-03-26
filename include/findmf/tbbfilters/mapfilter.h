@@ -30,7 +30,7 @@ namespace findmf{
 
       ralab::findmf::LCMSImageFilter imgf;
       imgf.filterMap( mp->getImageMap().getMap() , mzpixelwidth_ , rtpixelwidth_ , mzscale_, rtscale_);
-      mp->getImageMap().updateImageMax();
+      mp->getImageMap().updateImageRange();
       //std::cerr << " Image Filtered in : " << time.elapsed() << " [s]";
       return mp;
     }

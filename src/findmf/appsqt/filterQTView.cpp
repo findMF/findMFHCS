@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
       //imgf.filterMap( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
 
       imgf.filterMapMexHat( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
-      mp2.getImageMap().updateImageMax();
+      mp2.getImageMap().updateImageRange();
     }
 
     /*
@@ -71,6 +71,8 @@ int main(int argc, char *argv[])
     if(1){
       QApplication app(argc, argv);
       ralab::TwoPaneledImageWidget tpi;
+      ralab::MultiArrayVisLog<float> adapt2( mp2.getImageMap().getMap() );
+
       ralab::MultiArrayVisAsinh<float> adapt1( mp2.getImageMap().getMap() );
       ralab::MultiArrayVisLog<float> adapt0( mp.getImageMap().getMap() );
 

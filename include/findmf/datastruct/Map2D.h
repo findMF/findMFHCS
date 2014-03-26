@@ -27,6 +27,7 @@ namespace ralab{
       private:
         Map map_; //!< map
         float maxelem_; //!< largest element in map?
+        float minelem_; //!< smallest element in map
 
       public:
         Map2D():map_(),maxelem_( std::numeric_limits<float>::min() ){}
@@ -42,15 +43,21 @@ namespace ralab{
         }
 
         /// update maximum variable
-        void updateImageMax(){
+        void updateImageRange(){
           vigra::FindMinMax<Tmap> minmax;   // init functor
           vigra::inspectImage(srcImageRange(map_), minmax);
           maxelem_ = minmax.max;
+          minelem_ = minmax.min;
         }
 
         Tmap getImageMax(){
           return maxelem_;
         }
+
+        Tmap getImageMin(){
+          return minelem_;
+        }
+
 
         /// get image value at index
         float get(std::size_t row, std::size_t col) const {

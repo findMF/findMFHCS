@@ -3,13 +3,10 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-
-
 #ifndef _TWOPANELIMAGEWIDGET
 #define _TWOPANELIMAGEWIDGET
 #include <QtGui>
 #include "mandelbrotwidget.h"
-
 
 namespace ralab{
   struct TwoPaneledImageWidget : QObject{

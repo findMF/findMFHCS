@@ -115,7 +115,7 @@ namespace ralab{
 
     virtual float get(std::size_t px, std::size_t py)override{
       float x = Base::data_[typename Base::difftype(px,py)];
-      return x;
+      return boost::math::asinh(x);
     }
 
     virtual float getMaxelem()override{

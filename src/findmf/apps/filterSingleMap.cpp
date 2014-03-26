@@ -56,7 +56,7 @@ namespace ralab
       try{
         ralab::findmf::LCMSImageFilter imgf;
         imgf.filterMap(mp.getImageMap().getMap(), anap_.mzpixelwidth , anap_.rtpixelwidth, anap_.mzscale , anap_.rtscale );
-        mp.getImageMap().updateImageMax();
+        mp.getImageMap().updateImageRange();
         mp.getImageMap().write( anap_.outdir, anap_.filestem_ );
 
         pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));

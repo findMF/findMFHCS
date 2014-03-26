@@ -45,7 +45,7 @@ namespace ralab{
             -1. ,  4., -1.,
             0.  , -1., -0.;
         laplace2d.setBorderTreatment(vigra::BORDER_TREATMENT_REFLECT);
-        vigra::convolveImage(vigra::srcImageRange(mp_), vigra::destImage(mp_), vigra::kernel2d(laplace2d));
+        //vigra::convolveImage(vigra::srcImageRange(mp_), vigra::destImage(mp_), vigra::kernel2d(laplace2d));
         //vigra::mexicanHat2D(vigra::srcImageRange(mp_), vigra::destImage(mp_), (double) scalemz, (double) scalert );
         //vigra::laplacianOfGaussian(vigra::srcImageRange(mp_), vigra::destImage(mp_), scalemz );
       }
