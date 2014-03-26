@@ -122,8 +122,10 @@ void RenderThread::run()
                 //double x =  sqrt(map_->get( px,  py )+1.)/sqrt(map_->getMaxelem()+1.);
                 double pixelval = map_->get( px,  py );
                 double maxelem = map_->getMaxelem();
+                double minelem = map_->getMinelem();
+
                 //double x =  log(pixelval + 1.) / log(maxelem + 1.);
-                double x = (pixelval)/(maxelem);
+                double x = (pixelval-minelem)/(maxelem-minelem);
                 int col = static_cast<int>( x * (ColormapSize - 1));
                 if(col < ColormapSize && col >=0){
                     *scanLine = colormap[col];

@@ -40,27 +40,27 @@ namespace ralab{
                      "id integer primary key, "
                      "idmap int, " // id in the current map
                      "idswath int,"
-                     "centerOfMassMZ real, "
-                     "centerOfMassRT real, "
-                     "MZ real, "
-                     "RT real ,"
-                     "MZSD real, "
-                     "RTSD real, "
-                     "MZSKEW real, "
+                     "centerOfMassMZ real, " // center of mass mz coordinate
+                     "centerOfMassRT real, " // center of mass rt coordinate
+                     "MZ real, " // feature apex mz coordinate
+                     "RT real ," // feature apex rt coordinate
+                     "MZSD real, " // standard deviation in mz dimension
+                     "RTSD real, " // standard deviation in rt dimension
+                     "MZSKEW real, " // skewness
                      "RTSKEW real, "
-                     "MZKURT real, "
+                     "MZKURT real, " // kurtosis
                      "RTKURT real, "
-                     "Max real, "
-                     "Count integer, "
-                     "Volume real, "
-                     "maximumLocationMZ real, "
-                     "maximumLocationRT real, "
-                     "minMZIndex real, "
-                     "mzExtend real, "
-                     "minRTIndex real, "
-                     "rtExtend real, "
-                     "mzProjection blob , "
-                     "rtProjection blob"
+                     "Max real, " // maximum intensity
+                     "Count integer, " // base of feature in pixels
+                     "Volume real, " // volume of feature
+                     "maximumLocationMZ real, " // maximum location mz coordinate
+                     "maximumLocationRT real, " // maximum location rt coordinate
+                     "minMZIndex real, " // peak start mz coordinate
+                     "mzExtend real, " // peak width mz
+                     "minRTIndex real, " // peak start rt coordinate
+                     "rtExtend real, " // peak with rt
+                     "mzProjection blob , " // feature mz projection
+                     "rtProjection blob" // feature rt projection
                      ")")){
         QSqlError err = query.lastError();
         std::cerr << err.text().toStdString() ;

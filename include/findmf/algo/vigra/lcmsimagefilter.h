@@ -7,6 +7,7 @@
 #define LCMSIMAGEFILTER_H
 
 #include "findmf/datastruct/lcmsimage.h"
+#include "findmf/algo/vigra/mexhat2DNaive.h"
 #include "base/filter/scanfilter/getfitlertophat.h"
 #include <vigra/stdimagefunctions.hxx>
 #include <vigra/convolution.hxx>
@@ -15,9 +16,9 @@ namespace ralab{
   namespace findmf{
 
     /// filter LCMSImage
-    /// TODO move to algo
-    /// feature finder based on gaussian smoothing,
+    /// feature finder based on gaussian smoothing and
     /// tophat morphological filter background subraction
+    ///
     class LCMSImageFilter{
     private:
       std::vector<float> signal_; //worker variable
@@ -27,6 +28,26 @@ namespace ralab{
                                float scalemz = 1. , float scalert = 1.){
         //using namespace vigra::functor;
         vigra::gaussianSmoothing(vigra::srcImageRange(mp_), vigra::destImage(mp_), scalemz , scalert);
+      }
+
+      /// mexican hat smooth image
+      static void filterMexicanHat( datastruct::LCMSImage::FloatMap::Map & mp_,
+                                    float scalemz = 1. , float scalert = 1.){
+        //using namespace vigra::functor;
+
+        gaussianSmoothing(vigra::srcImageRange(mp_), vigra::destImage(mp_), scalemz, scalert);
+        // define horizontal Sobel filter
+        vigra::Kernel2D<float> laplace2d;
+        // upper left and lower right
+
+        laplace2d.initExplicitly(vigra::Diff2D(-1,-1), vigra::Diff2D(1,1)) =
+            0.  ,  -1., 0.,
+            -1. ,  4., -1.,
+            0.  , -1., -0.;
+        laplace2d.setBorderTreatment(vigra::BORDER_TREATMENT_REFLECT);
+        vigra::convolveImage(vigra::srcImageRange(mp_), vigra::destImage(mp_), vigra::kernel2d(laplace2d));
+        //vigra::mexicanHat2D(vigra::srcImageRange(mp_), vigra::destImage(mp_), (double) scalemz, (double) scalert );
+        //vigra::laplacianOfGaussian(vigra::srcImageRange(mp_), vigra::destImage(mp_), scalemz );
       }
 
       /// square map intensities
@@ -77,11 +98,8 @@ namespace ralab{
                             double factor = 1. // size of structuring element resolution * factor
           )
       {
-        std::cout << "mzscale: " << mzscale << " rtscale: " << rtscale
-                  << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth
-                  <<  " factor : " << factor << std::endl;
         sqrt(mp_); // put it on nicer scale
-        filterGauss(mp_,mzscale,rtscale);
+        /*filterGauss(mp_,mzscale,rtscale);
         if( rtpixelwidth > 0 ){
           ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfRT =
               ralab::base::filter::scanfilter::getFilterTOPHAT(
@@ -97,14 +115,13 @@ namespace ralab{
                 ,factor
                 );
           filterMZ(mp_,sfpfMZ);
-        }
+        }*/
 
         //in addition filter after background removal
-        filterGauss( mp_ , mzscale/2. , rtscale/2. );
-        sq(mp_);
+        filterMexicanHat( mp_ , mzscale , rtscale );
+        //sq(mp_);
         //mp_.updateImageMax();
       }
-
 
 
       /// applies gaussian smoothing, background subtraction and gaussian smoothing after
@@ -141,7 +158,7 @@ namespace ralab{
         }
 
         //in addition filter after background removal
-        filterGauss( mp_ , mzscale/2. , rtscale/2. );
+        filterMexicanHat( mp_ , mzscale/2. , rtscale/2. );
         sq(mp_);
         //mp_.updateImageMax();
       }

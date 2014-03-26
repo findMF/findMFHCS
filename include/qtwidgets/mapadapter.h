@@ -9,7 +9,7 @@
 
 #include <vigra/multi_array.hxx>
 #include <vigra/inspectimage.hxx>
-
+#include <boost/math/special_functions/asinh.hpp>
 
 #include "findmf/datastruct/lcmsimage.h"
 
@@ -21,6 +21,7 @@ namespace ralab{
     virtual std::size_t getRTsize() = 0;
     virtual float get(std::size_t px, std::size_t py) = 0;
     virtual float getMaxelem() = 0;
+    virtual float getMinelem() = 0;
   };
 
   /**
@@ -32,6 +33,7 @@ namespace ralab{
     typedef typename DATA::difference_type difftype;
     DATA data_;
     float max_;
+    float min_;
 
 
     AbstractMultiArrayVis(DATA & data){
@@ -40,6 +42,7 @@ namespace ralab{
       vigra::FindMinMax<typename DATA::value_type> minmax;   // functor to find range
       inspectImage(srcImageRange(data), minmax); // find original range
       max_ = minmax.max;
+      min_ = minmax.min;
     }
 
     virtual std::size_t getMZsize()override{
@@ -55,11 +58,10 @@ namespace ralab{
 
     //template methods
     virtual float getMaxelem() override = 0;
+    virtual float getMinelem() override = 0;
   };
 
-  /**
-    used to visualize segementation.
-  */
+  /// used to visualize segementation.
   template<typename T>
   struct MultiArrayVisSegments : public AbstractMultiArrayVis<T>{
 
@@ -95,10 +97,36 @@ namespace ralab{
     virtual float getMaxelem()override{
       return Base::max_;
     }
+
+    virtual float getMinelem() override{
+      return Base::min_;
+    }
   };
 
 
-  // square root visualization of image.
+
+  /// arcus sinus hyperbolicus visualization of image.
+  template<typename T>
+  struct MultiArrayVisAsinh : AbstractMultiArrayVis<T>{
+    typedef  AbstractMultiArrayVis<T> Base;
+
+    MultiArrayVisAsinh(typename Base::DATA & data):Base(data){
+    }
+
+    virtual float get(std::size_t px, std::size_t py)override{
+      float x = Base::data_[typename Base::difftype(px,py)];
+      return x;
+    }
+
+    virtual float getMaxelem()override{
+      return boost::math::asinh(Base::max_);
+    }
+    virtual float getMinelem()override{
+      return boost::math::asinh(Base::min_);
+    }
+  };
+
+  /// square root visualization of image.
   template<typename T>
   struct MultiArrayVisSquare : AbstractMultiArrayVis<T>{
     typedef  AbstractMultiArrayVis<T> Base;
@@ -114,11 +142,12 @@ namespace ralab{
     virtual float getMaxelem()override{
       return Base::max_*Base::max_;
     }
+    virtual float getMinelem()override{
+      return Base::min_*Base::min_;
+    }
   };
 
-  /**
-
-  */
+  ///
   template<typename T>
   struct MultiArrayVisLog : AbstractMultiArrayVis<T>{
     typedef  AbstractMultiArrayVis<T> Base;
@@ -130,6 +159,10 @@ namespace ralab{
 
     virtual float getMaxelem() override {
       return log(Base::max_+1.);
+    }
+
+    virtual float getMinelem() override {
+      return log(Base::min_+1.);
     }
   };
 

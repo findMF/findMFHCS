@@ -142,8 +142,6 @@ void MandelbrotWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void MandelbrotWidget::updatePixmap(const QImage &image, double scaleFactor)
 {
-
-
   if (!lastDragPos.isNull())
     return;
 
@@ -160,6 +158,7 @@ void MandelbrotWidget::zoom(double zoomFactor)
   update();
   //thread.render(centerX_, centerY_, curScale_, size());
 }
+
 void MandelbrotWidget::coors(int xcoor, int ycoor){
   if (xcoor != centerX_ && ycoor != centerY_) {
       centerX_ = xcoor;// * curScale_;
@@ -177,5 +176,4 @@ void MandelbrotWidget::scroll(int deltaX, int deltaY)
   //update();
   //thread.render(centerX_, centerY_, curScale_, size());
   coors(centerX_ + deltaX , centerY_ + deltaY);
-
 }

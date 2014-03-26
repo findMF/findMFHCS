@@ -18,7 +18,7 @@ namespace ralab
   {
     namespace datastruct
     {
-      /** */
+      /// represents an 2D feature - practically an data transfer object (DTO)
       struct Feature2D{
         typedef float value_type;
 
