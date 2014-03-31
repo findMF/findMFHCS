@@ -85,12 +85,11 @@ namespace ralab{
       typedef vigra::MultiArray< 2 , float > Gradient;
 
     protected:
-
       Labels labels_;
       int backgroundLabel_;
 
-
     public:
+      virtual ~FeatureFinder(){}
 
       /// access to label image
       Labels & getLabels(){
@@ -103,11 +102,21 @@ namespace ralab{
       }
 
     private:
+      /// private abstract findFeats
+      virtual void findFeat(Gradient & data, //[inout]
+                            float threshold
+                            ) = 0;
+    };
 
+
+    ///
+    class FeatureFinderLocalMax : public  FeatureFinder{
       //method to find features
+
+    private:
       void findFeat(Gradient & data, //[inout]
                     float threshold
-          ){
+                    ){
         using namespace vigra;
         Gradient & gradient_ = data;//you work with the data
         vigra::FindMinMax<Gradient::value_type> minmax;   // functor to find range
@@ -115,11 +124,11 @@ namespace ralab{
         //LOG(INFO)<< " >>> attempt reshape of labels <<< ";
         labels_.reshape(gradient_.shape());
 
-        ///
+        // flip image - because seededregiongrowin expects local minima
+        // just flip the image so you can run seeded region growing.
         transformImage( srcImageRange(gradient_) , destImage(gradient_),
-                        ImageTransformatorFlip<float>( threshold , minmax.max )
+                        ImageTransformatorFlip<float>( 0. , minmax.max )
                         );
-
         vigra::localMinima(srcImageRange(gradient_), destImage(labels_),
                            vigra::LocalMinmaxOptions().neighborhood(4).allowAtBorder());
         int max_region_label = labelImageWithBackground(srcImageRange(labels_), destImage(labels_), false, 0);
@@ -127,11 +136,7 @@ namespace ralab{
         // create a statistics functor for region growing
         vigra::ArrayOfRegionStatistics< vigra::SeedRgDirectValueFunctor<float> > gradstat( max_region_label ) ;
 
-        // perform region growing, starting from the minima of the gradient magnitude;
-        // as the feature (first input) image contains the gradient magnitude,
-        // this calculates the catchment basin of each minimum
-        // TODO look into seeded region growing how to fix issue of not split features.
-        // TODO test with
+
         seededRegionGrowing(srcImageRange(gradient_), srcImage(labels_),
                             destImage(labels_),
                             gradstat,
@@ -141,13 +146,54 @@ namespace ralab{
                             static_cast<double>(minmax.max - (threshold + 0.001))
                             );
 
+        // flip the image back.
         transformImage( srcImageRange(gradient_) , destImage(gradient_),
-                        ImageTransformatorFlipBack<float>(  minmax.max , threshold )
+                        ImageTransformatorFlipBack<float>(  minmax.max , 0. )
                         );
-      }
-
-
+      }//end
     };
+
+
+    //flip back image
+    class FeatureFinderMexhat : public FeatureFinder{
+      //method to find features
+      void findFeat(Gradient & data, //[inout]
+                    float threshold
+                    ) override {
+        using namespace vigra;
+        Gradient & gradient_ = data;//you work with the data
+        vigra::FindMinMax<Gradient::value_type> minmax;   // functor to find range
+        inspectImage(srcImageRange(gradient_), minmax); // find original range
+        //LOG(INFO)<< " >>> attempt reshape of labels <<< ";
+        labels_.reshape(gradient_.shape());
+
+        vigra::localMaxima( srcImageRange(gradient_), destImage(labels_),
+                            vigra::LocalMinmaxOptions().neighborhood(4).allowAtBorder().threshold(threshold)
+                            );
+        int max_region_label = labelImageWithBackground(srcImageRange(labels_), destImage(labels_), false, 0 );
+
+        transformImage( srcImageRange(gradient_) , destImage(gradient_), boost::bind(std::multiplies<float>(), _1, -1.));
+
+        // create a statistics functor for region growing
+        vigra::ArrayOfRegionStatistics< vigra::SeedRgDirectValueFunctor<float> > gradstat( max_region_label ) ;
+
+        seededRegionGrowing(srcImageRange(gradient_), srcImage(labels_),
+                            destImage(labels_),
+                            gradstat,
+                            //SRGType(StopAtThreshold | KeepContours),
+                            SRGType(StopAtThreshold),// | KeepContours),
+                            FourNeighborCode(),
+                            static_cast<double>(minmax.max - (threshold + 0.001))
+                            );
+
+        //TODO check if you really need it?
+        // flip the image back
+        transformImage( srcImageRange(gradient_) , destImage(gradient_), boost::bind(std::multiplies<float>(), _1, -1.));
+      }
+    };
+
+
+
   }
 }
 

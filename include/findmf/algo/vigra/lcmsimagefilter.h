@@ -7,8 +7,9 @@
 #define LCMSIMAGEFILTER_H
 
 #include "findmf/datastruct/lcmsimage.h"
-#include "findmf/algo/vigra/mexhat2DNaive.h"
+#include "findmf/algo/vigra/differenceOfGaussians.h"
 #include "base/filter/scanfilter/getfitlertophat.h"
+
 #include <vigra/stdimagefunctions.hxx>
 #include <vigra/convolution.hxx>
 
@@ -20,7 +21,7 @@ namespace ralab{
     /// tophat morphological filter background subraction
     ///
     class LCMSImageFilter{
-    private:
+    protected:
       std::vector<float> signal_; //worker variable
 
       /// gaussian smoot image
@@ -30,25 +31,15 @@ namespace ralab{
         vigra::gaussianSmoothing(vigra::srcImageRange(mp_), vigra::destImage(mp_), scalemz , scalert);
       }
 
-      /// mexican hat smooth image
-      static void filterMexicanHat( datastruct::LCMSImage::FloatMap::Map & mp_,
-                                    float scalemz = 1. , float scalert = 1.){
-        //using namespace vigra::functor;
 
-        gaussianSmoothing(vigra::srcImageRange(mp_), vigra::destImage(mp_), scalemz, scalert);
-        // define horizontal Sobel filter
-        vigra::Kernel2D<float> laplace2d;
-        // upper left and lower right
-
-        laplace2d.initExplicitly(vigra::Diff2D(-1,-1), vigra::Diff2D(1,1)) =
-            0.  ,  -1., 0.,
-            -1. ,  4., -1.,
-            0.  , -1., -0.;
-        laplace2d.setBorderTreatment(vigra::BORDER_TREATMENT_REFLECT);
-        //vigra::convolveImage(vigra::srcImageRange(mp_), vigra::destImage(mp_), vigra::kernel2d(laplace2d));
-        //vigra::mexicanHat2D(vigra::srcImageRange(mp_), vigra::destImage(mp_), (double) scalemz, (double) scalert );
-        //vigra::laplacianOfGaussian(vigra::srcImageRange(mp_), vigra::destImage(mp_), scalemz );
+      /// mexican hat smooth image using difference of gaussians
+      static void diffOfGaussians( datastruct::LCMSImage::FloatMap::Map & mp_,
+                                   float scalemz = 1.,
+                                   float scalert = 1. )
+      {
+        differenceOfGaussian( vigra::srcImageRange(mp_), vigra::destImage(mp_), scalemz, scalert);
       }
+
 
       /// square map intensities
       static void sq(datastruct::LCMSImage::FloatMap::Map & mp_){
@@ -89,24 +80,53 @@ namespace ralab{
 
     public:
 
-      /// applies mexican hat wavelet filtering to Map
-      void filterMapMexHat( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
-                            uint32_t mzpixelwidth, //!< in pixel
-                            uint32_t rtpixelwidth, //!< in pixel
-                            double mzscale=1., //!< scale
-                            double rtscale=1.,
-                            double factor = 1. // size of structuring element resolution * factor
+      virtual void filter(datastruct::LCMSImage::FloatMap::Map & mp_, //!<
+                          uint32_t mzpixelwidth, //!< in pixel
+                          uint32_t rtpixelwidth, //!< in pixel
+                          double mzscale=1., //!< scale
+                          double rtscale=1.,
+                          double factor = 1. //!< just in case some implementation needs
           )
       {
+        this->filt(mp_,
+                   mzpixelwidth,
+                   rtpixelwidth,
+                   mzscale,
+                   rtscale,
+                   factor);
+      }
+
+    private:
+      virtual void filt(datastruct::LCMSImage::FloatMap::Map & mp_, //!<
+                        uint32_t mzpixelwidth, //!< in pixel
+                        uint32_t rtpixelwidth, //!< in pixel
+                        double mzscale=1., //!< scale
+                        double rtscale=1.,
+                        double factor = 1. // size of structuring element resolution * factor);
+          ) = 0;
+
+    };
+
+    class LCMSImageFilterMexhat : LCMSImageFilter{
+
+      /// applies mexican hat wavelet filtering to Map
+      void filt( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
+                 uint32_t mzpixelwidth, //!< in pixel
+                 uint32_t rtpixelwidth, //!< in pixel
+                 double mzscale=1., //!< scale
+                 double rtscale=1.,
+                 double factor = 1. // size of structuring element resolution * factor
+          ) override
+      {
         sqrt(mp_); // put it on nicer scale
-        /*filterGauss(mp_,mzscale,rtscale);
+        filterGauss(mp_,mzscale,rtscale);
         if( rtpixelwidth > 0 ){
           ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfRT =
               ralab::base::filter::scanfilter::getFilterTOPHAT(
                 rtpixelwidth
                 ,factor
                 );
-          filterRT(mp_,sfpfRT);
+          filterRT(mp_, sfpfRT);
         }
         if( mzpixelwidth > 0 ){
           ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfMZ =
@@ -115,25 +135,27 @@ namespace ralab{
                 ,factor
                 );
           filterMZ(mp_,sfpfMZ);
-        }*/
+        }
 
         //in addition filter after background removal
-        filterMexicanHat( mp_ , mzscale , rtscale );
+        diffOfGaussians( mp_ , mzscale , rtscale );
         //sq(mp_);
-        //mp_.updateImageMax();
+
       }
+    };
 
 
+    class LCMSImageFilterGauss : LCMSImageFilter{
       /// applies gaussian smoothing, background subtraction and gaussian smoothing after
       /// background subtraction with a kernel mzscale / 2. rtscale /2. to remove
       /// artefacts due to background subtraction
-      void filterMap( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
+      void filt( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
                       uint32_t mzpixelwidth, //!< in pixel
                       uint32_t rtpixelwidth, //!< in pixel
                       double mzscale = 1., //!< scale
                       double rtscale = 1.,
                       double factor = 1. // size of structuring element resolution * factor
-          )
+          ) override
       {
         std::cout << "mzscale: " << mzscale << " rtscale: " << rtscale
                   << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth
@@ -157,10 +179,10 @@ namespace ralab{
           filterMZ(mp_,sfpfMZ);
         }
 
-        //in addition filter after background removal
-        filterMexicanHat( mp_ , mzscale/2. , rtscale/2. );
+        //to remove background subtraction artifacts
+        filterGauss( mp_ , mzscale/2. , rtscale/2. );
         sq(mp_);
-        //mp_.updateImageMax();
+        ///mp_.updateImageMax();
       }
     };
 

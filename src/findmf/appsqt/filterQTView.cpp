@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
   boost::filesystem::path p1,p2;
 
   {
-    //LOG(INFO)  << "i::::" << i << std::endl;
+    // LOG(INFO)  << "i::::" << i << std::endl;
     p1 = ralab::findmf::createOutputs(aparam.infile,"");
     p2 = ralab::findmf::createOutputs(aparam.infile,"filtered");
 
@@ -40,20 +40,22 @@ int main(int argc, char *argv[])
     ralab::findmf::LCMSImageReader sm(aparam.infile, ppm, aparam.rt2sum_ );
     ralab::findmf::datastruct::LCMSImage mp;
     sm.getMap( 0 , aparam.minmass, aparam.maxmass, mp);
-    //LOG(INFO) << " " << mp.getMZsize() << " " << mp.getRTsize();
+    // LOG(INFO) << " " << mp.getMZsize() << " " << mp.getRTsize();
 
     ralab::findmf::datastruct::LCMSImage mp2( mp );
     {
       ralab::findmf::LCMSImageFilter imgf;
-      //imgf.filterMap( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
+      // imgf.filterMap( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
 
       imgf.filterMapMexHat( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
       mp2.getImageMap().updateImageRange();
+      std::cout << mp2.getImageMap().getImageMin() << std::endl;
+      //imgf.filterMap();
     }
 
-    /*
-    ralab::findmf::FeatureFinder ff;
-    ff.findFeature( mp2.getImageMap().getMap(), aparam.minintensity );
+
+    ralab::findmf::FeatureFinderMexhat ff;
+    ff.findFeature( mp2.getImageMap().getMap() , aparam.minintensity );
     ralab::findmf::datastruct::FeaturesMap map;
     map.setMapDescription(mp2.getMapDescription());
     ralab::findmf::ComputeFeatureStatistics cfs;
@@ -66,8 +68,9 @@ int main(int argc, char *argv[])
 
     ralab::MultiArrayVisSegments<int> mavL( ff.getLabels() );
     //write filtered data into mzML file
+
     sm.write( p2.string() , mp2 );
-    */
+
     if(1){
       QApplication app(argc, argv);
       ralab::TwoPaneledImageWidget tpi;
@@ -77,8 +80,8 @@ int main(int argc, char *argv[])
       ralab::MultiArrayVisLog<float> adapt0( mp.getImageMap().getMap() );
 
       tpi.setTopMap(&adapt1);
-      tpi.setBottomMap(&adapt0);
-      //tpi.setBottomMap(&mavL);
+      //tpi.setBottomMap(&adapt0);
+      tpi.setBottomMap(&mavL);
 
       tpi.show();
       res = app.exec();

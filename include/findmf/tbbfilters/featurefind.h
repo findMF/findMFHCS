@@ -27,7 +27,7 @@ namespace ralab{
 
         boost::timer time;
         time.restart();
-        ralab::findmf::FeatureFinder ff;
+        ralab::findmf::FeatureFinderLocalMax  ff;
         ralab::findmf::datastruct::FeaturesMap * map = new ralab::findmf::datastruct::FeaturesMap();
         map->setMapDescription(mp->getMapDescription());
 

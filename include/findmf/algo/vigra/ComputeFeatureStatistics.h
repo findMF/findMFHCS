@@ -8,6 +8,8 @@ namespace ralab{
   namespace findmf{
     namespace vigac = vigra::acc;
 
+
+    /// compute feature statistics
     struct ComputeFeatureStatistics{
       typedef vigra::MultiArray< 2 , int > Labels;
       typedef vigra::MultiArray< 2 , float > Gradient;
@@ -30,8 +32,8 @@ namespace ralab{
 
     private:
       //method to extract the features
-      void extractFeatureChain(const Gradient & data,
-                               const Labels & labels,
+      void extractFeatureChain(const Gradient & data, //!< the data
+                               const Labels & labels, //!< the labels
                                ralab::findmf::MyAccumulatorChain & acummulatorChain)
       {
         //Gradient weights;

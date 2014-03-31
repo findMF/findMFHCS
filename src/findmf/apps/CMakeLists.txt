@@ -13,6 +13,9 @@ TARGET_LINK_LIBRARIES(filterSingleMap ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${
 ADD_EXECUTABLE(findMF findMF.cpp)
 TARGET_LINK_LIBRARIES(findMF ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}   tbb )
 
+ADD_EXECUTABLE(findMFMH findMFMH.cpp)
+TARGET_LINK_LIBRARIES(findMFMH ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}   tbb )
+
 ADD_EXECUTABLE(PeakPicker PeakPicker.cpp)
 TARGET_LINK_LIBRARIES(PeakPicker ${Boost_LIBRARIES} pwiz  )
 

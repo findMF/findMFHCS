@@ -45,71 +45,74 @@
 #include "vigra/multi_shape.hxx"
 
 namespace vigra {
-/********************************************************/
-/*                                                      */
-/*                 laplacianOfGaussian                  */
-/*                                                      */
-/********************************************************/
+  /********************************************************/
+  /*                                                      */
+  /*                 differenceOfGaussian                  */
+  /*                                                      */
+  /********************************************************/
 
-doxygen_overloaded_function(template <...> void laplacianOfGaussian)
+  doxygen_overloaded_function(template <...> void laplacianOfGaussian)
 
-
-
-
-
-template <class SrcIterator, class SrcAccessor,
-          class DestIterator, class DestAccessor>
-void laplacianOfGaussian(SrcIterator supperleft,
-                        SrcIterator slowerright, SrcAccessor sa,
-                        DestIterator dupperleft, DestAccessor da,
-                        double scale1, double scale2 = 1.6*)
-{
+  template <class SrcIterator, class SrcAccessor,
+  class DestIterator, class DestAccessor>
+  void differenceOfGaussian(SrcIterator supperleft,
+                            SrcIterator slowerright, SrcAccessor sa,
+                            DestIterator dupperleft, DestAccessor da,
+                            double scale1, double scale2, double R12 = 1.6)
+  {
     typedef typename
-        NumericTraits<typename SrcAccessor::value_type>::RealPromote
+    NumericTraits<typename SrcAccessor::value_type>::RealPromote
         TmpType;
-    BasicImage<TmpType> tmp(slowerright - supperleft, SkipInitialization),
-                        tmpx(slowerright - supperleft, SkipInitialization),
-                        tmpy(slowerright - supperleft, SkipInitialization);
+    BasicImage<TmpType> tmpBig(slowerright - supperleft, SkipInitialization),
+        tmpSmall(slowerright - supperleft, SkipInitialization);
 
-    Kernel1D<double> smooth, deriv;
-    smooth.initGaussian(scale);
-    deriv.initGaussianDerivative(scale, 2);
+    Kernel1D<double> smooth11, smooth12, smooth21, smooth22;
+    smooth11.initGaussian(scale1 * R12);
+    smooth12.initGaussian(scale1);
+    smooth21.initGaussian(scale2 * R12);
+    smooth22.initGaussian(scale2);
 
+
+    //smooth with larger kernel
     separableConvolveX(srcIterRange(supperleft, slowerright, sa),
-                       destImage(tmp), kernel1d(deriv));
-    separableConvolveY(srcImageRange(tmp),
-                       destImage(tmpx), kernel1d(smooth));
+                       destImage(tmpBig), kernel1d(smooth11));
+    separableConvolveY(srcImageRange(tmpBig),
+                       destImage(tmpBig), kernel1d(smooth21));
+
+    //smooth with smaller kernel
     separableConvolveX(srcIterRange(supperleft, slowerright, sa),
-                       destImage(tmp), kernel1d(smooth));
-    separableConvolveY(srcImageRange(tmp),
-                       destImage(tmpy), kernel1d(deriv));
-    combineTwoImages(srcImageRange(tmpx), srcImage(tmpy),
-                       destIter(dupperleft, da), std::plus<TmpType>());
-}
+                       destImage(tmpSmall), kernel1d(smooth12));
+    separableConvolveY(srcImageRange(tmpSmall),
+                       destImage(tmpSmall), kernel1d(smooth22));
 
-template <class SrcIterator, class SrcAccessor,
-          class DestIterator, class DestAccessor>
-inline void
-laplacianOfGaussian(triple<SrcIterator, SrcIterator, SrcAccessor> src,
-                    pair<DestIterator, DestAccessor> dest,
-                    double scale)
-{
-    laplacianOfGaussian(src.first, src.second, src.third,
-                        dest.first, dest.second, scale);
-}
+    combineTwoImages(srcImageRange(tmpSmall), srcImage(tmpBig),
+                     destIter(dupperleft, da), std::minus<TmpType>());
+  }
 
-template <class T1, class S1,
-          class T2, class S2>
-inline void
-laplacianOfGaussian(MultiArrayView<2, T1, S1> const & src,
-                    MultiArrayView<2, T2, S2> dest,
-                    double scale)
-{
+  template <class SrcIterator, class SrcAccessor,
+            class DestIterator, class DestAccessor>
+  inline void
+  differenceOfGaussian(triple<SrcIterator, SrcIterator, SrcAccessor> src,
+                       pair<DestIterator, DestAccessor> dest,
+                       double scale1, double scale2, double R12 = 1.6)
+  {
+    differenceOfGaussian(src.first, src.second, src.third,
+                         dest.first, dest.second, scale1, scale2);
+  }
+
+  template <class T1, class S1,
+            class T2, class S2>
+  inline void
+  differenceOfGaussian(MultiArrayView<2, T1, S1> const & src,
+                       MultiArrayView<2, T2, S2> dest,
+                       double scale1, double scale2 ,double R12 = 1.6)
+  {
     vigra_precondition(src.shape() == dest.shape(),
-        "laplacianOfGaussian(): shape mismatch between input and output.");
-    laplacianOfGaussian(srcImageRange(src),
-                        destImage(dest), scale);
-}
+                       "laplacianOfGaussian(): shape mismatch between input and output.");
+    differenceOfGaussian(srcImageRange(src),
+                         destImage(dest), scale1, scale2);
+  }
 
+}//vigra
 
 #endif // DIFFERENCEOFGAUSSIANS_H
