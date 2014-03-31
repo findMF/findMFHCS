@@ -54,8 +54,8 @@ namespace ralab
       }
 
       try{
-        ralab::findmf::LCMSImageFilter imgf;
-        imgf.filterMap(mp.getImageMap().getMap(), anap_.mzpixelwidth , anap_.rtpixelwidth, anap_.mzscale , anap_.rtscale );
+        ralab::findmf::LCMSImageFilterGauss imgf;
+        imgf.filter(mp.getImageMap().getMap(), anap_.mzpixelwidth , anap_.rtpixelwidth, anap_.mzscale , anap_.rtscale );
         mp.getImageMap().updateImageRange();
         mp.getImageMap().write( anap_.outdir, anap_.filestem_ );
 

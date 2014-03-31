@@ -44,10 +44,10 @@ int main(int argc, char *argv[])
 
     ralab::findmf::datastruct::LCMSImage mp2( mp );
     {
-      ralab::findmf::LCMSImageFilter imgf;
+      ralab::findmf::LCMSImageFilterMexhat imgf;
       // imgf.filterMap( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
 
-      imgf.filterMapMexHat( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
+      imgf.filter( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
       mp2.getImageMap().updateImageRange();
       std::cout << mp2.getImageMap().getImageMin() << std::endl;
       //imgf.filterMap();

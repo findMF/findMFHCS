@@ -102,12 +102,53 @@ namespace ralab{
                         uint32_t rtpixelwidth, //!< in pixel
                         double mzscale=1., //!< scale
                         double rtscale=1.,
-                        double factor = 1. // size of structuring element resolution * factor);
+                        double factor = 1. //!< size of structuring element resolution * factor);
           ) = 0;
 
     };
 
-    class LCMSImageFilterMexhat : LCMSImageFilter{
+    class LCMSImageFilterGauss : public LCMSImageFilter{
+      /// applies gaussian smoothing, background subtraction and gaussian smoothing after
+      /// background subtraction with a kernel mzscale / 2. rtscale /2. to remove
+      /// artefacts due to background subtraction
+      void filt( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
+                      uint32_t mzpixelwidth, //!< in pixel
+                      uint32_t rtpixelwidth, //!< in pixel
+                      double mzscale = 1., //!< scale
+                      double rtscale = 1.,
+                      double factor = 1.
+          ) override
+      {
+        std::cout << "mzscale: " << mzscale << " rtscale: " << rtscale
+                  << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth
+                  <<  " factor : " << factor << std::endl;
+        sqrt(mp_); // put it on nicer scale
+        filterGauss(mp_,mzscale,rtscale);
+        if( rtpixelwidth > 0 ){
+          ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfRT =
+              ralab::base::filter::scanfilter::getFilterTOPHAT(
+                rtpixelwidth
+                ,factor
+                );
+          filterRT(mp_,sfpfRT);
+        }
+        if( mzpixelwidth > 0 ){
+          ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfMZ =
+              ralab::base::filter::scanfilter::getFilterTOPHAT(
+                mzpixelwidth
+                ,factor
+                );
+          filterMZ(mp_,sfpfMZ);
+        }
+
+        //to remove background subtraction artifacts
+        filterGauss( mp_ , mzscale/2. , rtscale/2. );
+        sq(mp_);
+      }
+    };
+
+
+    class LCMSImageFilterMexhat : public LCMSImageFilter{
 
       /// applies mexican hat wavelet filtering to Map
       void filt( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
@@ -115,7 +156,7 @@ namespace ralab{
                  uint32_t rtpixelwidth, //!< in pixel
                  double mzscale=1., //!< scale
                  double rtscale=1.,
-                 double factor = 1. // size of structuring element resolution * factor
+                 double factor = 1.
           ) override
       {
         sqrt(mp_); // put it on nicer scale
@@ -145,46 +186,6 @@ namespace ralab{
     };
 
 
-    class LCMSImageFilterGauss : LCMSImageFilter{
-      /// applies gaussian smoothing, background subtraction and gaussian smoothing after
-      /// background subtraction with a kernel mzscale / 2. rtscale /2. to remove
-      /// artefacts due to background subtraction
-      void filt( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
-                      uint32_t mzpixelwidth, //!< in pixel
-                      uint32_t rtpixelwidth, //!< in pixel
-                      double mzscale = 1., //!< scale
-                      double rtscale = 1.,
-                      double factor = 1. // size of structuring element resolution * factor
-          ) override
-      {
-        std::cout << "mzscale: " << mzscale << " rtscale: " << rtscale
-                  << " mzw: " << mzpixelwidth << " rt: " << rtpixelwidth
-                  <<  " factor : " << factor << std::endl;
-        sqrt(mp_); // put it on nicer scale
-        filterGauss(mp_,mzscale,rtscale);
-        if( rtpixelwidth > 0 ){
-          ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfRT =
-              ralab::base::filter::scanfilter::getFilterTOPHAT(
-                rtpixelwidth
-                ,factor
-                );
-          filterRT(mp_,sfpfRT);
-        }
-        if( mzpixelwidth > 0 ){
-          ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfMZ =
-              ralab::base::filter::scanfilter::getFilterTOPHAT(
-                mzpixelwidth
-                ,factor
-                );
-          filterMZ(mp_,sfpfMZ);
-        }
-
-        //to remove background subtraction artifacts
-        filterGauss( mp_ , mzscale/2. , rtscale/2. );
-        sq(mp_);
-        ///mp_.updateImageMax();
-      }
-    };
 
 
   }
