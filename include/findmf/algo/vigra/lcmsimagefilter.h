@@ -83,8 +83,8 @@ namespace ralab{
       virtual void filter(datastruct::LCMSImage::FloatMap::Map & mp_, //!<
                           uint32_t mzpixelwidth, //!< in pixel
                           uint32_t rtpixelwidth, //!< in pixel
-                          double mzscale=1., //!< scale
-                          double rtscale=1.,
+                          double mzscale= 1., //!< scale
+                          double rtscale= 1.,
                           double factor = 1. //!< just in case some implementation needs
           )
       {
@@ -112,11 +112,11 @@ namespace ralab{
       /// background subtraction with a kernel mzscale / 2. rtscale /2. to remove
       /// artefacts due to background subtraction
       void filt( datastruct::LCMSImage::FloatMap::Map & mp_, //!<
-                      uint32_t mzpixelwidth, //!< in pixel
-                      uint32_t rtpixelwidth, //!< in pixel
-                      double mzscale = 1., //!< scale
-                      double rtscale = 1.,
-                      double factor = 1.
+                 uint32_t mzpixelwidth, //!< in pixel
+                 uint32_t rtpixelwidth, //!< in pixel
+                 double mzscale = 1., //!< scale
+                 double rtscale = 1.,
+                 double factor = 1.
           ) override
       {
         std::cout << "mzscale: " << mzscale << " rtscale: " << rtscale
@@ -161,6 +161,7 @@ namespace ralab{
       {
         sqrt(mp_); // put it on nicer scale
         filterGauss(mp_,mzscale,rtscale);
+
         if( rtpixelwidth > 0 ){
           ralab::base::filter::scanfilter::IScanFilterFloatPtr sfpfRT =
               ralab::base::filter::scanfilter::getFilterTOPHAT(
@@ -177,6 +178,7 @@ namespace ralab{
                 );
           filterMZ(mp_,sfpfMZ);
         }
+
 
         //in addition filter after background removal
         diffOfGaussians( mp_ , mzscale , rtscale );

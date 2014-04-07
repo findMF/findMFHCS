@@ -39,7 +39,6 @@ namespace ralab{
         //Gradient weights;
         //weights.reshape(Gradient::difference_type(data.size(0),data.size(1)));
         //vigra::copyMultiArray(vigra::srcMultiArrayRange(data),vigra::destMultiArrayRange(weights));
-
         ralab::findmf::Iterator start = createCoupledIterator(data, labels);//, data);
         ralab::findmf::Iterator end = start.getEndIterator();
 
@@ -68,7 +67,7 @@ namespace ralab{
       }
 
 
-      //copy statistics generated in accumulator chain into features
+      /// copy statistics generated in accumulator chain into features
       static void createFeaturesFromStatistics( datastruct::FeaturesMap & features ,
                                                 findmf::MyAccumulatorChain & chain
                                                 )
@@ -119,7 +118,7 @@ namespace ralab{
       }
 
 
-      //create intensity projections in RT and MZ
+      /// create intensity projections in RT and MZ
       void createIntensityProjections( const Gradient & data , const Labels & labels, datastruct::FeaturesMap & mf )
       {
         typedef vigra::CoupledIteratorType<2, float, int>::type Iterator;
@@ -215,12 +214,12 @@ namespace ralab{
         return stream;
       }
     public:
-      /*prints feature accumulator chain */
+      /// prints feature accumulator chain
       std::ostream & printFeaturesAcc(std::ostream & statsfile2){
         return this->printFAcc(statsfile2,  mac_ );
       }
 
-      // Print the accumulator chain
+      /// Print the accumulator chain
       void writeFeatures(const std::string & output_directory,
                          const std::string & outfileprefix)
       {

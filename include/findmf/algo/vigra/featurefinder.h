@@ -157,8 +157,8 @@ namespace ralab{
     //flip back image
     class FeatureFinderMexhat : public FeatureFinder{
       //method to find features
-      void findFeat(Gradient & data, //[inout]
-                    float threshold
+      void findFeat(Gradient & data, //!< [inout]
+                    float threshold = 0. //!< threshold for local maxima search in 2. derivative.
                     ) override {
         using namespace vigra;
         Gradient & gradient_ = data;//you work with the data
@@ -172,6 +172,7 @@ namespace ralab{
                             );
         int max_region_label = labelImageWithBackground(srcImageRange(labels_), destImage(labels_), false, 0 );
 
+        // flip image since seeded region requires minima
         transformImage( srcImageRange(gradient_) , destImage(gradient_), boost::bind(std::multiplies<float>(), _1, -1.));
 
         // create a statistics functor for region growing
@@ -179,14 +180,15 @@ namespace ralab{
 
         seededRegionGrowing(srcImageRange(gradient_), srcImage(labels_),
                             destImage(labels_),
-                            gradstat,
+                            gradstat
                             //SRGType(StopAtThreshold | KeepContours),
-                            SRGType(StopAtThreshold),// | KeepContours),
+                            ,SRGType(StopAtThreshold),// | KeepContours),
                             FourNeighborCode(),
-                            static_cast<double>(minmax.max - (threshold + 0.001))
+                            0.001
+                            //,static_cast<double>(minmax.max - (threshold + 0.001))
                             );
 
-        //TODO check if you really need it?
+        //T ODO check if you really need it?
         // flip the image back
         transformImage( srcImageRange(gradient_) , destImage(gradient_), boost::bind(std::multiplies<float>(), _1, -1.));
       }
