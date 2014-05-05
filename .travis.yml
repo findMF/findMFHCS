@@ -7,10 +7,11 @@ before_install:
   - sudo apt-get install libboost-all-dev
   - sudo apt-get install qt-sdk
   - sudo apt-get install libtbb2
-  - sudo apt-get install libvigraimpex-dev
+  #- sudo apt-get install libvigraimpex-dev
   #- sudo add-apt-repository --yes ppa:boost-latest/ppa
   #- sudo apt-get install libpwiz-dev
 before_script:
   ./scripts/buildpwiz.sh
-script: cmake . && make && make test
-
+#script: cmake -DPwiz_INCLUDE_DIR=/home/travis/build/findMF/findMFHCS/pwiz/pwiz -DPwiz_LIBRARY=/home/travis/build/findMF/findMFHCS/pwiz/lib . && make && make test
+script: 
+   ./scripts/buildscript.sh
