@@ -2,7 +2,7 @@ language: cpp
 compiler:
   - gcc
   # - clang build errors on clang
-# Change this to your needs
+  # Change this to your needs
 before_install: 
   - sudo apt-get install libboost-all-dev
   - sudo apt-get install qt-sdk
