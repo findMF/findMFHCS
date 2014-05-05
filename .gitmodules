@@ -1,6 +1,3 @@
 [submodule "submodule/findMFIncludes"]
 	path = submodule/findMFIncludes
 	url = git@github.com:findMF/findMFInterfaces.git
-[submodule "submodule/findMFData"]
-	path = submodule/findMFData
-	url = git@github.com:findMF/findMFData.git
