@@ -1,11 +1,12 @@
-sudo git clone https://github.com/wolski/pwiz.git pwiz
+su -
+git clone https://github.com/wolski/pwiz.git pwiz
 cd pwiz
-sudo tar xf libpwiz_src_3_0_6002.tgz
+tar xf libpwiz_src_3_0_6002.tgz
 cd pwiz
 cd autotools
-sudo autoreconf --force --install
+autoreconf --force --install
 cd ..
-sudo ./autotools/configure --prefix=${pwd}
-sudo make
-sudo make install
+./autotools/configure --prefix=${pwd}
+make
+make install
 
