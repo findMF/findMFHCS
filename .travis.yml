@@ -11,6 +11,6 @@ before_install:
   #- sudo add-apt-repository --yes ppa:boost-latest/ppa
   #- sudo apt-get install libpwiz-dev
 before_script:
-   ./scripts/installpwiztrusty.sh
+  ./scripts/installpwizfromtrusty.sh
 script: cmake . && make && make test
 
