@@ -28,13 +28,12 @@ message(STATUS "inc ${inc}")
 set(vigralibs vigraimpex)
 
 
-
-FIND_PACKAGE(FindMFBase)
+FIND_PACKAGE(FindMFBase REQUIRED)
 if(FindMFBase_FOUND)
   message(STATUS "FindMF found" ${FindMFBase_INCLUDE_DIR})
   SET(inc ${inc} ${FindMFBase_INCLUDE_DIR})
 else(FindMFBase_FOUND)
-  message(STATUS " !!!!!!!!!!!!!!!! FindMFBase !!!!!!!!!!!!!!!! ")
+  message(FATAL_ERROR " !!!!!!!!!!!!!!!! FindMFBase !!!!!!!!!!!!!!!! ")
   return()
 endif(FindMFBase_FOUND)
 

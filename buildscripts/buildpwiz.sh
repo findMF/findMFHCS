@@ -10,4 +10,3 @@ cd ..
 sudo ./autotools/configure --prefix=${loc}/pwiz
 sudo make
 sudo make install
-

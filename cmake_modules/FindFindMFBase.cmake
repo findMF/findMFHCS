@@ -10,13 +10,12 @@ IF (FindMFBase_INCLUDE_DIR)
    SET(FindMFBase_FOUND TRUE)
 ENDIF (FindMFBase_INCLUDE_DIR)
 
+
 IF (FindMFBase_FOUND)
-   # show which CppUnit was found only if not quiet
    IF (NOT FindMFBase_FIND_QUIETLY)
       MESSAGE(STATUS "Found FindMFBase: ${FindMFBase_INCLUDE_DIR}")
    ENDIF (NOT FindMFBase_FIND_QUIETLY)
 ELSE (FindMFBase_FOUND)
-   # fatal error if CppUnit is required but not found
    IF (FindMFBase_FIND_REQUIRED)
       MESSAGE(FATAL_ERROR "Could not find FindMFBase please do specify the FindMFBase_INCLUDE_DIR variables using ccmake!")
    ENDIF (FindMFBase_FIND_REQUIRED)
