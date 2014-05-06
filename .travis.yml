@@ -6,7 +6,7 @@ compiler:
 before_install: 
   - sudo apt-get install libboost-all-dev
   - sudo apt-get install qt-sdk
-  - sudo apt-get install libtbb2
+  - sudo apt-get install libtbb2-dev
   - sudo apt-get install doxygen
   #- sudo apt-get install libvigraimpex-dev
   #- sudo add-apt-repository --yes ppa:boost-latest/ppa
