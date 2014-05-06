@@ -8,6 +8,6 @@ cd autotools
 sudo autoreconf --force --install
 cd ..
 sudo ./autotools/configure --prefix=${loc}/pwiz
-#sudo make
-#sudo make install
+sudo make
+sudo make install
 
