@@ -11,7 +11,7 @@ before_install:
   #- sudo apt-get install libvigraimpex-dev
   #- sudo add-apt-repository --yes ppa:boost-latest/ppa
   #- sudo apt-get install libpwiz-dev
-before_script:
+install:
   ./scripts/buildpwiz.sh
 #script: cmake -DPwiz_INCLUDE_DIR=/home/travis/build/findMF/findMFHCS/pwiz/pwiz -DPwiz_LIBRARY=/home/travis/build/findMF/findMFHCS/pwiz/lib . && make && make test
 script: 
