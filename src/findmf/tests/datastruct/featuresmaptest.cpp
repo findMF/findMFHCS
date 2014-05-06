@@ -8,7 +8,7 @@
 
 BOOST_AUTO_TEST_SUITE(FeatureMapTest)
 
-BOOST_AUTO_TEST_CASE( testdiff)
+BOOST_AUTO_TEST_CASE(testdiff)
 {
   BOOST_CHECK(true);
 }

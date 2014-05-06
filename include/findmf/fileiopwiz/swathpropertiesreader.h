@@ -82,6 +82,13 @@ namespace ralab{
                       {
                         double p1=0,p2=0;
                         pwiz::msdata::IsolationWindow isw = s.precursors[0].isolationWindow;
+                        // TODO replace with safer :
+                        // bool hasCVParam(CVID cvid) const;
+                        //
+                        // <cvParam cvRef="MS" accession="MS:1000827" name="isolation window target m/z" value="811.40999999999997" unitCvRef="MS" unitAccession="MS:1000040" unitName="m/z"/>
+                        // <cvParam cvRef="MS" accession="MS:1000828" name="isolation window lower offset" value="0.5" unitCvRef="MS" unitAccession="MS:1000040" unitName="m/z"/>
+                        // <cvParam cvRef="MS" accession="MS:1000829" name="isolation window upper offset" value="0.5" unitCvRef="MS" unitAccession="MS:1000040" unitName="m/z"/>
+
                         if(isw.cvParams.size() == 2){
                             p1 = boost::lexical_cast<double>(isw.cvParams[0].value);
                             p2 = boost::lexical_cast<double>(isw.cvParams[1].value);

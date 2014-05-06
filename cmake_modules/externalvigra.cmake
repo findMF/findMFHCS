@@ -15,6 +15,7 @@ ExternalProject_Add(
                -DWITH_OPENEXR=OFF
                -DWITH_VIGRANUMPY=OFF
                -DWITH_VALGRIND=OFF
+               -DVIGRA_STATIC_LIB=ON
                -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
     # Disable install step
     INSTALL_COMMAND "" # ${CMAKE_BUILD_TOOL} install

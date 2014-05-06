@@ -69,7 +69,7 @@ SET(inc ${inc} ${findMFHCS_SOURCE_DIR}/submodule/findMFInterfaces/include)
 #############################################################################
 file(GLOB Demo_HEADERS "sql/*.sql" "cmake_modules/*cmake" "include/*.h" "include/**/*.h"
  "include/**/**/*.h" "include/**/**/**/*.h" "src/**/*.h" "src/**/**/*.h" ".travis.yml"
-"submodule/findMFIncludes/include/**/**/*.h" "scripts/*.*" "buildscripts/*.*")
+"submodule/**/**/**/**/*.h" "scripts/*.*" "buildscripts/*.*")
 
 add_library(headers SHARED ${Demo_HEADERS} Dummy.cpp)
 
@@ -77,10 +77,10 @@ add_library(headers SHARED ${Demo_HEADERS} Dummy.cpp)
 # regression tests
 #############################################################################
 
-IF(ENABLE_TESTING)
-    INCLUDE(CTest)
-#    ENABLE_TESTING()
-ENDIF(ENABLE_TESTING)
+#IF(ENABLE_TESTING)
+INCLUDE(CTest)
+ENABLE_TESTING()
+#ENDIF(ENABLE_TESTING)
 
 #############################################################################
 # build: subdirectories
