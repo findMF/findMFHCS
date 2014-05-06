@@ -16,3 +16,11 @@ ENDIF()
 SET(WITH_QT ${WITH_QT}
     CACHE BOOL "Build with qt ?"
     FORCE)
+
+
+IF(NOT DEFINED WITH_QT)
+    SET(WITH_DOX "OFF")
+ENDIF()
+SET(WITH_DOX ${WITH_DOX}
+    CACHE BOOL "Build with doxygen ?"
+    FORCE)

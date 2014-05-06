@@ -77,7 +77,7 @@ add_library(headers SHARED ${Demo_HEADERS} Dummy.cpp)
 # regression tests
 #############################################################################
 
-IF (ENABLE_TESTING)
+IF(ENABLE_TESTING)
     INCLUDE(CTest)
 #    ENABLE_TESTING()
 ENDIF(ENABLE_TESTING)
@@ -97,6 +97,7 @@ CONFIGURE_FILE(${findMFHCS_SOURCE_DIR}/doc/Doxyfile.cmake
 )
 
 
+IF(WITH_DOX)
 FIND_PACKAGE(Doxygen)
 IF(DOXYGEN_FOUND)
     # add w/ the ALL option to make sure the docs are built for the install
@@ -107,7 +108,7 @@ IF(DOXYGEN_FOUND)
         COMPONENT doc
     )
 ENDIF(DOXYGEN_FOUND)
-
+ENDIF(WITH_DOX)
 
 
 

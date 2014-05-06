@@ -14,7 +14,7 @@
 #include "findmf/datastruct/lcmsimage.h"
 
 namespace ralab{
-  /**/
+  /// map access interface for visualization
   struct MapVis{
     virtual ~MapVis(){}
     virtual std::size_t getMZsize() = 0;
@@ -24,9 +24,7 @@ namespace ralab{
     virtual float getMinelem() = 0;
   };
 
-  /**
-    used to visualize segementation.
-  */
+  ///  used to visualize segementation.
   template<typename T>
   struct AbstractMultiArrayVis : MapVis{
     typedef vigra::MultiArray<2,T> DATA;
