@@ -37,8 +37,9 @@ signals:
   void zoomchanged(double zoom);
  public slots:
   void coors(int xcoor, int ycoor);
-  void updatePixmap(const QImage &image, double scaleFactor);
   void zoom(double zoomFactor);
+
+  void updatePixmap(const QImage &image, double scaleFactor);
 
 private:
   void scroll(int deltaX, int deltaY);
