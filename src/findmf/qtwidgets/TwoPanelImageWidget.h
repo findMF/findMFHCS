@@ -11,8 +11,8 @@
 namespace ralab{
   struct TwoPaneledImageWidget : QObject{
     QWidget * window;
-    MandelbrotWidget * widget;
-    MandelbrotWidget * widget2;
+    MandelbrotWidget * topPanel;
+    MandelbrotWidget * bottomPanel;
     QVBoxLayout * layout;
 
     TwoPaneledImageWidget(){
@@ -20,35 +20,35 @@ namespace ralab{
       window->setWindowTitle(
             QApplication::translate("toplevel", "Top-level widget"));
       window->resize(320, 240);
-      widget = new MandelbrotWidget();
-      widget2 = new MandelbrotWidget();
+      topPanel = new MandelbrotWidget();
+      bottomPanel = new MandelbrotWidget();
 
-      QObject::connect( widget, SIGNAL(coorschanged(int,int)),
-                        widget2, SLOT(coors(int,int)));
-      QObject::connect( widget2, SIGNAL(coorschanged(int,int)),
-                        widget, SLOT(coors(int,int)) );
+      QObject::connect( topPanel, SIGNAL(coorschanged(int,int)),
+                        bottomPanel, SLOT(coors(int,int)));
+      QObject::connect( bottomPanel, SIGNAL(coorschanged(int,int)),
+                        topPanel, SLOT(coors(int,int)) );
 
       layout = new QVBoxLayout();
-      layout->addWidget(widget);
-      layout->addWidget(widget2);
+      layout->addWidget(topPanel);
+      layout->addWidget(bottomPanel);
       window->setLayout(layout);
     }
 
     ~TwoPaneledImageWidget(){
       delete layout;
-      delete widget;
-      delete widget2;
+      delete topPanel;
+      delete bottomPanel;
       delete window;
     }
 
     //set bottom map
     void setBottomMap(ralab::MapVis * mp){
-      widget2->setMap(mp);
+      bottomPanel->setMap(mp);
     }
 
     // set top map
     void setTopMap(ralab::MapVis * mp){
-      widget->setMap(mp);
+      topPanel->setMap(mp);
     }
 
     // show

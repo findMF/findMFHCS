@@ -9,10 +9,10 @@
 BOOST_AUTO_TEST_SUITE(LCMSImageTest)
 
 /*! \brief test filter function */
-BOOST_AUTO_TEST_CASE( testImage)
+BOOST_AUTO_TEST_CASE(testImage)
 {
   ralab::findmf::datastruct::LCMSImage lcmsimage;
-  lcmsimage.read("../data/dil_6_2/dil_6_2_0.tiff");
+  lcmsimage.read("./testdata/dil_6_2/dil_6_2_0.tiff");
   std::vector<double> mz, rt;
   lcmsimage.getMZ(mz);
   rt.assign( lcmsimage.getRT().begin() , lcmsimage.getRT().end() );

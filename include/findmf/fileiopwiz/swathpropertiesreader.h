@@ -75,7 +75,6 @@ namespace ralab{
                     map->rtRange_.second = std::max(map->rtRange_.second, specInf.retentionTime);
                     map->mzRange_.first = std::min(map->mzRange_.first, specInf.mzLow);
                     map->mzRange_.second = std::max(map->mzRange_.second, specInf.mzHigh);
-
                   }
                 else if(specInf.msLevel == 2){
                     if( specInf.precursors.size() > 0 )

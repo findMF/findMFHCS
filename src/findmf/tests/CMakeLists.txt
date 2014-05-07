@@ -20,9 +20,9 @@ COMMAND ${BinOut}/premtest)
 set_tests_properties(premtest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
 
 
-ADD_SUBDIRECTORY(datastruct)
-#ADD_SUBDIRECTORY(fileio)
-#ADD_SUBDIRECTORY(tbbtests)
-#ADD_SUBDIRECTORY(pwiztests)
-#ADD_SUBDIRECTORY(algo)
+#ADD_SUBDIRECTORY(datastruct)
+ADD_SUBDIRECTORY(fileio)
+ADD_SUBDIRECTORY(tbbtests)
+ADD_SUBDIRECTORY(pwiztests)
+ADD_SUBDIRECTORY(algo)
 

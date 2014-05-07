@@ -53,7 +53,7 @@ void test()
             //*os_ << mass << ":\n" << xx << endl;
             *os_ <<  mass;
 
-            for( int i = 0 ; i < 8 ; ++i ){
+            for( unsigned int i = 0 ; i < 8 ; ++i ){
                 if(i < xx.size()){
                     *os_ <<  "\t" << xx[i].abundance;
                   }
@@ -78,7 +78,6 @@ int main(int argc, char* argv[])
         myfile.open ("example.txt");
         if (argc>1 && !strcmp(argv[1],"-v")) os_ = &myfile;
         //if (os_) *os_ << "IsotopeEnvelopeEstimatorTest" << std::endl;
-       
         test();
     }
     catch (exception& e)
@@ -89,6 +88,5 @@ int main(int argc, char* argv[])
     {
         TEST_FAILED("Caught unknown exception.")
     }
-
     TEST_EPILOG
 }
