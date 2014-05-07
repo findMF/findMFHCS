@@ -34,7 +34,7 @@ protected:
 
 signals:
   void coorschanged(int xcoor, int ycoor);
-
+  void zoomchanged(double zoom);
  public slots:
   void coors(int xcoor, int ycoor);
   void updatePixmap(const QImage &image, double scaleFactor);

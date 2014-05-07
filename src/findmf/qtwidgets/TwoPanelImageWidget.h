@@ -27,6 +27,10 @@ namespace ralab{
                         bottomPanel, SLOT(coors(int,int)));
       QObject::connect( bottomPanel, SIGNAL(coorschanged(int,int)),
                         topPanel, SLOT(coors(int,int)) );
+      QObject::connect( topPanel, SIGNAL(zoomchanged(double)),
+                        bottomPanel, SLOT(zoom(double)));
+      QObject::connect( bottomPanel, SIGNAL(zoomchanged(double)),
+                        topPanel, SLOT(zoom(double)) );
 
       layout = new QVBoxLayout();
       layout->addWidget(topPanel);

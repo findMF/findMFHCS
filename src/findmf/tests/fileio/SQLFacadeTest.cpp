@@ -11,14 +11,12 @@
 #include <iostream>
 #include <stdexcept>
 
-
+//TODO change into a boost fixture test.
 inline void testMapInfoTable()
 {
   ralab::findmf::FeaturesMapSQLWriterFacade sql(".","bla");
   sql.createDatabase();
 }
-
-
 
 int main(int arg, char ** argv)
 {

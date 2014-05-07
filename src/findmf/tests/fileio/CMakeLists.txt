@@ -3,6 +3,8 @@
 # Authors   : Witold Wolski
 # for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
+# TODO move this out into findMFSQL
+
 include_directories(${inc})
 link_directories(  ${Soci_LIBRARY} )
 

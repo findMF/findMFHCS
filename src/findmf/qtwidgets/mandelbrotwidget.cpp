@@ -157,6 +157,7 @@ void MandelbrotWidget::zoom(double zoomFactor)
   curScale_ *= zoomFactor;
   update();
   //thread.render(centerX_, centerY_, curScale_, size());
+  emit zoomchanged(zoomFactor);
 }
 
 void MandelbrotWidget::coors(int xcoor, int ycoor){
