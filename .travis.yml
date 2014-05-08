@@ -14,7 +14,7 @@ before_install:
 install:
     - ./buildscripts/buildVigra.sh
     - ./buildscripts/gitclonefindMFBase.sh
-    - ./buildscripts/gitclonefindMFBase.sh
+    - ./buildscripts/buildpwiz.sh
 #script: cmake -DPwiz_INCLUDE_DIR=/home/travis/build/findMF/findMFHCS/pwiz/pwiz -DPwiz_LIBRARY=/home/travis/build/findMF/findMFHCS/pwiz/lib . && make && make test
 script: 
 - ./buildscripts/buildscript.sh
