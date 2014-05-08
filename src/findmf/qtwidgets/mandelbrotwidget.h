@@ -42,7 +42,6 @@ signals:
   void updatePixmap(const QImage &image, double scaleFactor);
 
 private:
-  void scroll(int deltaX, int deltaY);
   RenderThread thread;
   QPixmap pixmap;
   QPoint pixmapOffset;

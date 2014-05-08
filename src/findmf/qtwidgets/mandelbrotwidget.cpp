@@ -110,7 +110,9 @@ void MandelbrotWidget::wheelEvent(QWheelEvent *event)
 {
     int numDegrees = event->delta() / 8;
     double numSteps = numDegrees / 15.0f;
-    zoom(pow(ZoomInFactor, numSteps));
+    float curscale = curScale_;
+    curscale *= pow(ZoomInFactor, numSteps);
+    zoom(curscale);
 }
 
 void MandelbrotWidget::mousePressEvent(QMouseEvent *event)
@@ -136,7 +138,7 @@ void MandelbrotWidget::mouseReleaseEvent(QMouseEvent *event)
 
         int deltaX = (width() - pixmap.width()) / 2 - pixmapOffset.x();
         int deltaY = (height() - pixmap.height()) / 2 - pixmapOffset.y();
-        scroll(deltaX, deltaY);
+        coors(centerX_+deltaX, centerY_+deltaY);
     }
 }
 
@@ -152,18 +154,17 @@ void MandelbrotWidget::updatePixmap(const QImage &image, double scaleFactor)
     update();
 }
 
-void MandelbrotWidget::zoom(double zoomFactor)
+void MandelbrotWidget::zoom(double scale)
 {
-    //curScale_ *= zoomFactor;
-    //update();
-    if (fabs(curScale_ - (curScale_ * zoomFactor)) > 0.000001) {
-        curScale_ *= zoomFactor;
+    if (fabs(curScale_ - scale) > 0.000001) {
+        //curScale_ = scale;
+        curScale_ = scale;
         update();
-        //thread.render(centerX_, centerY_, curScale_, size());
-        thread.render(centerX_, centerY_, curScale_, size());
-        emit zoomchanged(zoomFactor);
+        // thread.render(centerX_, centerY_, curScale_, size());
+        emit zoomchanged(curScale_);
     }
 }
+
 
 void MandelbrotWidget::coors(int xcoor, int ycoor){
     if (xcoor != centerX_ && ycoor != centerY_) {
@@ -173,13 +174,4 @@ void MandelbrotWidget::coors(int xcoor, int ycoor){
         thread.render(centerX_, centerY_, curScale_, size());
         emit coorschanged(centerX_,centerY_);
     }
-}
-
-void MandelbrotWidget::scroll(int deltaX, int deltaY)
-{
-    //centerX_ += deltaX;// * curScale_;
-    //centerY_ += deltaY;// * curScale_;
-    //update();
-    //thread.render(centerX_, centerY_, curScale_, size());
-    coors(centerX_ + deltaX , centerY_ + deltaY);
 }

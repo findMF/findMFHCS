@@ -27,8 +27,8 @@ include(ExternalProject)
 
 FIND_PACKAGE(Vigra REQUIRED)
 if(VIGRA_FOUND)
-  message(STATUS "Vigra found" ${VIGRA_INCLUDE_DIR})
-  message(STATUS "Vigra library" ${VIGRA_LIBRARY})
+  message(STATUS "Vigra found :" ${VIGRA_INCLUDE_DIR})
+  message(STATUS "Vigra library :" ${VIGRA_LIBRARY})
 
   SET(inc ${inc} ${VIGRA_INCLUDE_DIR})
   SET(vigralibs vigraimpex)
