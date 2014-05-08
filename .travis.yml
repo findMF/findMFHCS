@@ -1,19 +1,20 @@
 language: cpp
 compiler:
-  - gcc
-  # - clang build errors on clang
-  # Change this to your needs
+- gcc
+# - clang build errors on clang
+# Change this to your needs
 before_install: 
-  - sudo apt-get install libboost-all-dev
-  - sudo apt-get install qt-sdk
-  - sudo apt-get install libtbb-dev
-  - sudo apt-get install doxygen
-  - sudo apt-get install libvigraimpex-dev
-  #- sudo add-apt-repository --yes ppa:boost-latest/ppa
-  #- sudo apt-get install libpwiz-dev
+- sudo apt-get install libboost-all-dev
+- sudo apt-get install qt-sdk
+- sudo apt-get install libtbb-dev
+- sudo apt-get install doxygen
+- sudo apt-get install libvigraimpex-dev
+#- sudo add-apt-repository --yes ppa:boost-latest/ppa
+#- sudo apt-get install libpwiz-dev
 install:
-  - ./buildscripts/gitclonefindMFBase.sh
-  - ./buildscripts/buildpwiz.sh
+    - ./buildscripts/buildVigra.sh
+    - ./buildscripts/gitclonefindMFBase.sh
+    - ./buildscripts/gitclonefindMFBase.sh
 #script: cmake -DPwiz_INCLUDE_DIR=/home/travis/build/findMF/findMFHCS/pwiz/pwiz -DPwiz_LIBRARY=/home/travis/build/findMF/findMFHCS/pwiz/lib . && make && make test
 script: 
-  - ./buildscripts/buildscript.sh
+- ./buildscripts/buildscript.sh
