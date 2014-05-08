@@ -17,21 +17,19 @@ struct SQLFeatureRTreeSelect{
     QSqlDatabase db_;
 
     SQLFeatureRTreeSelect( QSqlDatabase db):db_(db){}
-
     //
     void getMinRTS( std::vector<float> & prem){
-        //cpplog::FileLogger log( "log.txt", true );
+        cpplog::FileLogger log( "log.txt", true );
         QString queryString3( "SELECT minRT FROM feature_index");
         QSqlQuery query(db_);
         if(!query.exec(queryString3)){
             QSqlError err = query.lastError();
-            //LOG_INFO(log) <<  "Cant select from feature_index : " << err.text().toStdString() <<std::endl;
+            LOG_INFO(log) <<  "Cant select from feature_index : " << err.text().toStdString() <<std::endl;
         }
         while(query.next()){
             prem.push_back(query.value(0).toFloat());
         }
     }
-
 
     /// select ids of all features intersecting with rt range
     void getIDs(float rtStart, float rtEnd, std::vector<uint32_t> & prem){
