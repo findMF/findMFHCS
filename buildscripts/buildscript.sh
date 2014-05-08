@@ -4,4 +4,3 @@ sudo cmake -DFindMFBase_INCLUDE_DIR=/home/travis/build/findMF/findMFHCS/findMFBa
 sudo make 
 sudo make test
 
-

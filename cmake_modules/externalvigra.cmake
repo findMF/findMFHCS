@@ -29,11 +29,12 @@ ExternalProject_Get_Property(vigra source_dir)
 set(VIGRA_SourceDir ${source_dir}/include)
 
 ExternalProject_Get_Property(vigra binary_dir)
-#IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(VIGRA_LIBRARY ${binary_dir}/src/impex/)
-#ELSE(CMAKE_BUILD_TYPE STREQUAL "Debug")
-#    set(VIGRA_LIBRARY ${binary_dir}/src/impex/)
-#ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
+message(STATUS "OOOOOOOOOOOOOOOOOOOOOOOOOBlabla ${binary_dir}")
+    set(VIGRA_LIBRARY ${binary_dir}/src/impex/DebugLibs)
+ELSE(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(VIGRA_LIBRARY ${binary_dir}/src/impex/ReleaseLibs)
+ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 
 #post

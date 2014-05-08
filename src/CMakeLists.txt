@@ -16,16 +16,27 @@ message( STATUS "lib ${lib}" )
 message( STATUS "inc boost ${inc}" )
 message( STATUS ">>>> ${Boost_LIBRARIES} <<<<" )
 
-
 include(ExternalProject)
 
-
 #### configuring vigra ####
-include(externalvigra)
-set(inc ${inc} ${VIGRA_SourceDir})
-message(STATUS "VIGRA_LIBRARY ${VIGRA_LIBRARY}")
-message(STATUS "inc ${inc}")
-set(vigralibs vigraimpex)
+#include(externalvigra)
+#set(inc ${inc} ${VIGRA_SourceDir})
+#message(STATUS "VIGRA_LIBRARY ${VIGRA_LIBRARY}")
+#message(STATUS "inc ${inc}")
+#set(vigralibs vigraimpex)
+
+FIND_PACKAGE(Vigra REQUIRED)
+if(VIGRA_FOUND)
+  message(STATUS "Vigra found" ${VIGRA_INCLUDE_DIR})
+  message(STATUS "Vigra library" ${VIGRA_LIBRARY})
+
+  SET(inc ${inc} ${VIGRA_INCLUDE_DIR})
+  SET(vigralibs vigraimpex)
+else(VIGRA_FOUND)
+  message(FATAL_ERROR " !!!!!!!!!!!!!!!! Vigra !!!!!!!!!!!!!!!! ")
+  return()
+endif(VIGRA_FOUND)
+
 
 
 FIND_PACKAGE(FindMFBase REQUIRED)

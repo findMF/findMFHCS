@@ -5,7 +5,11 @@
 
 
 include_directories(${inc})
+
 link_directories( ${Pwiz_LIBRARY} ${VIGRA_LIBRARY} ${Tbb_LIBRARY} )
+message(STATUS "OOOOO VIGRA_LIBRARY ${VIGRA_LIBRARY}")
+message(STATUS "OOOOO vigralibs ${vigralibs}")
+
 
 ADD_EXECUTABLE(filterSingleMap filterSingleMap.cpp)
 TARGET_LINK_LIBRARIES(filterSingleMap ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}  tbb )
