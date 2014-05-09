@@ -24,17 +24,20 @@ struct PPParams
   double integrationwidth_;
   bool area_;
   double threshold_;
+  uint32_t numberofpeaks_;
 
   std::string filestem_;
   boost::filesystem::path outdir_;
 
-  PPParams(): infile_() ,
+  PPParams():
+    infile_() ,
     outfile_() ,
     resolution_(0.) ,
     smoothwidth_(1.),
     integrationwidth_(4.) ,
     area_(false),
     threshold_(10.),
+    numberofpeaks_(150),
     filestem_(),
     outdir_(){
   }
@@ -84,7 +87,8 @@ inline int defineParameters(
         ("resolution",b_po::value<double>()->default_value(20000.),
          "instrument resolution (default 50000).")
         ("area", b_po::value<bool>()->default_value(true),"otherwise store intensity")
-        ("threshold", b_po::value<double>()->default_value(3.),"multiplicative factor of smallest intensity in spectrum");
+        ("threshold", b_po::value<double>()->default_value(3.),"multiplicative factor of smallest intensity in spectrum")
+    ("numberofpeaks", b_po::value<uint32_t>()->default_value(0),"maximum number of peaks per spectrum (0 = no limit)");
 
     b_po::options_description advancedprocessing("Advanced Processing Options:");
     advancedprocessing.add_options()
@@ -152,7 +156,7 @@ inline int defineParameters(
   return 0;
 }//end parse command line
 
-
+/// get the parameters
 inline void analysisParameters(PPParams & ap,b_po::variables_map & vmgeneral){
   if(vmgeneral.count("in"))
   {
@@ -167,6 +171,7 @@ inline void analysisParameters(PPParams & ap,b_po::variables_map & vmgeneral){
   ap.integrationwidth_ = 2*vmgeneral["intwidth"].as<double>();
   ap.area_ = vmgeneral["area"].as<bool>(); //do you want to store areas
   ap.threshold_ = vmgeneral["threshold"].as<double>();
+  ap.numberofpeaks_ = vmgeneral["numberofpeaks"].as<uint32_t>();
 }
 
 ///
@@ -187,7 +192,8 @@ int main(int argc, char *argv[])
                                         aparam.smoothwidth_,
                                         aparam.integrationwidth_,
                                         aparam.threshold_,
-                                        aparam.area_
+                                        aparam.area_,
+                                        aparam.numberofpeaks_
                                         )
         );
   msdataptr_->run.spectrumListPtr = mp;

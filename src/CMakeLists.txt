@@ -48,6 +48,16 @@ else(FindMFBase_FOUND)
 endif(FindMFBase_FOUND)
 
 
+FIND_PACKAGE(FindMFInterfaces REQUIRED)
+if(FindMFInterfaces_FOUND)
+  message(STATUS "FindMF found" ${FindMFInterfaces_INCLUDE_DIR})
+  SET(inc ${inc} ${FindMFInterfaces_INCLUDE_DIR})
+else(FindMFInterfaces_FOUND)
+  message(FATAL_ERROR " !!!!!!!!!!!!!!!! FindMFInterfaces !!!!!!!!!!!!!!!! ")
+  return()
+endif(FindMFInterfaces_FOUND)
+
+
 ADD_SUBDIRECTORY(findmf)
 
 ENABLE_TESTING()
