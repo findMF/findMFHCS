@@ -72,7 +72,7 @@ namespace ralab{
           if(it != swathindices_.end())
             {
               MapLCMSDescriptionPtr map = it->second;
-              map->runnumber_ = key;
+              map->runnumber( key );
               return map;
             }
           else{

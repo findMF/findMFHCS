@@ -11,7 +11,7 @@
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <QtSql>
-#include "base/base/cpplog.h"
+#include "base/cpplog.h"
 
 #include "findmf/interfaces/ifeatureaccess.h"
 

@@ -70,11 +70,11 @@ namespace ralab{
                     datastruct::MapLCMSDescriptionPtr map = swathinfo_->getMapDescriptionForKey(0);
                     map->getIndices().push_back(specIndex);
                     //map.rt_.push_back(specInf.retentionTime);
-                    map->mslevel_ = 1;
-                    map->rtRange_.first = std::min(map->rtRange_.first, specInf.retentionTime);
-                    map->rtRange_.second = std::max(map->rtRange_.second, specInf.retentionTime);
-                    map->mzRange_.first = std::min(map->mzRange_.first, specInf.mzLow);
-                    map->mzRange_.second = std::max(map->mzRange_.second, specInf.mzHigh);
+                    map->mslevel( 1 );
+                    map->rtRange().first = std::min(map->rtRange().first, specInf.retentionTime);
+                    map->rtRange().second = std::max(map->rtRange().second, specInf.retentionTime);
+                    map->mzRange().first = std::min(map->mzRange().first, specInf.mzLow);
+                    map->mzRange().second = std::max(map->mzRange().second, specInf.mzHigh);
                   }
                 else if(specInf.msLevel == 2){
                     if( specInf.precursors.size() > 0 )
@@ -95,19 +95,19 @@ namespace ralab{
 
                        datastruct::MapLCMSDescriptionPtr map = swathinfo_->getMapDescriptionForKey(specInf.precursors[0].mz);
 
-                        map->mslevel_ = 2;
-                        map->extractionWindowMZ_.first = specInf.precursors[0].mz - p1;
-                        map->extractionWindowMZ_.second = specInf.precursors[0].mz + p2;
+                        map->mslevel( 2 );
+                        map->extractionWindowMZ().first = specInf.precursors[0].mz - p1;
+                        map->extractionWindowMZ().second = specInf.precursors[0].mz + p2;
 
                         map->getIndices().push_back(specIndex);
 
                         // TODO - there is an issue with missing spectra in the AB Sciex API.
                         // map->getRT().push_back(specInf.retentionTime);
 
-                        map->rtRange_.first = std::min(map->rtRange_.first, specInf.retentionTime);
-                        map->rtRange_.second = std::max(map->rtRange_.second, specInf.retentionTime);
-                        map->mzRange_.first = std::min(map->mzRange_.first, specInf.mzLow);
-                        map->mzRange_.second = std::max(map->mzRange_.second, specInf.mzHigh);
+                        map->rtRange().first = std::min(map->rtRange().first, specInf.retentionTime);
+                        map->rtRange().second = std::max(map->rtRange().second, specInf.retentionTime);
+                        map->mzRange().first = std::min(map->mzRange().first, specInf.mzLow);
+                        map->mzRange().second = std::max(map->mzRange().second, specInf.mzHigh);
                       }
                   }
                 else

@@ -8,7 +8,7 @@
 #define SQLFEATURERTREE_H
 
 #include <QtSql>
-#include "base/base/cpplog.h"
+#include "base/cpplog.h"
 
 #include "findmf/interfaces/ifeaturerangeaccess.h"
 

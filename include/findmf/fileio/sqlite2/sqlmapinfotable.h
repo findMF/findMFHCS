@@ -9,7 +9,7 @@
 
 #include <QtSql>
 #include "findmf/datastruct/maplcmsdescription.h"
-#include "base/base/cpplog.h"
+#include "base/cpplog.h"
 
 namespace ralab{
   namespace findmf{

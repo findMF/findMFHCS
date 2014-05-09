@@ -20,13 +20,14 @@ namespace ralab{
       /// Description of an lcms map...
       struct MapLCMSDescription
       {
+      private:
         uint32_t runnumber_; //!< running number of LCMS map
         uint32_t mslevel_; //!< ms level of the map (i.e. 1)
+        typedef std::pair<double, double>  dpair;
         std::pair<double, double> extractionWindowMZ_; //!< only relevant for mslevel_ > 1 swath window
         std::pair<double, double> mzRange_; //!< mz range
         std::pair<double, double> rtRange_; //!< rt range
 
-      private:
         std::vector<std::size_t> indices_; //!< indices of the spectra in the raw file.
         typedef std::vector<double> axesT;
 
@@ -34,15 +35,36 @@ namespace ralab{
         axesT mass_; //!< mass vector (is used convert index to mass)
         double am_; //!< vendor sampling width parameter
 
-
       public:
-
         /// const
         MapLCMSDescription():runnumber_(0),mslevel_(1),extractionWindowMZ_(),
           mzRange_(std::make_pair(std::numeric_limits<double>::max(),std::numeric_limits<double>::min())),
           rtRange_(std::make_pair(std::numeric_limits<double>::max(),std::numeric_limits<double>::min())),
           indices_(),retentiontime_(),mass_()
         {
+        }
+
+        std::uint32_t runnumber(){
+            return runnumber_;
+        }
+        void runnumber(uint32_t runnumber){
+            runnumber_ = runnumber;
+        }
+        std::uint32_t mslevel(){
+            return mslevel_;
+        }
+        void mslevel(uint32_t mslevel){
+            mslevel_ = mslevel;
+        }
+
+        dpair & extractionWindowMZ(){
+            return extractionWindowMZ_;
+        }
+        dpair & mzRange(){
+            return mzRange_;
+        }
+        dpair & rtRange(){
+            return rtRange_;
         }
 
         /// use for transforming index to RT

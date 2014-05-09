@@ -8,7 +8,7 @@
 #define SQLFEATURERTREESELECT_H
 
 #include <QtSql>
-#include "base/base/cpplog.h"
+#include "base/cpplog.h"
 
 namespace ralab{
 

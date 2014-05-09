@@ -17,8 +17,6 @@
 namespace ralab{
   namespace findmf{
     namespace datastruct{
-
-
       ///
       /// returns retention time and masses instead of pixel locations.
       ///
@@ -27,12 +25,10 @@ namespace ralab{
         MapLCMSDescriptionPtr featureMap_; // required here to allow for mz rt transoformations
         //ralab::projectionstats & mzstats_;
         //ralab::projectionstats & rtstats_;
-
         FeatureReadAdapterFM(Feature2D & feature, MapLCMSDescriptionPtr fm )
           : FeatureReadAdapter( feature ),
             featureMap_( fm )
         {}
-
 
         //implementing the IFeatureRangeAccess interface
         virtual float getMinRT(){
@@ -56,16 +52,16 @@ namespace ralab{
         }
 
         virtual float getMinMZsw(){
-          return (featureMap_->extractionWindowMZ_.first);
+          return (featureMap_->extractionWindowMZ().first);
         }
 
         virtual float getMaxMZsw(){
-          return(featureMap_->extractionWindowMZ_.second);
+          return(featureMap_->extractionWindowMZ().second);
         }
         ///implmenting the IFeatureAccess Interface
 
 
-        float getApexMZ() override {
+        float getApexMZ() override{
           float apx =  FeatureReadAdapter::getApexMZ();
           return featureMap_->getMZforIndex(apx);
         }

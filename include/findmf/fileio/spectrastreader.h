@@ -3,11 +3,10 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-
 #ifndef SPECTRASTREADER_H
 #define SPECTRASTREADER_H
 
-#include "base/base/cpplog.h"
+#include "base/cpplog.h"
 
 #include "findmf/datastruct/transition.h"
 #include "swathwindowrange.h"

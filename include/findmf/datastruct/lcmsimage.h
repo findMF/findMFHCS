@@ -182,7 +182,7 @@ namespace ralab{
         void write(){
           std::string path = sip_->getPath();
           std::string filename = sip_->getFilename();
-          int runnum = this->descript_->runnumber_;
+          int runnum = this->descript_->runnumber();
           filename += "_" + boost::lexical_cast<std::string>(runnum);
 
           imageMap_.write(path , filename);
@@ -195,7 +195,7 @@ namespace ralab{
         void write(std::string &outdir){
           //std::string path = sip_->getPath();
           std::string filename = sip_->getFilename();
-          int runnum = this->descript_->runnumber_;
+          int runnum = this->descript_->runnumber();
           filename += "_" + boost::lexical_cast<std::string>(runnum);
 
           imageMap_.write(  outdir , filename);
@@ -252,7 +252,7 @@ namespace ralab{
         /// write the transformators (mapping of RT and mz to pixel coordinates into file)
         void writeTransformation(const std::string outdir, const std::string & filename){
           boost::filesystem::path p1(outdir);
-          std::string workname = filename + "_" + boost::lexical_cast<std::string>(this->descript_->runnumber_);
+          std::string workname = filename + "_" + boost::lexical_cast<std::string>(this->descript_->runnumber());
           boost::filesystem::path p2 = addextension( workname ,  "mass" );
           p1 /= p2;
           ralab::base::utils::writeBin( this->c2d_.bin_.getBreaks(),  p1.string());

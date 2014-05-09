@@ -10,7 +10,7 @@
 #include <string>
 #include <QtSql>
 #include <boost/filesystem.hpp>
-#include "base/base/cpplog.h"
+#include "base/cpplog.h"
 namespace ralab{
 
   struct SQLFeatureStorage{

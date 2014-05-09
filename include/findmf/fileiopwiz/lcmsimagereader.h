@@ -94,7 +94,7 @@ namespace ralab{
         double am = determineAm(msdataptr_, swathInfo_->getMapDescriptionForKey(key)->getIndices());
         swathInfo_->getMapDescriptionForKey(key)->setAM(am);
 
-        map_.getMapDescription()->mzRange_= mzRange_;
+        map_.getMapDescription()->mzRange()= mzRange_;
         size_t nrcols = swathInfo_->getMapDescriptionForKey(key)->getIndices().size();
         nrcols = rt2sum_.getNrCols(nrcols);
 

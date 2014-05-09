@@ -10,7 +10,7 @@
 #include <boost/lexical_cast.hpp>
 #include "findmf/interfaces/ifeaturewrite.h"
 
-#include "base/base/cpplog.h"
+#include "base/cpplog.h"
 
 namespace ralab{
 
