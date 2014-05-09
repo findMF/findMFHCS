@@ -38,7 +38,6 @@ else(VIGRA_FOUND)
 endif(VIGRA_FOUND)
 
 
-
 FIND_PACKAGE(FindMFBase REQUIRED)
 if(FindMFBase_FOUND)
   message(STATUS "FindMF found" ${FindMFBase_INCLUDE_DIR})
