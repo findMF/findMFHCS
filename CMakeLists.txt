@@ -62,7 +62,7 @@ SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BinOut} )
 
 SET(inc ${inc} ${findMFHCS_SOURCE_DIR})
 SET(inc ${inc} ${findMFHCS_SOURCE_DIR}/include)
-SET(inc ${inc} ${findMFHCS_SOURCE_DIR}/submodule/findMFInterfaces/include)
+#SET(inc ${inc} ${findMFHCS_SOURCE_DIR}/submodule/findMFInterfaces/include)
 
 #############################################################################
 # QT - Creator tweak so that it sees headers
