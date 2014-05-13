@@ -84,7 +84,6 @@ template <typename T> struct invoker {
 //test
 int main(int argc, char *argv[])
 {
-
   // TODO maybe should go in a single class.
   b_po::variables_map vmgeneral;
   parsecommandlineExtract(argc, argv, vmgeneral);
@@ -93,11 +92,10 @@ int main(int argc, char *argv[])
 
   std::cerr << "ppm is:" << pars.ppm << std::endl;
 
-
+  ///
   ///ralab::findmf::FeaturesMapSQLWriterFacade facade(pars.outdir,pars.filestem_);
   ///facade.createDatabase();
 
-  //////
   boost::timer time;
 
   ralab::findmf::SwathPropertiesReader swathPropReader(pars.infile);
