@@ -13,6 +13,8 @@ Command line tools shipped with this package:
 if build with QT:
 - filterQTView - allows to visualize intermediate processing steps
 
+To find out more run the tools with the --help option.
+
 see also : (https://github.com/findMF/findMFBase)
 
 
