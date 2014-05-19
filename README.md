@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/findMF/findMFHCS.svg?branch=master)](https://travis-ci.org/findMF/findMFHCS)
+[![Build Status](https://travis-ci.org/findMF/findMFHCS.svg?branch=master)](https://travis-ci.org/findMF/findMFHCS) [![Project Stats](https://www.ohloh.net/p/findMFHCS/widgets/project_thin_badge.gif)](https://www.ohloh.net/p/findMFHCS)
 
 findMF - find molecular features
 ==
