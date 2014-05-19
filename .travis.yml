@@ -1,6 +1,7 @@
 language: cpp
 compiler:
 - gcc
+- clang
 # - clang build errors on clang
 # Change this to your needs
 before_install: 
