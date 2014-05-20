@@ -8,7 +8,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE Hello
 #include <boost/test/unit_test.hpp>
-
+#include <iostream>
 
 
 BOOST_AUTO_TEST_SUITE(MapLCMSDescriptionTest)
@@ -34,19 +34,16 @@ BOOST_AUTO_TEST_CASE( testMapDescription)
   ralab::findmf::datastruct::MapLCMSDescriptionPtr x =
       ralab::findmf::datastruct::MapLCMSDescriptionPtr(new ralab::findmf::datastruct::MapLCMSDescription());
 
-  x->mslevel_ = 1;
-  x->extractionWindowMZ_.first = 100.;
-  x->extractionWindowMZ_.second  = 125.;
+  x->mslevel(1);
+  x->extractionWindowMZ().first = 100.;
+  x->extractionWindowMZ().second  = 125.;
   x->setMass( mzproj );
-  x->setRT( rtproj);
-  x->rtRange_.first = 1000;
-  x->rtRange_.second = 1400;
+  x->setRT( rtproj );
+  x->rtRange().first = 1000;
+  x->rtRange().second = 1400;
 
-  x->mzRange_.first = 120.03;
-  x->mzRange_.second = 1444.03;
-
+  x->mzRange().first = 120.03;
+  x->mzRange().second = 1444.03;
 }
-
-
 BOOST_AUTO_TEST_SUITE_END()
 

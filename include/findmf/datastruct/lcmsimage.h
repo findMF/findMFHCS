@@ -219,7 +219,7 @@ namespace ralab{
         {
           auto begfiltered = imageMap_.getMap().bindOuter(i).begin();
           auto endfiltered = imageMap_.getMap().bindOuter(i).end();
-          std::size_t dist = std::distance(begfiltered,endfiltered);
+          std::size_t dist = std::distance( begfiltered, endfiltered );
           mz.resize(dist);
           intensities.resize(dist);
 
@@ -242,9 +242,6 @@ namespace ralab{
           mz.resize(countLarger);
           intensities.resize(countLarger);
         }
-
-
-
 
 
       private:

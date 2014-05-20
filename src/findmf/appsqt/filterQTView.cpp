@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 
     ralab::findmf::datastruct::LCMSImage mp2( mp );
     {
-      ralab::findmf::LCMSImageFilterMexhat imgf;
+      ralab::findmf::LCMSImageFilterGauss imgf;
       // imgf.filterMap( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
 
       imgf.filter( mp2.getImageMap().getMap() , aparam.mzpixelwidth , aparam.rtpixelwidth, aparam.mzscale, aparam.rtscale);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     }
 
 
-    ralab::findmf::FeatureFinderMexhat ff;
+    ralab::findmf::FeatureFinderLocalMax ff;
     ff.findFeature( mp2.getImageMap().getMap() , aparam.minintensity );
     ralab::findmf::datastruct::FeaturesMap map;
     map.setMapDescription(mp2.getMapDescription());
@@ -69,7 +69,8 @@ int main(int argc, char *argv[])
     ralab::MultiArrayVisSegments<int> mavL( ff.getLabels() );
     //write filtered data into mzML file
 
-    sm.write( p2.string() , mp2 );
+    //TODO check why this isn't working
+    //sm.write( p2.string() , mp2 );
 
     if(1){
       QApplication app(argc, argv);
@@ -79,9 +80,9 @@ int main(int argc, char *argv[])
       ralab::MultiArrayVisAsinh<float> adapt1( mp2.getImageMap().getMap() );
       ralab::MultiArrayVisLog<float> adapt0( mp.getImageMap().getMap() );
 
-      tpi.setTopMap(&adapt1);
+      tpi.setTopMap(&mavL);
       //tpi.setBottomMap(&adapt0);
-      tpi.setBottomMap(&mavL);
+      tpi.setBottomMap(&adapt0);
 
       tpi.show();
       res = app.exec();

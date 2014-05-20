@@ -29,10 +29,10 @@ TARGET_LINK_LIBRARIES(lcmsimagetest ${Boost_LIBRARIES} ${vigralibs})
 
 ENABLE_TESTING()
 
-add_test(NAME lcmsimagetest
-WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-COMMAND ${BinOut}/lcmsimagetest )
-set_tests_properties(lcmsimagetest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
+#add_test(NAME lcmsimagetest
+#WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+#COMMAND ${BinOut}/lcmsimagetest )
+#set_tests_properties(lcmsimagetest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
 
 add_test(NAME maplcmsdescriptiontest
 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

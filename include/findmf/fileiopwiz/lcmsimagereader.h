@@ -101,7 +101,6 @@ namespace ralab{
         size_t rows = map_.defBreak(mzRange_, ppm_ );
         map_.getImageMap().resize(rows,nrcols);
         std::cerr << "rows : [" << rows << "]  nrcols : [" << nrcols << "]" << std::endl;
-
         fillLCMSImage(msdataptr_,swathInfo_->getMapDescriptionForKey(key)->getIndices(), map_, am);
       }
 
