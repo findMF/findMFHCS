@@ -60,7 +60,9 @@ namespace ralab{
                      "minRTIndex real, " // peak start rt coordinate
                      "rtExtend real, " // peak with rt
                      "mzProjection blob , " // feature mz projection
-                     "rtProjection blob" // feature rt projection
+                     "rtProjection blob , " // feature rt projection
+                     "FOREIGN KEY(id) REFERENCES feature_index(id) , "
+                     "FOREIGN KEY(idswath) REFERENCES mapinfo(id)"
                      ")")){
         QSqlError err = query.lastError();
         std::cerr << err.text().toStdString() ;
