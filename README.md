@@ -18,9 +18,8 @@ To find out more run the tools with the --help option.
 
 See also project [findMFBase](https://github.com/findMF/findMFBase) which is a header only library implementing a lot of functions required by this project.
 
-
-For how to build this project please refer to the .travis.yml  file in the root directory of the project and to the files
-*.sh files in the buildscript folder refered to from the .travis.yml file.
+For how to build this project please refer to the [.travis.yml](https://github.com/findMF/findMFHCS/blob/master/.travis.yml)  file in the root directory of the project and to the 
+*.sh files in the [buildscripts](https://github.com/findMF/findMFHCS/tree/master/buildscripts) folder refered to from the .travis.yml file.
 
 
 
