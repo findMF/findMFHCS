@@ -8,7 +8,7 @@ $PROJECTDIR/findMFHCSout/findMF --mzscale=1.3 --resolution=65000 --minMass=200 -
 $PROJECTDIR/findMFHCSout/findMF --mzscale=1.3 --resolution=65000 --minMass=200 --nrthreads=2 --minintensity=5. --in=$PROJECTDIR/submodule/findMFData/testS.mzML --outdir=$PROJECTDIR/tmp
 
 ####### chemical noise filtering - works for single maps only #######
-$PROJECTDIR/findMFHCSout/filterSingleMap --mzscale=1.3 --resolution=65000 --minMass=200 --nrthreads=2 --minintensity=5. --in=$PROJECTDIR/submodule/findMFData/dil_6_2.mzML --outdir=$PROJECTDIR/tmp
+$PROJECTDIR/findMFHCSout/filterSingleMap --mzscale=1.3 --resolution=65000 --minMass=200 --nrthreads=2 --in=$PROJECTDIR/submodule/findMFData/dil_6_2.mzML --outdir=$PROJECTDIR/tmp
 
 ####### Peak picking #######
 # intensity

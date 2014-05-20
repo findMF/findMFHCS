@@ -13,5 +13,4 @@ memthr
 core
 *.pdf
 findMFHCSout/
-
-
+tmp
