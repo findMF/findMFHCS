@@ -19,7 +19,6 @@ namespace ralab{
       QSqlQuery insertMapQuery_;
       SQLMapInfoTable( QSqlDatabase db):db_(db){}
 
-
       void setDB(QSqlDatabase db){
         db_ = db;
       }
