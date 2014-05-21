@@ -140,7 +140,6 @@ namespace ralab{
                 );
           filterMZ(mp_,sfpfMZ);
         }
-
         //to remove background subtraction artifacts
         filterGauss( mp_ , mzscale/2. , rtscale/2. );
         sq(mp_);

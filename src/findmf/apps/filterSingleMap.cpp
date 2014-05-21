@@ -60,11 +60,11 @@ namespace ralab
         mp.getImageMap().write( anap_.outdir, anap_.filestem_ );
 
         pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));
-        ralab::findmf::LCMSImageReader tmp ( msdataptr , sip_ , anap_.ppm );
+        ralab::findmf::LCMSImageReader imagereader ( msdataptr , sip_ , anap_.ppm );
 
-        ///TODO test.
+        ///Did visual test and it looks good.
         boost::filesystem::path x = anap_.outdir_ / anap_.filestem_ ;
-        tmp.write(x.string(),mp);
+        imagereader.write(x.string(),mp);
 
       }catch(std::exception &e){
         std::cerr << "filtering failed " << e.what() << std::endl;

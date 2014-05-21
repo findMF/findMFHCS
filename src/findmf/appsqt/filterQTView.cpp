@@ -53,15 +53,17 @@ int main(int argc, char *argv[])
       //imgf.filterMap();
     }
 
-
+    // feature finding
     ralab::findmf::FeatureFinderLocalMax ff;
     ff.findFeature( mp2.getImageMap().getMap() , aparam.minintensity );
+
     ralab::findmf::datastruct::FeaturesMap map;
     map.setMapDescription(mp2.getMapDescription());
     ralab::findmf::ComputeFeatureStatistics cfs;
     cfs.extractFeatures(map,mp2.getImageMap().getMap(),ff.getLabels());
+
     //this writes the accessor....
-    cfs.writeFeatures(aparam.outdir , p1.stem().string() );
+   cfs.writeFeatures(aparam.outdir , p1.stem().string() );
 
     ralab::FeaturesMapPrinter fp;
     fp.writeFeatures(aparam.outdir , p1.stem().string(), map);
@@ -70,7 +72,7 @@ int main(int argc, char *argv[])
     //write filtered data into mzML file
 
     //TODO check why this isn't working
-    //sm.write( p2.string() , mp2 );
+    sm.write( p2.string() , mp2 );
 
     if(1){
       QApplication app(argc, argv);
