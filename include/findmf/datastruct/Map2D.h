@@ -121,10 +121,11 @@ namespace ralab{
             vigra::ImageImportInfo info(p1.string().c_str());
             if(info.isGrayscale())
             {
-              //map_.reshape(Map::difference_type(info.width(), info.height()));
+              map_.reshape(typename Map::difference_type(info.width(), info.height()));
               vigra::importImage(info, destImage(map_));
             }
           }
+          this->updateImageRange();
         }
       }; // end class Map2D
     }//datastruct

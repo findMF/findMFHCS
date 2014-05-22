@@ -219,7 +219,7 @@ namespace ralab{
         {
           auto begfiltered = imageMap_.getMap().bindOuter(i).begin();
           auto endfiltered = imageMap_.getMap().bindOuter(i).end();
-          size_t siz = imageMap_.getMap().bindOuter(i).size();
+          //size_t siz = imageMap_.getMap().bindOuter(i).size();
           std::size_t dist = std::distance( begfiltered, endfiltered );
           mz.resize(dist);
           intensities.resize(dist);
@@ -263,6 +263,7 @@ namespace ralab{
 
         void readTransformation(const std::string & filename){
           boost::filesystem::path p1(filename);
+          // read the mass axis
           std::vector<double> mass;
           std::string str =  p1.stem().string() ;
           str += ".mass";
@@ -271,11 +272,13 @@ namespace ralab{
           ralab::base::utils::readBin(p1.string(), mass);
           c2d_.bin_.setBreaks(mass);
 
+          // read the rt axis
           str =  p1.stem().string() ;
           str += ".rt";
           p1 = p1.parent_path();
           p1 /= str;
           ralab::base::utils::readBin(p1.string(), descript_->getRT() );
+          std::cout << descript_->getRT().size() << std::endl;
         }//end read image
 
       };
