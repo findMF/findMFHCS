@@ -69,7 +69,7 @@ SET(inc ${inc} ${findMFHCS_SOURCE_DIR}/include)
 #############################################################################
 file(GLOB Demo_HEADERS "sql/*.sql" "cmake_modules/*cmake" "include/*.h" "include/**/*.h"
  "include/**/**/*.h" "include/**/**/**/*.h" "src/**/*.h" "src/**/**/*.h" ".travis.yml"
-"submodule/**/**/**/**/*.h" "scripts/*.*" "buildscripts/*.*")
+"submodule/**/**/**/**/*.h" "scripts/*.*" "scripts/**/*.*" "buildscripts/*.*")
 
 add_library(headers SHARED ${Demo_HEADERS} Dummy.cpp)
 

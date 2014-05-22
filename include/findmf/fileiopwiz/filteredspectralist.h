@@ -28,12 +28,14 @@ namespace ralab{
     struct FilteredSpectrumList : pwiz::msdata::SpectrumListWrapper{
       mutable datastruct::LCMSImage mmap_;
       RT2sum rt2sum_;
+      mutable size_t ms1counter_; //!< count how many ms1 spectra you took
 
       FilteredSpectrumList(
           const pwiz::msdata::SpectrumListPtr& inner,
           datastruct::LCMSImage & mmap,
           const RT2sum & rt2sum = 1
-          ):SpectrumListWrapper(inner),mmap_(mmap),rt2sum_(rt2sum){
+          ):SpectrumListWrapper(inner),mmap_(mmap),rt2sum_(rt2sum),ms1counter_(0)
+      {
         // add processing methods to the copy of the inner SpectrumList's data processing
         pwiz::msdata::ProcessingMethod method;
         method.order = dp_->processingMethods.size();
@@ -46,21 +48,29 @@ namespace ralab{
       virtual pwiz::msdata::SpectrumPtr spectrum(std::size_t index, bool getBinaryData) const
       {
         pwiz::msdata::SpectrumPtr s = inner_->spectrum(index, true);
-        try
-        {
-          std::vector<double>& mzs = s->getMZArray()->data;
-          std::vector<double>& intensities = s->getIntensityArray()->data;
-          std::vector<double> filteredMZs, filteredIntensities;
-          //this deletes all binary data.
-          size_t idx = rt2sum_.getCols(index);
-          mmap_.getSpectrum( idx, filteredMZs , filteredIntensities );
-          mzs.swap(filteredMZs);
-          intensities.swap(filteredIntensities);
-          s->defaultArrayLength = mzs.size();
-        }
-        catch(std::exception& e)
-        {
-          throw std::runtime_error(std::string("[SpectrumList_ZeroSamplesFilter] Error filtering intensity data: ") + e.what());
+
+        size_t specidx = mmap_.getMapDescription()->specidx(index);
+        size_t nrSpec = mmap_.getRTsize();
+        if(specidx < nrSpec){
+          try
+          {
+            std::vector<double>& mzs = s->getMZArray()->data;
+            std::vector<double>& intensities = s->getIntensityArray()->data;
+            std::vector<double> filteredMZs, filteredIntensities;
+            //this deletes all binary data.
+            size_t idx = rt2sum_.getCols(index);
+            mmap_.getSpectrum( ms1counter_ , filteredMZs , filteredIntensities );
+            mzs.swap(filteredMZs);
+            intensities.swap(filteredIntensities);
+            s->defaultArrayLength = mzs.size();
+
+            //this is actually a hack
+            ++ms1counter_;
+          }
+          catch(std::exception& e)
+          {
+            throw std::runtime_error(std::string("[SpectrumList_ZeroSamplesFilter] Error filtering intensity data: ") + e.what());
+          }
         }
         s->dataProcessingPtr = dp_;
         return s;

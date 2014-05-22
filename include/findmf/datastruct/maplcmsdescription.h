@@ -45,26 +45,26 @@ namespace ralab{
         }
 
         std::uint32_t runnumber(){
-            return runnumber_;
+          return runnumber_;
         }
         void runnumber(uint32_t runnumber){
-            runnumber_ = runnumber;
+          runnumber_ = runnumber;
         }
         std::uint32_t mslevel(){
-            return mslevel_;
+          return mslevel_;
         }
         void mslevel(uint32_t mslevel){
-            mslevel_ = mslevel;
+          mslevel_ = mslevel;
         }
 
         dpair & extractionWindowMZ(){
-            return extractionWindowMZ_;
+          return extractionWindowMZ_;
         }
         dpair & mzRange(){
-            return mzRange_;
+          return mzRange_;
         }
         dpair & rtRange(){
-            return rtRange_;
+          return rtRange_;
         }
 
         /// use for transforming index to RT
@@ -149,8 +149,7 @@ namespace ralab{
           return rtRange_.second;
         }
 
-
-        //get the transformation vectors
+        /// get the transformation vectors
         char * getRTAxis(std::size_t & size)  {
           //char * res = boost::lexical_cast<char *>(feature_.getProjectionRT());
           char * res = reinterpret_cast<char *>( &(retentiontime_[0]) );
@@ -158,13 +157,25 @@ namespace ralab{
           return res;
         }
 
-        //get the transformation vectors
+        /// get the transformation vectors
         char * getMZAxis(std::size_t & size)  {
           //char * res = boost::lexical_cast<char *>(feature_.getProjectionMZ());
           char * res = reinterpret_cast<char *>( &(mass_[0]) );
           size = mass_.size() * (sizeof(axesT::value_type)/sizeof(char));
           return res;
         }
+
+        /// get spec idx
+        size_t specidx(size_t indx){
+          size_t count=0;
+          for(auto x = indices_.begin(); x!=indices_.end();++x,++count){
+            if(*x == indx){
+              return count;
+            }
+          }
+          return indices_.size();
+        }
+
       };//end MapLCMSDescription
       typedef boost::shared_ptr<MapLCMSDescription> MapLCMSDescriptionPtr;
     }

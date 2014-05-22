@@ -57,8 +57,6 @@ namespace ralab{
             std::cerr << "PROCESSING MAP : " << count_ << " with key : " << keys[count_] <<std::endl;
             imagereader.getMap( keys[count_] ,anap_.minmass_ , anap_.maxmass_, *lcmsimage);
             lcmsimage->getImageMap().updateImageRange();
-            double max = lcmsimage->getImageMap().getImageMax();
-            //std::cerr << "max : " << max << std::endl;
             count_++;
 
           }

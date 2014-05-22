@@ -2,7 +2,7 @@
 mkdir $PROJECTDIR/tmp
 
 ####### Feature finding #######
-# example with feature detectin in file with single map. Output is an dil_6_2.sqlite file
+# example with feature detection in file with single map. Output is an dil_6_2.sqlite file
 $PROJECTDIR/findMFHCSout/findMF --mzscale=1.3 --resolution=65000 --minMass=200 --nrthreads=2 --minintensity=5. --in=$PROJECTDIR/submodule/findMFData/dil_6_2.mzML --outdir=$PROJECTDIR/tmp
 # example of feature detection in file with many maps. Output is a file named testS.sqlite
 $PROJECTDIR/findMFHCSout/findMF --mzscale=1.3 --resolution=65000 --minMass=200 --nrthreads=2 --minintensity=5. --in=$PROJECTDIR/submodule/findMFData/testS.mzML --outdir=$PROJECTDIR/tmp
@@ -18,5 +18,6 @@ $PROJECTDIR/findMFHCSout/PeakPicker --in $PROJECTDIR/submodule/findMFData/dil_6_
 ####### generating images #######
 $PROJECTDIR/findMFHCSout/conv2Image --in $PROJECTDIR/submodule/findMFData/testS.mzML --outdir=$PROJECTDIR/tmp --enable=0
 
-
-
+####### visualization #####
+$PROJECTDIR/findMFHCSout/filterQTView --in /home/witold/prog/qttest/findMFData/testS.mzML --minintensity=1 --width-RT=20
+$PROJECTDIR/findMFHCSout/filterQTView --in /home/witold/prog/qttest/findMFData/dil_6_2.mzML --minintensity=1 --width-RT=20

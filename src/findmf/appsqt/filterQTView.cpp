@@ -36,8 +36,19 @@ int main(int argc, char *argv[])
       return -1;
     }
 
+    ralab::findmf::datastruct::MSFileInfoPtr sip;
+    try{
+      ralab::findmf::SwathPropertiesReader swathPropReader(aparam.infile);
+      sip = swathPropReader.getSwathInfo();
+    } catch(std::exception & e){
+      std::cerr << "infile : " << aparam.infile << std::endl;
+      std::cerr  << "can't open file: " << e.what() << std::endl;
+      return 0;
+    }
+
     double ppm = aparam.ppm;
-    ralab::findmf::LCMSImageReader sm(aparam.infile, ppm, aparam.rt2sum_ );
+    pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(aparam.infile));
+    ralab::findmf::LCMSImageReader sm(msdataptr, sip, ppm, aparam.rt2sum_ );
     ralab::findmf::datastruct::LCMSImage mp;
     sm.getMap( 0 , aparam.minmass, aparam.maxmass, mp);
     // LOG(INFO) << " " << mp.getMZsize() << " " << mp.getRTsize();

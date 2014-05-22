@@ -66,7 +66,7 @@ namespace ralab{
       double max = 8.;
       int maxi = 8;
       if(x == 0)
-        return 0;
+        return Base::max_;
       else if(x % maxi == 0)
         return Base::max_ * (0.5/max);
       else if((x+1)%maxi ==0)

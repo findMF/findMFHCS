@@ -127,11 +127,11 @@ namespace ralab{
         // flip image - because seededregiongrowin expects local minima
         // just flip the image so you can run seeded region growing.
         transformImage( srcImageRange(gradient_) , destImage(gradient_),
-                        ImageTransformatorFlip<float>( 0. , minmax.max )
+                        ImageTransformatorFlip<float>( threshold , minmax.max )
                         );
         vigra::localMinima(srcImageRange(gradient_), destImage(labels_),
                            vigra::LocalMinmaxOptions().neighborhood(4).allowAtBorder());
-        int max_region_label = labelImageWithBackground(srcImageRange(labels_), destImage(labels_), false, 0);
+        int max_region_label = labelImageWithBackground(srcImageRange(labels_),  destImage(labels_), false, 0);
 
         // create a statistics functor for region growing
         vigra::ArrayOfRegionStatistics< vigra::SeedRgDirectValueFunctor<float> > gradstat( max_region_label ) ;
@@ -148,7 +148,7 @@ namespace ralab{
 
         // flip the image back.
         transformImage( srcImageRange(gradient_) , destImage(gradient_),
-                        ImageTransformatorFlipBack<float>(  minmax.max , 0. )
+                        ImageTransformatorFlipBack<float>(  minmax.max , threshold )
                         );
       }//end
     };

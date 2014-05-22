@@ -217,6 +217,7 @@ namespace ralab{
                          double threshold = 10 //!< minimal intensity still to retrieve
             )
         {
+
           auto begfiltered = imageMap_.getMap().bindOuter(i).begin();
           auto endfiltered = imageMap_.getMap().bindOuter(i).end();
           //size_t siz = imageMap_.getMap().bindOuter(i).size();
@@ -243,7 +244,6 @@ namespace ralab{
           mz.resize(countLarger);
           intensities.resize(countLarger);
         }
-
 
       private:
 
