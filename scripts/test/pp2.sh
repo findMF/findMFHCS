@@ -4,12 +4,10 @@
 export PROJECTDIR=$(pwd)
 mkdir $PROJECTDIR/tmp
 
-
 ####### Peak picking #######
 # intensity
 
 $PROJECTDIR/findMFHCSout/PeakPicker --in $PROJECTDIR/submodule/findMFData/testS.mzML --out $PROJECTDIR/tmp/testS.i.c.mzML --resolution=30000 --smoothwidth=2.5 --intwidth=2 --area=1
-
 $PROJECTDIR/findMFHCSout/PeakPicker --in $PROJECTDIR/submodule/findMFData/testS.mzML --out $PROJECTDIR/tmp/testS.i.c.mzML --resolution=30000 --smoothwidth=2.5 --intwidth=2 --area=1 --numberofpeaks=10
 
 

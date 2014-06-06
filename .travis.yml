@@ -19,4 +19,5 @@ install:
     - ./buildscripts/gitclonefindMFBase.sh
     - ./buildscripts/buildpwiz.sh
 script: 
-- ./buildscripts/buildscript.sh
+    - ./buildscripts/buildscript.sh
+    - ./scripts/test/pp2.sh
