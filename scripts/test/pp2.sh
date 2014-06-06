@@ -2,7 +2,7 @@
 # run this script from project root by:
 #./scripts/test/pp.sh
 export PROJECTDIR=$(pwd)
-mkdir $PROJECTDIR/tmp
+sudo mkdir $PROJECTDIR/tmp
 
 ####### Peak picking #######
 # intensity

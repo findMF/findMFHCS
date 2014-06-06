@@ -20,4 +20,8 @@ install:
     - ./buildscripts/buildpwiz.sh
 script: 
     - ./buildscripts/buildscript.sh
+    # now application test follow
     - ./scripts/test/pp2.sh
+    - ./scripts/test/filterSingleMap.sh
+    - ./scripts/test/findMF.sh
+    - ./scripts/test/convert2Image.sh
