@@ -1,11 +1,13 @@
 language: cpp
 compiler:
 - gcc
-# - clang
 # - clang build errors on clang
 # Change this to your needs
 before_install: 
+- sudo apt-get update -qq
 - sudo apt-get install libboost-all-dev
+# - sudo apt-get install qt-sdk
+- sudo apt-get install libqt4-dev
 - sudo apt-get install qt-sdk
 - sudo apt-get install libtbb-dev
 - sudo apt-get install doxygen
