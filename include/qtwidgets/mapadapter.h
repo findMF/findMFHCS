@@ -3,7 +3,6 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-
 #ifndef MAPADAPTER_H
 #define MAPADAPTER_H
 
@@ -60,13 +59,13 @@ namespace ralab{
 
     MultiArrayVisSegments( typename Base::DATA & data): Base(data){ }
 
+    /// get the intensity for a peak
     virtual float get(std::size_t px, std::size_t py)override{
       int x = Base::data_[typename Base::difftype(px,py)];
-
       double max = 8.;
       int maxi = 8;
       if(x == 0)
-        return Base::max_;
+        return Base::min_;///max;
       else if(x % maxi == 0)
         return Base::max_ * (0.5/max);
       else if((x+1)%maxi ==0)

@@ -45,9 +45,9 @@ namespace ralab
       ralab::findmf::datastruct::LCMSImage mp;
       try{
         pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));
-        ralab::findmf::LCMSImageReader tmp ( msdataptr , sip_ , anap_.ppm );
+        ralab::findmf::LCMSImageReader imgread ( msdataptr , sip_ , anap_.ppm );
         std::cerr << "processing map : " << mapid_ << " with key : " << keys[mapid_]<< std::endl ;
-        tmp.getMap( keys[ mapid_ ] , anap_.minmass,anap_.maxmass, mp );
+        imgread.getMap( keys[ mapid_ ] , anap_.minmass,anap_.maxmass, mp );
       }catch(std::exception &e){
         std::cerr << "reading failed" << e.what() << std::endl;
         return;
@@ -55,14 +55,15 @@ namespace ralab
 
       try{
         ralab::findmf::LCMSImageFilterGauss imgf;
-        imgf.filter(mp.getImageMap().getMap(), anap_.mzpixelwidth , anap_.rtpixelwidth, anap_.mzscale , anap_.rtscale );
+        if(anap_.dofilter){
+          imgf.filter(mp.getImageMap().getMap(), anap_.mzpixelwidth , anap_.rtpixelwidth, anap_.mzscale , anap_.rtscale );
+        }
         mp.getImageMap().updateImageRange();
         mp.getImageMap().write( anap_.outdir, anap_.filestem_ );
 
         pwiz::msdata::MSDataPtr msdataptr = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(anap_.infile));
         ralab::findmf::LCMSImageReader imagereader ( msdataptr , sip_ , anap_.ppm );
 
-        ///Did visual test and it looks good.
         boost::filesystem::path x = anap_.outdir_ / anap_.filestem_ ;
         imagereader.write(x.string(),mp);
 
@@ -107,8 +108,8 @@ int main(int argc, char *argv[])
   tbb::task_scheduler_init init(pars.nrthreads);
   std::vector<ralab::SwathProcessor> tasks;
   for(std::size_t i = 0 ; i < keys.size() ; ++i){
-      tasks.push_back(ralab::SwathProcessor( pars , swathPropReader.getSwathInfo(),i));
-    }
+    tasks.push_back(ralab::SwathProcessor( pars , swathPropReader.getSwathInfo(),i));
+  }
   tbb::parallel_for_each(tasks.begin(),tasks.end(),invoker<ralab::SwathProcessor>());
   return 0;
 }

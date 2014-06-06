@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
   PPParams aparam;
   analysisParameters(aparam,vmgeneral);
   pwiz::msdata::ExtendedReaderList readers;
-  pwiz::msdata::MSDataPtr msdataptr_ = pwiz::msdata::MSDataPtr(new pwiz::msdata::MSDataFile(aparam.infile_,&readers));
+  pwiz::msdata::MSDataPtr msdataptr_ = pwiz::msdata::MSDataPtr(new  pwiz::msdata::MSDataFile(aparam.infile_,&readers));
   pwiz::msdata::SpectrumListPtr sl = msdataptr_->run.spectrumListPtr;
   pwiz::msdata::SpectrumListPtr mp(
         new ralab::QTOFPeakPickerFilter(sl,
@@ -198,7 +198,8 @@ int main(int argc, char *argv[])
         );
   msdataptr_->run.spectrumListPtr = mp;
   pwiz::msdata::MSDataFile::Format format;
-  if(std::string("mzML").compare(boost::filesystem::extension(aparam.outfile_)) ==0 ){
+  std::string ext = boost::filesystem::extension(aparam.outfile_);
+  if(std::string(".mzML").compare(ext) ==0 ){
     format = pwiz::msdata::MSDataFile::Format_mzML;
   }
   else{

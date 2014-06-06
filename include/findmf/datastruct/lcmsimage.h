@@ -133,6 +133,11 @@ namespace ralab{
                              intens.begin(),
                              imageMap_.getMap().bindOuter(specnr).begin()
                              );
+          //TODO a count of 10 is getting lost somewhere
+          //float input =  std::accumulate(intens.begin(),intens.end(),0.0);
+          //float output = std::accumulate(imageMap_.getMap().bindOuter(specnr).begin(), imageMap_.getMap().bindOuter(specnr).end(),0.0);
+          //std::cout << input << " " << output << std::endl;
+
         }
 
         /// determine the pixel coordinate of a mass

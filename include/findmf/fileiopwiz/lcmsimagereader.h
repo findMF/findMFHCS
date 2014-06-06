@@ -136,11 +136,10 @@ namespace ralab{
             pwiz::msdata::BinaryDataArrayPtr mz,intensity;
             pwiz::msdata::SpectrumInfo specInfo(*sp);
             double rt = specInfo.retentionTime;
-
             map_.getRT().push_back(rt);
             mz = sp->getMZArray();
-
             intensity = sp->getIntensityArray();
+
             size_t idx = rt2sum_.getCols(i);
             if(!mz->data.empty()){
               map_.convert2dense(mz->data, intensity->data, idx, am);

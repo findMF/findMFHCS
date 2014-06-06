@@ -3,8 +3,6 @@
 // Authors   : Witold Wolski
 // for full text refer to files: LICENSE, AUTHORS and COPYRIGHT
 
-
-
 #ifndef RT2SUM_H
 #define RT2SUM_H
 

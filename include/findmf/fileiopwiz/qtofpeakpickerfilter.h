@@ -24,6 +24,7 @@ namespace ralab{
     double intensityThreshold_;
     bool area_; // should area or intensities be determined
     uint32_t maxnumberofpeaks_;
+    bool notCheckProfile_;
 
     QTOFPeakPickerFilter(
         const pwiz::msdata::SpectrumListPtr & inner, //!< spectrum list
@@ -38,7 +39,7 @@ namespace ralab{
       smoothwidth_(smoothwidth),
       integrationWidth_(integrationWidth),
       intensityThreshold_(intensityThreshold),
-      area_(area),maxnumberofpeaks_(maxnumberofpeaks)
+      area_(area),maxnumberofpeaks_(maxnumberofpeaks),notCheckProfile_(false)
     {
       // add processing methods to the copy of the inner SpectrumList's data processing
       pwiz::msdata::ProcessingMethod method;
@@ -59,7 +60,7 @@ namespace ralab{
 
       // return non-profile spectra as-is
       // (could have been acquired as centroid, or vendor may have done the centroiding)
-      if (itr == cvParams.end())
+      if (notCheckProfile_ || itr == cvParams.end() )
         return specptr;
 
       // make sure the spectrum has binary data
@@ -75,8 +76,11 @@ namespace ralab{
         std::vector<double>& mzs = specptr->getMZArray()->data;
         std::vector<double>& intensities = specptr->getIntensityArray()->data;
 
-        std::pair<double, double> range = std::make_pair(mzs.front(),mzs.back());
-
+        /// if empty spectrum return withouth processing
+        if(mzs.size()==0){
+          return specptr;
+        }
+        std::pair<double, double> range = std::make_pair(mzs.front() , mzs.back());
         //construct peak picker
         ralab::base::ms::PeakPicker<double, ralab::base::ms::SimplePeakArea > pp(
               resolution_,

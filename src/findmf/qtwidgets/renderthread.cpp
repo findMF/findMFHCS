@@ -87,7 +87,7 @@ void RenderThread::run()
                 //double x =  log(pixelval + 1.) / log(maxelem + 1.);
                 double x = (pixelval-minelem)/(maxelem-minelem);
                 int col = static_cast<int>( x * (ColormapSize - 1));
-                if(col < ColormapSize && col >=0){
+                if(col < ColormapSize && col > 0){
                     *scanLine = colormap[col];
                   }else{
                     *scanLine = qRgb(0, 0, 0);
