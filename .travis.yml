@@ -15,11 +15,11 @@ before_install:
 #- sudo add-apt-repository --yes ppa:boost-latest/ppa
 #- sudo apt-get install libpwiz-dev
 install:
-    #- ./buildscripts/buildVigra.sh
-    #- ./buildscripts/gitclonefindMFBase.sh
-    #- ./buildscripts/buildpwiz.sh
+    - ./buildscripts/buildVigra.sh
+    - ./buildscripts/gitclonefindMFBase.sh
+    - ./buildscripts/buildpwiz.sh
 script: 
-    #- ./buildscripts/buildscript.sh
+    - ./buildscripts/buildscript.sh
     - ./scripts/test/checkSubmodule.sh
     # now application test follow
     #- ./scripts/test/pp2.sh
