@@ -1,7 +1,4 @@
-ls -l ./submodule/
-tmp=$(ls -l ./submodule/)
-echo $tmp
-tmp=$(ls -l ./submodule/findMFData/)
-echo $tmp
-tmp=$(ls -l ./submodule/findMFData2/)
-echo $tmp
+export PROJECTDIR=$(pwd)
+
+sudo unzip $PROJECTDIR/submodule/findMFData/dil_6_2.mzML.zip -d $PROJECTDIR/submodule/findMFData/
+sudo pp2.sh
