@@ -22,7 +22,3 @@ script:
     - ./buildscripts/buildscript.sh
     - ./scripts/test/checkSubmodule.sh
     # now application test follow
-    #- ./scripts/test/pp2.sh
-    #- ./scripts/test/filterSingleMap.sh
-    #- ./scripts/test/findMF.sh
-    #- ./scripts/test/convert2Image.sh
