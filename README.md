@@ -11,7 +11,7 @@ Command line tools shipped with this package:
 - filterSingleMap - chemical noise removal in LCMS maps (in mzML out mzML with chemical noise removed)
 - filterQTView - allows to visualize intermediate processing steps
 
-For usage examples see [findMF.sh](https://github.com/findMF/findMFHCS/blob/master/scripts/test/findMF.sh)
+For usage examples see [checkSubmodule.sh](https://github.com/findMF/findMFHCS/blob/master/scripts/test/checkSubmodule.sh)
 
 To find out more run the tools with the --help option.
 
