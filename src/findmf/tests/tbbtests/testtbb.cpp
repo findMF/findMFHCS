@@ -16,7 +16,7 @@ struct mytask {
   {}
   void operator()() {
     for (int i=0;i<1000000;++i) {}  // Deliberately run slow
-    std::cerr << "[" << _n << "]";
+    //std::cerr << "[" << _n << "]";
   }
   size_t _n;
 };

@@ -11,7 +11,7 @@ message(STATUS "OOOOO VIGRA_LIBRARY ${VIGRA_LIBRARY}")
 message(STATUS "OOOOO vigralibs ${vigralibs}")
 
 
-ADD_EXECUTABLE(filterSingleMap filterSingleMap.cpp)
+ADD_EXECUTABLE(filterMap filterSingleMap.cpp)
 TARGET_LINK_LIBRARIES(filterSingleMap ${QT_LIBRARIES} ${Boost_LIBRARIES} pwiz ${vigralibs}  tbb )
 
 ADD_EXECUTABLE(findMF findMF.cpp)

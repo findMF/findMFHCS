@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE( testRDTree ){
     ralab::RangeFeature ff;
 
     for(int i = 0 ; i < 100; ++i){
-        std::cout << i << std::endl;
+        //std::cout << i << std::endl;
         ff.setID(i);
         float n = static_cast<float>(i);
         ff.setMinMZ(n/100.+10);
@@ -192,21 +192,21 @@ BOOST_AUTO_TEST_CASE( testRDTree ){
     }
     sfs.commit();
     int nMilliseconds = myTimer.elapsed();
-    std::cout << "milli seconds: " << nMilliseconds  << std::endl;
+//std::cout << "milli seconds: " << nMilliseconds  << std::endl;
 
     ralab::SQLFeatureRTreeSelect sfrteesel( sfs.getDatabase() );
 
     std::vector<uint32_t> tmp;
     sfrteesel.getIDs(20.5,25.,tmp);
-    std::cout << tmp.size() << std::endl;
+    //std::cout << tmp.size() << std::endl;
     tmp.clear();
     sfrteesel.getIDs(20.5,tmp);
-    std::cout << tmp.size() << std::endl;
+    //std::cout << tmp.size() << std::endl;
 
     tmp.clear();
 
     sfrteesel.getIDs(10.3,10.3,22.5,25.,tmp);
-    std::cout << tmp.size() << std::endl;
+    //std::cout << tmp.size() << std::endl;
 
     std::vector<float> rts;
     sfrteesel.getMinRTS(rts);
